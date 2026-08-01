@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Iceland · Aug 2026 · Star Pride</title>
+<meta name="theme-color" content="#16232A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF8F3;
+    --paper-2:#F4EEE5;
+    --card:#FFFFFF;
+    --ink:#182429;
+    --ink-2:#46595F;
+    --ink-3:#7B8D92;
+    --line:#E9E2D7;
+    --line-2:#F2ECE3;
+    --moss:#3F6E5F;
+    --glacier:#31696F;
+    --glacier-pale:#E6F0F0;
+    --ember:#B04D28;
+    --ember-pale:#FAE8DE;
+    --amber:#C0851F;
+    --night:#0E1620;
+    --sans:'Figtree',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    --serif:'Newsreader','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    --shadow:0 1px 2px rgba(24,36,41,.04), 0 12px 30px -20px rgba(24,36,41,.3);
+    --r:18px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;font-weight:400;line-height:1.62;
+    overflow-x:hidden;
+  }
+  svg{display:block}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left}
+  h1,h2{font-family:var(--serif);font-weight:500;letter-spacing:-.012em}
+
+  .wrap{max-width:620px;margin:0 auto;padding:0 18px}
+
+  /* pronunciation */
+  .pron{
+    font-style:italic;font-weight:400;letter-spacing:.02em;
+    font-variant:normal;white-space:nowrap;
+  }
+
+  /* ---------- HERO ---------- */
+  .stamp{
+    display:none;position:absolute;top:16px;right:8px;z-index:5;
+    transform:rotate(-13deg);pointer-events:none;user-select:none;
+    color:#B4332B;opacity:.8;mix-blend-mode:multiply;
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='7'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='1 1 1 1 1 0 1 1 1 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' seed='7'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='1 1 1 1 1 0 1 1 1 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    -webkit-mask-size:150px 150px;mask-size:150px 150px;
+  }
+  .hero.done .stamp{display:block}
+  .stamp .box{position:relative;border:3.5px solid currentColor;border-radius:9px;padding:9px 15px 8px;text-align:center}
+  .stamp .box::after{content:'';position:absolute;inset:3px;border:1.5px solid currentColor;border-radius:5px}
+  .stamp .s1{display:block;font-weight:700;font-size:clamp(19px,5.6vw,26px);letter-spacing:.14em;
+    text-indent:.14em;text-transform:uppercase;line-height:1}
+  .stamp .s2{display:block;font-size:9.5px;font-weight:600;letter-spacing:.19em;text-indent:.19em;
+    text-transform:uppercase;margin-top:5px;opacity:.9}
+
+  .hero{
+    position:relative;
+    padding:42px 0 32px;
+    background:
+      radial-gradient(110% 80% at 8% 0%,#FFEFD6 0%,rgba(255,239,214,0) 62%),
+      radial-gradient(95% 70% at 98% 6%,#DFEFEE 0%,rgba(223,239,238,0) 64%),
+      var(--paper);
+  }
+  /* the mark sits alone at the top left; the COMPLETE stamp owns the right */
+  .hero .mark{display:block;height:31px;width:auto;margin:0 0 30px}
+  .eyebrow{
+    display:block;margin:0 0 16px;font-size:12.5px;font-weight:500;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--ember);
+  }
+  /* provenance link: a real destination, but it sits under the countdown so it
+     never competes with the title block for the top of the page */
+  .source{margin:13px 0 0;font-size:14px}
+  .source a{
+    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+    color:var(--glacier);border-bottom:1px solid rgba(49,105,111,.28);
+    padding-bottom:1px;transition:border-color .18s ease;
+  }
+  .source a:hover{border-bottom-color:var(--glacier)}
+  .source a:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-bottom-color:transparent}
+  .source a svg{flex:none;opacity:.6}
+  h1{font-size:clamp(38px,11.5vw,54px);line-height:1.04;margin:0;font-variation-settings:'opsz' 60}
+  h1 em{
+    display:block;font-style:italic;font-weight:400;color:var(--moss);
+    font-size:.44em;line-height:1.34;margin-top:14px;letter-spacing:0;
+  }
+  /* the hero reuses the day card's middot line, so "what ship" reads the same
+     way here as "which guide" does further down */
+  .hero .meta{margin-top:18px;font-size:15px}
+  .lede{margin:10px 0 0;color:var(--ink-2);font-size:16.5px;max-width:37ch}
+  .lede strong{color:var(--ink);font-weight:500}
+
+  .countdown{margin-top:26px;display:flex;gap:9px}
+  .cd-cell{flex:1;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 6px 11px;text-align:center}
+  .cd-num{font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .cd-lab{font-size:10.5px;letter-spacing:.14em;text-indent:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:7px;font-weight:500}
+  .cd-msg{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px;font-size:16px;text-align:center;color:var(--ink-2)}
+  .cd-msg strong{color:var(--ink);font-weight:500}
+  .mapwrap{margin-top:22px}
+  .mapwrap svg{width:100%;height:auto;overflow:visible}
+  @keyframes ping{0%{transform:scale(1);opacity:.5}70%{opacity:.12}100%{transform:scale(9);opacity:0}}
+  .pulse circle{transform-origin:0 0}
+  .pulse .p1{animation:ping 5s cubic-bezier(.16,.62,.3,1) infinite}
+  .pulse .p2{animation:ping 5s cubic-bezier(.16,.62,.3,1) 1.67s infinite}
+  .pulse .p3{animation:ping 5s cubic-bezier(.16,.62,.3,1) 3.34s infinite}
+  .mapcap{margin-top:12px;text-align:center;font-size:14.5px;color:var(--ink-3)}
+  .mapcap b{color:var(--ink);font-weight:500}
+  .glance{margin:16px 0 0;font-size:14.5px;color:var(--ink-3)}
+  .glance b{font-weight:500;color:var(--ember)}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:60;
+    background:rgba(251,248,243,.94);
+    backdrop-filter:saturate(150%) blur(12px);-webkit-backdrop-filter:saturate(150%) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{max-width:620px;margin:0 auto;padding:9px 0}
+  .pills{display:flex;gap:7px;overflow-x:auto;padding:2px 18px;scrollbar-width:none;-ms-overflow-style:none}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{
+    flex:none;min-width:58px;border:1px solid var(--line);background:var(--card);
+    border-radius:12px;padding:8px 11px 9px;text-align:center;line-height:1.16;
+    transition:background .18s ease,color .18s ease,border-color .18s ease;
+  }
+  /* centred text with tracking sits visually left; text-indent pushes it back */
+  .pill .d{display:block;font-size:10.5px;letter-spacing:.1em;text-indent:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+  .pill .n{display:block;font-size:19px;font-weight:500;letter-spacing:-.01em;margin-top:3px;font-variant-numeric:tabular-nums}
+  .pill[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .pill[aria-current="true"] .d{color:rgba(251,248,243,.6)}
+  .pill.today{border-color:#E3B9A4}
+  .pill.today .d{color:var(--ember);font-weight:700}
+  .pill.today[aria-current="true"]{background:var(--ember);border-color:var(--ember);color:#fff}
+  .pill.today[aria-current="true"] .d{color:rgba(255,255,255,.78)}
+
+  /* ---------- DAY CARD ---------- */
+  main.wrap{padding:46px 18px 10px}  /* main also has .wrap, so it must be beaten on specificity */
+  .day{
+    scroll-margin-top:104px;margin-bottom:34px;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;
+  }
+  /* today: ember edge, a pale halo to hold it off the paper, and a warm cast below */
+  .day.now{
+    border-color:var(--ember);
+    box-shadow:0 0 0 4px var(--ember-pale),
+               0 2px 5px rgba(176,77,40,.10),
+               0 20px 40px -20px rgba(176,77,40,.55);
+  }
+  .art{position:relative;line-height:0}
+  .art svg{width:100%;height:auto}
+  .art .cap{position:absolute;left:18px;right:18px;bottom:15px;color:#fff;line-height:1.3}
+  /* tight shadow, not the wide one the place name uses: at 11.5px a big blur just smears */
+  .art .date{
+    font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.8);
+    margin-bottom:6px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.55);
+  }
+  .art .place{
+    font-family:var(--serif);font-weight:500;
+    /* full size on a wide card, eased only once the card gets narrow enough that the
+       longest name ("Golden Circle & Sky Lagoon") starts to dominate the artwork */
+    font-size:clamp(28px,7vw,33px);
+    line-height:1.08;letter-spacing:-.015em;text-shadow:0 2px 22px rgba(0,0,0,.5);
+  }
+  .art .pron{display:block;font-size:13px;color:rgba(255,255,255,.72);margin-top:5px;letter-spacing:.05em;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+  .art .badge{
+    position:absolute;top:14px;left:14px;background:rgba(255,255,255,.9);
+    border-radius:8px;line-height:1.45;font-size:11px;font-weight:500;
+    padding:5px calc(10px - .08em) 5px 10px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);
+  }
+  .art .badge.now{left:auto;right:14px;background:var(--ember);color:#fff}
+
+  .body{padding:17px}
+
+  .ports{
+    display:flex;align-items:center;flex-wrap:wrap;gap:9px;background:var(--glacier-pale);
+    border-radius:12px;padding:10px 13px;color:#245A60;font-size:15.5px;
+  }
+  .ports svg{flex:none;opacity:.7}
+  .ports .t{font-variant-numeric:tabular-nums;font-weight:500}
+  .ports .ar{opacity:.45;margin:0 2px}
+  /* second call of the day: the name carries it, the qualifier trails */
+  .ports + .ports{margin-top:7px}
+  .ports .tt{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+  /* no separator glyph: it dangles at the line end when the row wraps on a phone */
+  .ports .pn{font-weight:500;letter-spacing:.005em}
+  .ports .sub{flex:1 1 100%;font-size:13.5px;opacity:.72;letter-spacing:.01em}
+
+  .meta{margin:12px 0 0;font-size:14.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:5px 0}
+  .meta span:not(:first-child)::before{content:'·';margin:0 8px;opacity:.5}
+  .meta b{font-weight:500;color:var(--ink-2)}
+
+  .note{margin-top:14px;border-radius:13px;padding:13px 15px;font-size:15.5px;line-height:1.55;display:flex;gap:11px;align-items:flex-start}
+  .note svg{flex:none;margin-top:3px;opacity:.85}
+  .note b{display:block;margin-bottom:3px;font-weight:500}
+  .note.warn{background:var(--ember-pale);color:#7A3216}
+  .note.soft{background:var(--paper-2);color:var(--ink-2)}
+  .note.soft b{color:var(--ink)}
+
+  details{margin-top:15px}
+  details summary{
+    list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border:1px solid #DDD3C3;border-radius:12px;padding:10px 10px 10px 14px;
+    font-size:15.5px;color:var(--ink-3);cursor:pointer;background:#FCFAF5;
+    transition:background .18s ease,border-color .18s ease,transform .12s ease;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary:hover{background:var(--paper-2);border-color:#CDC1AE}
+  details summary:active{transform:scale(.994)}
+  details summary:focus-visible{outline:2px solid var(--glacier);outline-offset:2px}
+  details summary .lbl{font-weight:500;color:var(--ink)}
+  details summary .chev{
+    flex:none;width:30px;height:30px;border-radius:50%;background:#fff;
+    border:1px solid #DDD3C3;display:grid;place-items:center;color:var(--ink-2);
+    transition:transform .25s ease,border-color .18s ease;
+  }
+  details summary:hover .chev{border-color:#BEB09A}
+  details[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0;background:var(--paper-2)}
+  details[open] summary .chev{transform:rotate(180deg)}
+  .tl{background:#FCFAF6;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:4px 16px 16px}
+  /* height is animated in JS; this only clips the rows while it runs */
+  details.sliding .tl{overflow:hidden}
+
+  ol.stops{list-style:none;margin:0;padding:0}
+  .rail{display:flex;align-items:center;gap:10px;padding:11px 0;color:var(--ink-3);font-size:14px}
+  .rail .ic{
+    flex:none;width:26px;height:26px;border-radius:50%;background:#fff;
+    border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-3);
+  }
+  .leg{display:flex;align-items:center;gap:10px;padding:2px 0;color:var(--ink-3);font-size:13.5px}
+  .leg .bar{width:26px;display:flex;justify-content:center;flex:none}
+  .leg .bar i{display:block;width:1px;height:26px;background:repeating-linear-gradient(to bottom,var(--line) 0 3px,transparent 3px 7px)}
+  .leg .d{display:inline-flex;align-items:center;gap:6px}
+  .leg .d svg{flex:none;opacity:.72}
+
+  .stop{position:relative;display:flex;gap:10px;padding:10px 0}
+  .stop .ic{
+    flex:none;width:26px;height:26px;border-radius:50%;background:#fff;
+    border:1px solid var(--glacier);color:var(--glacier);display:grid;place-items:center;margin-top:2px;
+  }
+  .stop.hero .ic{border-color:var(--ember);background:var(--ember);color:#fff}
+  .stop .time{font-size:13px;letter-spacing:.04em;color:var(--glacier);font-variant-numeric:tabular-nums;font-weight:500}
+  .stop.hero .time{color:var(--ember)}
+  .stop .ttl{font-size:17.5px;font-weight:500;line-height:1.28;margin-top:2px;font-family:var(--serif);letter-spacing:-.005em}
+  .stop .ttl .pron{font-size:13px;color:var(--ink-3);font-family:var(--sans);margin-left:7px}
+  .stop .desc{font-size:15px;color:var(--ink-2);line-height:1.52;margin-top:5px}
+  /* Pickup: the one block on a card that is a thing to do rather than a thing to read, so it
+     carries the glacier fill of a ports bar plus a real border and a press state. */
+  .pickup{
+    display:flex;align-items:center;gap:13px;margin:13px 0 12px;
+    background:var(--glacier-pale);border:1.5px solid #A9C7C6;border-radius:13px;
+    padding:12px 14px;text-decoration:none;color:#245A60;
+    transition:background .18s ease,border-color .18s ease,transform .12s ease;
+  }
+  .pickup:hover{background:#DCEDEB;border-color:#87B0AE}
+  .pickup:active{transform:scale(.994)}
+  .pickup:focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
+  .pickup .ic{
+    flex:none;width:38px;height:38px;border-radius:50%;background:#fff;
+    border:1px solid #BBD3D1;display:grid;place-items:center;color:var(--glacier);
+  }
+  .pickup .tx{flex:1;min-width:0}
+  .pickup .lbl{display:block;font-size:16px;font-weight:500;color:var(--ink);line-height:1.25}
+  .pickup .ad{display:block;font-size:14.5px;color:#3D6A6E;margin-top:3px;line-height:1.35}
+  .pickup .go{flex:none;opacity:.5}
+
+  /* ---------- ECLIPSE ---------- */
+  .ec-block{border-radius:var(--r);overflow:hidden;margin-bottom:34px;background:var(--night);color:#EAE0CE}
+  .ec-block .art{line-height:0}
+  .ec-body{padding:22px 20px 24px}
+  .ec-body .ek{font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#C0A778;margin:0 0 12px}
+  .ec-body h2{font-size:31px;line-height:1.08;margin:0 0 14px;color:#FBF3E4;font-variation-settings:'opsz' 48}
+  .ec-body h2 em{display:block;font-style:italic;font-weight:400;color:#EFC470;font-size:.6em;margin-top:8px}
+  .ec-body p{margin:0 0 12px;font-size:16px;line-height:1.62;color:#C7BCA9}
+  .ec-body p.fine{font-size:14.5px;color:#8B8371;margin-bottom:0}
+
+  /* ---------- FLAGS ---------- */
+
+  /* ---------- ADVISOR ---------- */
+  .agent{
+    border-radius:var(--r);margin-bottom:34px;overflow:hidden;
+    background:linear-gradient(165deg,#1E3138 0%,#16252B 55%,#101C21 100%);
+    color:#E4DCCD;padding:24px 20px 22px;scroll-margin-top:92px;
+  }
+  .agent .vw{display:block;height:38px;width:auto;margin:0 0 22px}
+  .agent .who{display:flex;align-items:center;gap:14px}
+  .agent h2{font-size:25px;line-height:1.12;margin:0;color:#FBF4E7}
+  .agent .role{font-size:14.5px;color:#93A69F;margin-top:3px}
+  .agent p{margin:16px 0 0;font-size:15.5px;line-height:1.6;color:#BFB6A6}
+  .agent .acts{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+  .agent a{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    text-decoration:none;color:#F3EADA;font-size:15.5px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;padding:12px 15px;
+  }
+  .agent a .u{font-size:13.5px;color:#8E9F98;word-break:break-all}
+  .agent a svg{flex:none;opacity:.55}
+  .agent .ps{
+    margin-top:16px;font-size:14.5px;line-height:1.55;color:#A89E8D;
+    border-left:2px solid rgba(255,255,255,.15);padding-left:13px;
+  }
+
+  footer{padding:6px 0 46px;text-align:center;color:var(--ink-3);font-size:14px;line-height:1.7}
+  footer .rule{width:36px;height:1px;background:var(--line);margin:0 auto 18px}
+  footer b{color:var(--ink-2);font-weight:500}
+
+  .totop{
+    position:fixed;right:16px;bottom:16px;z-index:70;width:46px;height:46px;border-radius:14px;
+    background:var(--ink);color:var(--paper);display:grid;place-items:center;
+    box-shadow:0 10px 26px -10px rgba(24,36,41,.5);
+    opacity:0;pointer-events:none;transform:translateY(8px);transition:all .25s ease;
+  }
+  .totop.show{opacity:1;pointer-events:auto;transform:none}
+
+  /* ==== DEV PANEL: delete this block before sharing ==== */
+  #dev{position:fixed;left:14px;bottom:16px;z-index:80;display:flex;flex-direction:column;
+       align-items:flex-start;gap:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+  #dev .tog{background:#16232A;color:#8FC9C0;border-radius:11px;padding:8px 12px;letter-spacing:.08em;
+       box-shadow:0 8px 22px -10px rgba(0,0,0,.55);opacity:.75}
+  #dev.open .tog{opacity:1}
+  #dev .panel{display:none;background:#16232A;color:#D6E2E0;border-radius:14px;padding:14px;
+       width:min(290px,calc(100vw - 28px));box-shadow:0 16px 38px -14px rgba(0,0,0,.65)}
+  #dev.open .panel{display:block}
+  #dev h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7A9793;font-weight:400}
+  #dev .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  #dev button.j,#dev button.go{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+       color:#E3EDEB;border-radius:8px;padding:6px 9px;font:inherit;line-height:1.2}
+  #dev button.j[data-on="1"]{background:#B04D28;border-color:#B04D28;color:#fff}
+  #dev input[type=date]{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+       color:#E3EDEB;border-radius:8px;padding:7px 9px;font:inherit}
+  #dev .state{margin-top:10px;color:#87ADA8;line-height:1.6}
+  #dev .state b{color:#DCE9E6;font-weight:400}
+  #dev .go{width:100%;margin-top:9px;text-align:center}
+  /* ==== end dev panel ==== */
+
+  @media (min-width:520px){ .body{padding:21px} }
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important}
+    .pulse .p1{animation:none;transform:scale(5);opacity:.16}
+    .pulse .p2,.pulse .p3{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="stamp" aria-hidden="true"><div class="box">
+    <span class="s1">Complete</span><span class="s2">9 – 17 Aug 2026</span>
+  </div></div>
+  <div class="wrap">
+    <!-- viewBox cropped to the glyph's own bounds; the source file pads it to a 1000 square -->
+    <svg class="mark" role="img" aria-label="VoyageWell" xmlns="http://www.w3.org/2000/svg" viewBox="14.9 205.1 970.2 589.7">
+      <path fill="#deb268" d="M866.7706162,205.1369293v11.5133608c27.1528504,0,44.371898,8.2018859,41.1114167,41.9266925l-11.5133608,41.060734v.8152758l-113.4010691,415.0394306-177.5392074-509.5402179.8146539-.8152758h-23.7903819l-138.9239898,510.3554936-40.8060769-119.1067559-31.0756267,79.9309196,40.6530961,116.4068933h33.7248066l133.9315916-493.0857634,172.5978028,493.0857634h32.8585372l133.9825852-492.2704876c5.7566804-19.7152467,29.5470623-83.8027023,65.7176962-83.8027023v-11.5133608h-118.3424737Z"/>
+      <path fill="#182429" d="M378.9321147,205.5955968v11.5133608c34.5400824,0,52.6247775,14.0095599,34.5400824,70.7100944l-61.8465354,159.2502269-31.6359344,81.3574968-70.913447,182.5825992L105.2618795,300.9623425l-.8158977-1.6809233-4.0751352-11.4623672c-18.0846951-56.7005346,0-70.7100944,34.4890888-70.7100944v-11.5133608H14.8869101v11.5133608c29.5980559,0,50.1285784,40.2964518,59.9610158,67.3986196l4.1261288,10.698085c.8158977,2.4455164,1.6305516,4.9417155,1.6305516,4.9417155l155.3277616,443.771839,18.085317,49.3136135v1.6302406l4.1261288-1.6302406h17.2190476l72.2380369-185.7410933,31.3312166-80.5425319,87.929142-225.9868624.8146539-2.4961991,12.3286366-31.2286075c11.5127389-23.7906928,29.5980559-50.1285784,52.6247775-50.1285784v-11.5133608h-153.69721Z"/>
+    </svg>
+    <span class="eyebrow">9 – 17 August 2026</span>
+    <h1>Iceland<em>Around the island, and one dark afternoon</em></h1>
+    <div class="meta"><span><b>Star Pride</b></span><span>Windstar</span><span>Reykjavík round-trip</span></div>
+    <p class="lede">Five private land days ashore, run by <strong>Rúnar</strong>, with Kuba and Pétur.</p>
+    <div id="cd" class="countdown"></div>
+    <p class="glance">Five ports, eight days aboard, five waterfalls, two thermal baths and <b>one total eclipse</b>.</p>
+    <p class="source"><a href="https://www.windstarcruises.com/tour-details/REYREY7D9/n-europe/reykjavik-to-reykjavik/7-day-around-iceland-a-total-solar-eclipse/?pkgid=1013304" target="_blank" rel="noopener">Windstar's published itinerary for this sailing<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></a></p>
+  </div>
+</header>
+
+<nav class="nav" id="nav"><div class="nav-in"><div class="pills" id="pills"></div></div></nav>
+
+<main class="wrap" id="main"></main>
+
+<button class="totop" id="totop" aria-label="Back to top">
+  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<!-- ==== DEV PANEL: delete this block before sharing ==== -->
+<div id="dev">
+  <div class="panel">
+    <h4>Simulate date</h4>
+    <div class="row">
+      <button class="j" data-d="">real</button>
+      <button class="j" data-d="2026-08-09">9th</button>
+      <button class="j" data-d="2026-08-10">10th</button>
+      <button class="j" data-d="2026-08-12">12th</button>
+      <button class="j" data-d="2026-08-14">14th</button>
+      <button class="j" data-d="2026-08-16">16th</button>
+      <button class="j" data-d="2026-08-20">after</button>
+    </div>
+    <input type="date" id="devdate" value="">
+    <div class="state"></div>
+    <button class="go">scroll to marked day</button>
+  </div>
+  <button class="tog">DEV</button>
+</div>
+<!-- ==== end dev panel ==== -->
+
+<script>
+/* ============ icons ============ */
+const S=(p,w=14)=>`<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const I={
+  car:S('<path d="M5 17h14M6.2 17l1.4-5.4A2 2 0 0 1 9.5 10h5a2 2 0 0 1 1.9 1.6L17.8 17"/><circle cx="7.6" cy="17.6" r="1.5"/><circle cx="16.4" cy="17.6" r="1.5"/>',15),
+  falls:S('<path d="M7 3v10a5 5 0 0 0 10 0V3"/><path d="M12 8v6"/><path d="M9 21c1-1 2-1 3 0s2 1 3 0"/>'),
+  geyser:S('<path d="M12 3v6"/><path d="M9 6.5 12 3l3 3.5"/><path d="M4 19h16"/><path d="M7 15c1.6-1.4 3.2-1.4 5 0s3.4 1.4 5 0"/>'),
+  spa:S('<path d="M4 15c2-1.6 4-1.6 6 0s4 1.6 6 0 3-.6 4 .4"/><path d="M4 19c2-1.6 4-1.6 6 0s4 1.6 6 0 3-.6 4 .4"/><path d="M9 9c0-2 1.5-3.6 3-4.6C13.5 5.4 15 7 15 9s-1.3 3-3 3-3-1-3-3Z"/>'),
+  food:S('<path d="M6 3v7a2 2 0 0 0 4 0V3"/><path d="M8 10v11"/><path d="M17 3c-1.6 1.2-2.4 3-2.4 5.2S15.4 12 17 12.6V21"/>'),
+  whale:S('<path d="M3 12c3-4 8-5 12-3 2 1 4 1 6-1v6c-2 2-4 2-6 1-4-2-9-1-12 3Z"/>'),
+  cave:S('<path d="M3 20V13a9 9 0 0 1 18 0v7"/><path d="M9 20v-4a3 3 0 0 1 6 0v4"/>'),
+  beach:S('<path d="M3 17h18M4.5 20h15"/><path d="M12 14V6"/><path d="M5 11c2-5 5-7 7-7s5 2 7 7Z"/>'),
+  hike:S('<circle cx="14" cy="4.5" r="1.7"/><path d="M11 21l1.5-6-2.5-2.5 1-4.5 3 2 2.5 1"/><path d="M15 21l-1-5"/><path d="M6 21l2-5"/>'),
+  view:S('<path d="M3 20 10 8l4 6 2-3 5 9Z"/><circle cx="7" cy="6" r="1.9"/>'),
+  ship:S('<path d="M3 17c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M5 14 6.5 8h11L19 14"/><path d="M12 8V4h4"/>',16),
+  bird:S('<path d="M4 9c3-3 7-3 10 0l6-3-3 6c1 4-2 8-6 8s-7-3-7-7Z"/>'),
+  canyon:S('<path d="M3 21V9l4-4 3 5 3-6 4 5 4-3v15Z"/>'),
+  town:S('<path d="M3 21V10l5-4 5 4v11"/><path d="M13 21V13h8v8"/>'),
+  moon:S('<path d="M20.5 14.5A8.5 8.5 0 1 1 10 3.6a7 7 0 0 0 10.5 10.9Z"/>'),
+  warn:S('<path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z"/>',18),
+  info:S('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',18),
+  pin:S('<path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>')
+};
+
+/* ============ artwork ============ */
+const G=(u,n,stops)=>`<linearGradient id="${n}${u}" x1="0" y1="0" x2="0" y2="1">${stops.map(([o,c,a])=>`<stop offset="${o}" stop-color="${c}"${a!==undefined?` stop-opacity="${a}"`:''}/>`).join('')}</linearGradient>`;
+
+/* Hallgrimskirkja, in local coords: base y=260, apex y=0, width 0-248 */
+function church(x,baseY,sc,cLit,cShade,mode){
+  const t=`translate(${x-124*sc},${baseY-260*sc}) scale(${sc})`;
+  const lit=`<g fill="${cLit}">
+      <path d="M2 242h14v18H2z"/><path d="M16 228h18v32H16z"/><path d="M34 210h20v50H34z"/>
+      <path d="M54 186h22v74H54z"/><path d="M76 156h24v104H76z"/><path d="M100 78h24v182h-24z"/>
+      <path d="M104 60h20v18h-20z"/><path d="M108 48h16v12h-16z"/><path d="M124 0 112 48h12z"/></g>`;
+  const shade=`<g fill="${cShade}">
+      <path d="M232 242h14v18h-14z"/><path d="M214 228h18v32h-18z"/><path d="M194 210h20v50h-20z"/>
+      <path d="M172 186h22v74h-22z"/><path d="M148 156h24v104h-24z"/><path d="M124 78h24v182h-24z"/>
+      <path d="M124 60h20v18h-20z"/><path d="M124 48h16v12h-16z"/><path d="M124 0 136 48h-12z"/></g>`;
+  const seams=`<g fill="#2E3A3F" opacity=".22">
+      <rect x="74" y="156" width="2" height="104"/><rect x="52" y="186" width="2" height="74"/>
+      <rect x="32" y="210" width="2" height="50"/><rect x="14" y="228" width="2" height="32"/>
+      <rect x="172" y="156" width="2" height="104"/><rect x="194" y="186" width="2" height="74"/>
+      <rect x="214" y="210" width="2" height="50"/><rect x="232" y="228" width="2" height="32"/></g>`;
+  const day=`${seams}
+      <g fill="#31404A" opacity=".5"><rect x="105" y="120" width="4" height="80"/>
+        <rect x="122" y="110" width="4" height="90"/><rect x="139" y="120" width="4" height="80"/></g>
+      <circle cx="124" cy="94" r="9" fill="#F7F2E7" stroke="#31404A" stroke-width="2.4" opacity=".9"/>
+      <path d="M124 94v-6 M124 94l4 3" stroke="#31404A" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M112 260v-14a12 12 0 0 1 24 0v14z" fill="#31404A" opacity=".75"/>`;
+  const dusk=`<g fill="#FFCB86" opacity=".85"><rect x="105" y="128" width="4" height="64"/>
+        <rect x="122" y="118" width="4" height="74"/><rect x="139" y="128" width="4" height="64"/></g>
+      <circle cx="124" cy="94" r="8" fill="#FFCB86" opacity=".7"/>
+      <path d="M112 260v-14a12 12 0 0 1 24 0v14z" fill="#FFCB86" opacity=".5"/>`;
+  return `<g transform="${t}">${lit}${shade}${mode==='dusk'?dusk:day}</g>`;
+}
+
+/* `photo` swaps the drawn scene for an image inside the same <svg>, so the caption veil,
+   the badges and the Today chip all keep working untouched. See NOTES: this is the one
+   thing on the page that is not self-contained. */
+function art(k,u,h=420,photo){
+  /* Caption veil. Deepened for the painted photos: the drawn scenes were quiet and low-contrast
+     down there, the paintings are neither, so the white caption needed more to sit on. Starts
+     higher and lands darker, but still fully clear across the top half. */
+  const V=`<linearGradient id="v${u}" x1="0" y1="0" x2="0" y2="1"><stop offset=".3" stop-color="#08111A" stop-opacity="0"/><stop offset=".6" stop-color="#08111A" stop-opacity=".34"/><stop offset=".82" stop-color="#08111A" stop-opacity=".72"/><stop offset="1" stop-color="#08111A" stop-opacity=".92"/></linearGradient>`;
+  const scenes={
+
+/* ---- Golden Circle: the curtain between two mossy headlands, rainbow standing in the spray.
+        Laid out on the reference photo proportions: the lip is at y=134, the pool line at y=288,
+        and the two cliffs slope in to meet the curtain at x=336 and x=520. Order matters here.
+        Falls, then the cliffs over its outer edges, then the gravel, and only then the spray, so
+        the mist billows in front of both the cliff feet and the pool. Soft masses use the radial
+        fade; flat ellipses show their outline at card width. ---- */
+gullfoss:`<defs>
+ ${G(u,"sky",[["0","#3E8CC8"],[".36","#98C4DD"],[".72","#DFEBE8"],["1","#F3E9D2"]])}
+ ${G(u,"fall",[["0","#FFFFFF"],[".56","#F8FCFC"],["1","#DAE9EC"]])}
+ ${G(u,"grav",[["0","#3B444F"],[".38","#272D36"],["1","#13171C"]])}
+ ${G(u,"chan",[["0","#B2C8D2"],["1","#4F7183"]])}
+ ${G(u,"back",[["0","#4A4437"],[".5","#2E2B24"],["1","#1A1815"]])}
+ <linearGradient id="clfL${u}" x1=".1" y1="0" x2=".9" y2="1">
+   <stop offset="0" stop-color="#AA9752"/><stop offset=".24" stop-color="#71653F"/>
+   <stop offset=".62" stop-color="#453E30"/><stop offset="1" stop-color="#211E19"/></linearGradient>
+ <linearGradient id="clfR${u}" x1=".9" y1="0" x2=".1" y2="1">
+   <stop offset="0" stop-color="#C0A660"/><stop offset=".24" stop-color="#7E6E4B"/>
+   <stop offset=".62" stop-color="#4D4636"/><stop offset="1" stop-color="#26231E"/></linearGradient>
+ <radialGradient id="glo${u}" cx="50%" cy="50%" r="50%">
+   <stop offset="0" stop-color="#FFFFFF" stop-opacity=".96"/>
+   <stop offset=".44" stop-color="#FBFDFD" stop-opacity=".5"/>
+   <stop offset="1" stop-color="#F4FAFA" stop-opacity="0"/></radialGradient></defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <ellipse cx="150" cy="78" rx="220" ry="74" fill="url(#glo${u})" opacity=".6"/>
+ <ellipse cx="666" cy="72" rx="228" ry="78" fill="url(#glo${u})" opacity=".6"/>
+ <ellipse cx="428" cy="96" rx="238" ry="82" fill="url(#glo${u})" opacity=".62"/>
+ <ellipse cx="330" cy="74" rx="120" ry="44" fill="url(#glo${u})" opacity=".3"/>
+ <ellipse cx="530" cy="82" rx="126" ry="46" fill="url(#glo${u})" opacity=".28"/>
+ <ellipse cx="428" cy="190" rx="150" ry="104" fill="url(#glo${u})" opacity=".24"/>
+ <path d="M334 130 L522 130 L612 296 L228 296Z" fill="url(#back${u})"/>
+ <path d="M330 126 L526 126 L520 140 L336 140Z" fill="#24231F" opacity=".62"/>
+ <path d="M336 136 L520 136 L532 314 L324 314Z" fill="url(#fall${u})"/>
+ <path d="M336 136 L520 136 L521 150 L335 150Z" fill="#FFFFFF" opacity=".96"/>
+ <g stroke="#9DBEC9" stroke-width="3.2" opacity=".4" stroke-linecap="round">
+   <path d="M362 146 L350 296M394 144 L386 300M428 143 L428 302M462 144 L472 300M496 146 L510 296"/></g>
+ <g stroke="#FFFFFF" stroke-width="7" opacity=".62" stroke-linecap="round">
+   <path d="M378 148 L364 288M472 147 L484 290"/></g>
+ <path d="M0 0 L58 18 L104 2 L166 40 L216 30 L266 68 L306 96 L336 134 L240 292 L0 292Z" fill="url(#clfL${u})"/>
+ <path d="M0 0 L58 18 L104 2 L166 40 L216 30 L266 68 L306 96 L336 134 L318 150 L292 106 L254 74 L212 60 L162 68 L110 30 L64 46 L0 24Z" fill="#AC9A52" opacity=".7"/>
+ <path d="M800 0 L742 18 L696 2 L634 40 L584 30 L534 68 L494 96 L520 134 L600 292 L800 292Z" fill="url(#clfR${u})"/>
+ <path d="M800 0 L742 18 L696 2 L634 40 L584 30 L534 68 L494 96 L520 134 L538 150 L562 106 L598 74 L638 60 L688 68 L740 30 L790 46 L800 24Z" fill="#C4AB62" opacity=".72"/>
+ <path d="M0 288 L800 282 L800 420 L0 420Z" fill="url(#grav${u})"/>
+ <path d="M0 312 q142 26 240 70 L218 420 L0 420Z" fill="url(#chan${u})" opacity=".6"/>
+ <path d="M0 336 q130 22 210 58" stroke="#DEEBEE" stroke-width="3.5" opacity=".3" fill="none" stroke-linecap="round"/>
+ <path d="M286 328 q168 -12 328 6 M320 368 q186 -10 350 10" stroke="#8B939D" stroke-width="4" opacity=".2" fill="none" stroke-linecap="round"/>
+ <g fill="#79818C" opacity=".4">
+   <ellipse cx="352" cy="332" rx="12" ry="6"/><ellipse cx="470" cy="344" rx="15" ry="7"/><ellipse cx="612" cy="330" rx="12" ry="6"/>
+   <ellipse cx="286" cy="378" rx="17" ry="8"/><ellipse cx="424" cy="392" rx="16" ry="8"/><ellipse cx="556" cy="376" rx="18" ry="9"/>
+   <ellipse cx="704" cy="358" rx="14" ry="7"/><ellipse cx="748" cy="402" rx="19" ry="9"/><ellipse cx="196" cy="350" rx="11" ry="6"/></g>
+ <g fill="#BBC2C9" opacity=".44">
+   <ellipse cx="368" cy="372" rx="12" ry="6"/><ellipse cx="640" cy="398" rx="13" ry="7"/><ellipse cx="506" cy="326" rx="9" ry="5"/></g>
+ <ellipse cx="428" cy="300" rx="210" ry="66" fill="url(#glo${u})" opacity=".95"/>
+ <ellipse cx="300" cy="306" rx="140" ry="48" fill="url(#glo${u})" opacity=".7"/>
+ <ellipse cx="556" cy="304" rx="144" ry="48" fill="url(#glo${u})" opacity=".68"/>
+ <ellipse cx="428" cy="262" rx="112" ry="42" fill="url(#glo${u})" opacity=".4"/>
+ <g opacity=".46" fill="none" stroke-width="7" stroke-linecap="round">
+   <path d="M110 404 A268 268 0 0 1 610 386" stroke="#DE7A5C"/>
+   <path d="M117 404 A261 261 0 0 1 604 388" stroke="#E0A25E"/>
+   <path d="M124 404 A254 254 0 0 1 598 390" stroke="#DCC55F"/>
+   <path d="M131 404 A247 247 0 0 1 592 392" stroke="#7FAF6B"/>
+   <path d="M138 404 A240 240 0 0 1 586 394" stroke="#5292B6"/>
+   <path d="M145 404 A233 233 0 0 1 580 396" stroke="#6F70A6"/></g>`,
+
+/* ---- Reykjavik: Hallgrimskirkja above the harbour roofs ---- */
+reykjavik:`<defs>
+ ${G(u,'sky',[['0','#A6CBE0'],['.44','#DCE9E6'],['.78','#F7E2C0'],['1','#F2CDA2']])}
+ ${G(u,'wat',[['0','#7CA4B7'],['1','#4A7188']])}</defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <circle cx="118" cy="106" r="26" fill="#FFF9E6" opacity=".92"/>
+ <ellipse cx="118" cy="106" rx="80" ry="48" fill="#FFF4D8" opacity=".22"/>
+ <path d="M0 152 q140 -18 250 4 q112 22 212 -8 q118 -28 228 2" stroke="#fff" stroke-width="8" opacity=".2" fill="none" stroke-linecap="round"/>
+ <path d="M0 218 L108 178 L206 208 L306 166 L400 202 L494 172 L590 208 L690 174 L780 202 L800 192 L800 300 L0 300Z" fill="#8098AD" opacity=".45"/>
+ <path d="M0 246 L120 212 L228 242 L344 208 L452 240 L560 212 L672 244 L780 218 L800 230 L800 300 L0 300Z" fill="#68859C" opacity=".5"/>
+ ${church(400,300,.92,'#EFE9DC','#CBC2B1','day')}
+ <rect y="292" width="800" height="44" fill="#7C9078"/>
+ <path d="M0 292 q120 -10 240 2 q60 6 110 2 L350 336 L0 336Z" fill="#87996F" opacity=".5"/>
+ <g>
+   <path d="M28 314 L58 288 L88 314Z" fill="#B5563E"/><rect x="34" y="312" width="48" height="24" fill="#EAE1D0"/>
+   <path d="M100 316 L128 292 L156 316Z" fill="#3D7079"/><rect x="106" y="314" width="44" height="22" fill="#E5DCCA"/>
+   <path d="M168 314 L198 290 L228 314Z" fill="#C08A2C"/><rect x="174" y="312" width="48" height="24" fill="#EAE1D0"/>
+   <path d="M560 316 L588 292 L616 316Z" fill="#48684E"/><rect x="566" y="314" width="44" height="22" fill="#E5DCCA"/>
+   <path d="M628 314 L658 288 L688 314Z" fill="#A84C3A"/><rect x="634" y="312" width="48" height="24" fill="#EAE1D0"/>
+   <path d="M700 316 L726 294 L752 316Z" fill="#3A6072"/><rect x="706" y="314" width="40" height="22" fill="#E5DCCA"/></g>
+ <g fill="#3E4E58" opacity=".28">
+   <rect x="50" y="320" width="7" height="10"/><rect x="66" y="320" width="7" height="10"/>
+   <rect x="190" y="320" width="7" height="10"/><rect x="650" y="320" width="7" height="10"/></g>
+ <rect y="336" width="800" height="84" fill="url(#wat${u})"/>
+ <path d="M344 336 h112 l30 84 h-172z" fill="#F0E7D6" opacity=".13"/>
+ <path d="M40 356 q80 -8 150 4 M470 372 q100 -10 190 5 M180 396 q130 -12 250 5" stroke="#9CBAC6" stroke-width="3.5" opacity=".5" fill="none" stroke-linecap="round"/>
+ <path d="M600 320 q22 -10 44 0" stroke="#546C78" stroke-width="0" fill="none"/>`,
+
+/* ---- Kirkjufell: the arrowhead across the water, Kirkjufellsfoss stepping down on the left.
+        The silhouette is the whole subject, so it is deliberately asymmetric: a short steep left
+        flank, a long concave sweep off the right, and a low tail running out to the shore. Drawn
+        as a symmetric triangle it stops being Kirkjufell and becomes any mountain.
+        Same rules the Golden Circle scene learned: white water gets dark cliff behind it, soft
+        masses use the glo radial, and the order runs back to front. ---- */
+kirkjufell:`<defs>
+ ${G(u,'sky',[['0','#5E9AC4'],['.34','#A8CBDC'],['.7','#DCE7DE'],['1','#EFE3CA']])}
+ ${G(u,'mtn',[['0','#A08D57'],['.26','#848C55'],['.6','#637E4D'],['1','#476540']])}
+ ${G(u,'mtnS',[['0','#6B6644'],['.34','#4A6040'],['1','#2E452D']])}
+ ${G(u,'grass',[['0','#7CAA58'],['.55','#5D8C47'],['1','#456D3A']])}
+ ${G(u,'riv',[['0','#F1F7F6'],['.45','#C9DDDF'],['1','#9CBBC1']])}
+ ${G(u,'clf',[['0','#4E5F38'],['.34','#33402C'],['1','#1A211C']])}
+ ${G(u,'grav',[['0','#A9A296'],['.5','#8B8479'],['1','#6A645B']])}
+ <linearGradient id="falG${u}" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#FFFFFF" stop-opacity=".96"/>
+   <stop offset=".55" stop-color="#F4FAFA" stop-opacity=".8"/>
+   <stop offset="1" stop-color="#EAF4F4" stop-opacity=".12"/></linearGradient>
+ <radialGradient id="glo${u}" cx="50%" cy="50%" r="50%">
+   <stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/>
+   <stop offset=".45" stop-color="#F8FCFC" stop-opacity=".48"/>
+   <stop offset="1" stop-color="#F2F9F9" stop-opacity="0"/></radialGradient></defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <ellipse cx="180" cy="66" rx="220" ry="58" fill="url(#glo${u})" opacity=".34"/>
+ <ellipse cx="650" cy="92" rx="200" ry="50" fill="url(#glo${u})" opacity=".28"/>
+ <g stroke="#FFFFFF" opacity=".3" fill="none" stroke-linecap="round">
+   <path d="M56 60 q140 -14 262 6" stroke-width="5"/><path d="M486 46 q146 -12 274 8" stroke-width="5"/>
+   <path d="M118 100 q126 -10 236 6" stroke-width="3.5"/><path d="M540 112 q116 -10 224 4" stroke-width="3.5"/></g>
+ <path d="M0 190 L96 174 L172 188 L250 172 L322 190 L800 182 L800 216 L0 216Z" fill="#93ACB3" opacity=".45"/>
+ <path d="M616 208 L684 190 L742 202 L800 192 L800 222 L580 222Z" fill="#71897A" opacity=".55"/>
+ <path d="M296 208 C326 202 356 188 384 160 C404 140 420 106 438 64 C456 102 476 142 500 170 C530 202 582 212 664 214 L296 214Z" fill="url(#mtn${u})"/>
+ <path d="M438 64 C456 102 476 142 500 170 C530 202 582 212 664 214 L478 214Z" fill="url(#mtnS${u})" opacity=".8"/>
+ <path d="M438 62 C444 76 450 92 456 106 C448 96 441 80 438 62Z" fill="#DACF9C" opacity=".55"/>
+ <g stroke="#C9C28C" stroke-width="2.4" opacity=".22" fill="none" stroke-linecap="round">
+   <path d="M410 122 q30 -8 48 6"/><path d="M392 156 q52 -12 92 12"/></g>
+ <g stroke="#26361F" stroke-width="3" opacity=".2" fill="none" stroke-linecap="round">
+   <path d="M452 100 C474 138 500 172 528 192"/><path d="M466 128 C486 158 508 184 532 198"/></g>
+ <path d="M0 210 q160 -12 330 2 q170 14 340 -2 q66 -6 130 -2 L800 272 L0 278Z" fill="url(#grass${u})"/>
+ <path d="M474 240 q88 -14 176 -4 q60 6 150 -2 L800 306 L444 300Z" fill="#4E7642" opacity=".82"/>
+ <g fill="#406638" opacity=".6">
+   <ellipse cx="560" cy="256" rx="34" ry="11"/><ellipse cx="668" cy="268" rx="40" ry="12"/><ellipse cx="746" cy="252" rx="30" ry="10"/></g>
+ <path d="M92 256 C216 250 300 266 404 284 C520 304 640 322 800 326 L800 386 C620 378 470 356 350 334 C240 314 148 292 56 290 Z" fill="url(#riv${u})"/>
+ <g stroke="#FFFFFF" stroke-width="3.2" opacity=".5" fill="none" stroke-linecap="round">
+   <path d="M150 272 C270 272 380 292 520 310"/><path d="M182 292 C302 296 422 316 562 332"/>
+   <path d="M124 306 C244 312 372 336 542 354"/></g>
+ <path d="M0 92 C40 86 74 100 118 124 C166 150 214 178 252 202 C272 214 282 228 280 244 C258 258 196 266 132 264 C74 262 30 256 0 250Z" fill="url(#clf${u})"/>
+ <path d="M0 92 C40 86 74 100 118 124 C166 150 214 178 252 202 C272 214 282 228 280 244 L258 240 C250 222 226 202 186 178 C142 152 98 128 58 116 C38 110 18 108 0 112Z" fill="#5B7040" opacity=".62"/>
+ <path d="M34 106 C30 150 31 198 30 238 C36 246 50 248 58 240 C56 198 54 150 52 104 C46 101 40 102 34 106Z" fill="url(#falG${u})"/>
+ <path d="M112 136 C108 176 109 216 108 246 C115 254 131 256 140 248 C137 216 134 176 132 134 C126 131 118 132 112 136Z" fill="url(#falG${u})"/>
+ <path d="M200 172 C196 204 197 230 197 252 C204 260 218 262 226 254 C223 230 220 204 218 170 C212 167 206 168 200 172Z" fill="url(#falG${u})"/>
+ <g stroke="#FFFFFF" stroke-width="3" opacity=".7" fill="none" stroke-linecap="round">
+   <path d="M42 110 C39 148 40 186 42 214"/><path d="M121 140 C118 174 119 204 121 226"/><path d="M209 176 C206 202 207 222 209 238"/></g>
+ <g fill="#FFFFFF" opacity=".7">
+   <ellipse cx="43" cy="106" rx="12" ry="4"/><ellipse cx="122" cy="135" rx="12" ry="4"/><ellipse cx="209" cy="171" rx="11" ry="4"/></g>
+ <ellipse cx="44" cy="250" rx="56" ry="18" fill="url(#glo${u})" opacity=".85"/>
+ <ellipse cx="128" cy="256" rx="60" ry="20" fill="url(#glo${u})" opacity=".85"/>
+ <ellipse cx="214" cy="260" rx="52" ry="18" fill="url(#glo${u})" opacity=".75"/>
+ <path d="M0 322 C70 318 146 330 206 348 C258 364 292 382 308 420 L0 420Z" fill="url(#grav${u})"/>
+ <path d="M0 348 C62 346 128 356 180 372 C222 385 250 400 262 420 L0 420Z" fill="#7E7770" opacity=".45"/>
+ <g fill="#C3BCB0" opacity=".55">
+   <ellipse cx="58" cy="352" rx="13" ry="6"/><ellipse cx="146" cy="374" rx="15" ry="7"/><ellipse cx="34" cy="390" rx="17" ry="8"/>
+   <ellipse cx="122" cy="406" rx="18" ry="8"/><ellipse cx="212" cy="398" rx="14" ry="6"/></g>
+ <g fill="#3C463F" opacity=".5">
+   <ellipse cx="628" cy="398" rx="44" ry="15"/><ellipse cx="728" cy="374" rx="32" ry="11"/><ellipse cx="548" cy="414" rx="28" ry="10"/></g>
+ <g fill="#3E5257" opacity=".45"><path d="M646 100 q9 -7 18 0 q-9 -3 -18 0Z"/><path d="M686 86 q8 -6 16 0 q-8 -3 -16 0Z"/><path d="M612 116 q7 -5 14 0 q-7 -3 -14 0Z"/></g>`,
+
+/* ---- Eclipse: corona and twilight band over a dark fjord ---- */
+eclipse:`<defs>
+ ${G(u,'sky',[['0','#0A1220'],['.55','#152234'],['.86','#2C4155'],['1','#5A5F63']])}
+ <radialGradient id="cor${u}"><stop offset=".46" stop-color="#FFEBBC" stop-opacity="0"/><stop offset=".54" stop-color="#FFEBBC" stop-opacity=".9"/><stop offset=".72" stop-color="#FFD9A0" stop-opacity=".28"/><stop offset="1" stop-color="#FFD9A0" stop-opacity="0"/></radialGradient>
+ <radialGradient id="hz${u}" cx=".5" cy="1" r=".8"><stop offset="0" stop-color="#E9A25C" stop-opacity=".55"/><stop offset="1" stop-color="#E9A25C" stop-opacity="0"/></radialGradient></defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <rect y="180" width="800" height="150" fill="url(#hz${u})"/>
+ <g fill="#fff"><circle cx="96" cy="58" r="1.6" opacity=".85"/><circle cx="238" cy="34" r="1.2" opacity=".7"/><circle cx="322" cy="88" r="1.5" opacity=".8"/>
+ <circle cx="548" cy="44" r="1.3" opacity=".75"/><circle cx="684" cy="102" r="1.6" opacity=".8"/><circle cx="58" cy="132" r="1.1" opacity=".6"/>
+ <circle cx="742" cy="38" r="1.4" opacity=".7"/><circle cx="470" cy="126" r="1.2" opacity=".6"/><circle cx="160" cy="98" r="1.1" opacity=".55"/></g>
+ <circle cx="400" cy="128" r="132" fill="url(#cor${u})"/>
+ <g opacity=".5" stroke="#FFEBBC" stroke-linecap="round" fill="none">
+   <path d="M400 60 v-24" stroke-width="2"/><path d="M400 196 v24" stroke-width="2"/>
+   <path d="M332 128 h-26" stroke-width="2"/><path d="M468 128 h26" stroke-width="2"/>
+   <path d="M352 80 l-16 -18" stroke-width="1.6"/><path d="M448 80 l16 -18" stroke-width="1.6"/>
+   <path d="M352 176 l-16 18" stroke-width="1.6"/><path d="M448 176 l16 18" stroke-width="1.6"/></g>
+ <circle cx="400" cy="128" r="50" fill="#FFF4DA" opacity=".95"/>
+ <circle cx="400" cy="128" r="45" fill="#0B1220"/>
+ <path d="M0 274 L118 214 L226 258 L316 220 L400 262 L500 216 L606 260 L714 218 L800 256 L800 316 L0 316Z" fill="#0F1A25"/>
+ <path d="M0 296 L140 254 L280 292 L420 256 L560 294 L700 258 L800 288 L800 330 L0 330Z" fill="#0A1119"/>
+ <rect y="326" width="800" height="94" fill="#070D14"/>
+ <path d="M368 326 L432 326 L482 420 L318 420Z" fill="#FFD9A0" opacity=".13"/>
+ <path d="M60 348 h110 M600 366 h150 M240 392 h180 M520 404 h140" stroke="#17242F" stroke-width="4" stroke-linecap="round"/>`,
+
+/* ---- Husavik: a humpback fluke, the RIB, and puffins ---- */
+whale:`<defs>
+ ${G(u,'sky',[['0','#8FBAD6'],['.44','#CFE2E2'],['.78','#F1E4C8'],['1','#E8D6B4']])}
+ ${G(u,'wat',[['0','#5F8FA3'],['1','#26526A']])}</defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <circle cx="124" cy="80" r="26" fill="#FFF9E8" opacity=".9"/>
+ <ellipse cx="124" cy="80" rx="82" ry="46" fill="#FFF4DC" opacity=".2"/>
+ <path d="M0 132 q150 -16 260 6 q118 22 218 -8 q116 -24 222 4" stroke="#fff" stroke-width="7" opacity=".2" fill="none" stroke-linecap="round"/>
+ <path d="M0 210 L88 174 L152 196 L232 160 L312 190 L400 152 L482 186 L566 158 L654 190 L734 166 L800 184 L800 252 L0 252Z" fill="#7C96A6" opacity=".7"/>
+ <g fill="#EBF2F3" opacity=".8">
+   <path d="M232 160 L258 174 L286 166 L312 190 L232 190Z"/><path d="M400 152 L428 168 L456 160 L482 186 L400 186Z"/>
+   <path d="M566 158 L592 174 L620 168 L654 190 L566 190Z"/></g>
+ <path d="M0 234 L120 214 L260 238 L400 212 L540 238 L680 214 L800 234 L800 264 L0 264Z" fill="#5A7789" opacity=".75"/>
+ <rect y="258" width="800" height="162" fill="url(#wat${u})"/>
+ <ellipse cx="318" cy="338" rx="172" ry="21" fill="#8FB6C4" opacity=".4"/>
+ <ellipse cx="318" cy="338" rx="114" ry="13" fill="#B9D4DC" opacity=".45"/>
+ <g transform="translate(160 174) scale(1.5)">
+   <path d="M87 110 C89 84 93 64 97 52 C75 30 41 10 1 2 C43 -2 81 16 105 40 C129 16 167 -2 209 2 C169 10 135 30 113 52 C117 64 121 84 123 110 Z" fill="#17272F"/>
+   <path d="M105 40 C118 52 126 74 129 96" stroke="#2C4553" stroke-width="4" fill="none" opacity=".65" stroke-linecap="round"/>
+   <path d="M105 40 C92 52 84 74 81 96" stroke="#334F5E" stroke-width="4" fill="none" opacity=".5" stroke-linecap="round"/>
+   <path d="M40 12 C58 16 76 24 90 34" stroke="#2C4553" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/>
+   <path d="M170 12 C152 16 134 24 120 34" stroke="#2C4553" stroke-width="3" fill="none" opacity=".45" stroke-linecap="round"/></g>
+ <g stroke="#DEECF0" stroke-width="3.4" opacity=".7" fill="none" stroke-linecap="round">
+   <path d="M212 236 q-6 22 -2 44"/><path d="M250 218 q-6 24 -2 46"/><path d="M290 246 q-4 22 0 42"/>
+   <path d="M398 218 q6 24 2 46"/><path d="M436 238 q6 22 2 42"/><path d="M348 248 q4 22 0 42"/></g>
+ <g><path d="M652 296 q-9 -36 3 -56 q11 20 5 56 q11 -34 24 -48 q-3 26 -11 48Z" fill="#EBF4F6" opacity=".85"/>
+   <path d="M616 300 q30 -13 76 -7 q27 4 42 9 q-42 10 -76 8 q-27 -2 -42 -10Z" fill="#14232C"/>
+   <path d="M664 293 q11 -4 19 -2" stroke="#31505E" stroke-width="3" fill="none" opacity=".7" stroke-linecap="round"/></g>
+ <g transform="translate(552 338)">
+   <path d="M0 12 q0 -13 15 -15 l64 -6 q27 -2 35 11 l-4 12 q-4 8 -19 8 l-75 0 q-16 0 -16 -10Z" fill="#C9552B"/>
+   <path d="M11 10 l97 -8 q8 6 6 13 l-100 4Z" fill="#27343E"/>
+   <g fill="#B7452A"><rect x="26" y="-9" width="11" height="15" rx="5"/><rect x="47" y="-11" width="11" height="15" rx="5"/><rect x="68" y="-10" width="11" height="15" rx="5"/></g>
+   <g fill="#1C2830"><circle cx="31.5" cy="-11" r="4.2"/><circle cx="52.5" cy="-13" r="4.2"/><circle cx="73.5" cy="-12" r="4.2"/></g>
+   <path d="M114 5 l15 -2 -3 11 -13 -2Z" fill="#1F2C34"/>
+   <path d="M-14 21 q-42 7 -78 -3" stroke="#9EC2CE" stroke-width="4" opacity=".5" fill="none" stroke-linecap="round"/></g>
+ <g fill="#18262E"><ellipse cx="708" cy="358" rx="17" ry="12"/><circle cx="717" cy="349" r="7"/><path d="M723 356 l13 -4 -13 -4z" fill="#DE8B2C"/>
+   <ellipse cx="750" cy="392" rx="15" ry="10"/><circle cx="758" cy="384" r="6"/><path d="M763 390 l12 -3 -12 -4z" fill="#DE8B2C"/></g>
+ <g fill="#EDE7DC"><circle cx="713" cy="348" r="1.6"/><circle cx="755" cy="383" r="1.4"/></g>
+ <path d="M60 296 h100 M480 386 h150 M100 400 h130" stroke="#76A0B0" stroke-width="4" opacity=".4" stroke-linecap="round"/>`,
+
+/* ---- Seyðisfjörður: the rainbow street running up to the Blue Church.
+        The street is the subject, so it is one perspective wedge from the bottom edge to the
+        church door, and the church sits at its head rather than floating above it. Bands run
+        across the road the way the real paint does, cool at the top so they hand off to the
+        church's blue and warm at the foot where the eye starts.
+        The whole scene is pitched high on purpose. art() lays a darkening veil over the bottom
+        third for the caption, so anything that has to stay vivid must sit above roughly y=330.
+        An earlier pass put the street in the bottom third and the veil ate it. ---- */
+fjord:`<defs>
+ ${G(u,'sky',[['0','#A8CBDA'],['.44','#DDE7DC'],['.76','#F3DCB8'],['1','#EBC79C']])}
+ ${G(u,'wl',[['0','#6B8175'],['1','#44574F']])}
+ ${G(u,'wr',[['0','#5C7062'],['1','#394940']])}
+ ${G(u,'road',[['0','#94A08D'],['1','#707C6A']])}</defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <circle cx="400" cy="70" r="20" fill="#FFF8E4" opacity=".55"/>
+ <ellipse cx="400" cy="70" rx="84" ry="40" fill="#FFF3D6" opacity=".15"/>
+ <path d="M0 26 L90 90 L176 70 L250 130 L300 194 L322 234 L0 234Z" fill="url(#wl${u})"/>
+ <path d="M800 34 L710 98 L624 76 L550 136 L500 198 L478 234 L800 234Z" fill="url(#wr${u})"/>
+ <path d="M0 26 L90 90 L176 70 L212 100 L118 234 L0 234Z" fill="#7B8F83" opacity=".8"/>
+ <path d="M800 34 L710 98 L624 76 L590 106 L684 234 L800 234Z" fill="#6A7E71" opacity=".8"/>
+ <g fill="#EAF2EB" opacity=".5"><path d="M90 90 L116 102 L138 94 L176 70 L104 74Z"/><path d="M710 98 L684 110 L662 102 L624 76 L694 82Z"/></g>
+ <g stroke="#DAE9E0" stroke-width="3.6" stroke-linecap="round" opacity=".46" fill="none">
+   <path d="M84 108 q12 42 6 86"/><path d="M142 100 q10 48 4 92"/><path d="M198 126 q10 44 4 84"/>
+   <path d="M42 134 q10 38 6 76"/></g>
+ <g stroke="#DAE9E0" stroke-width="3.6" stroke-linecap="round" opacity=".42" fill="none">
+   <path d="M716 114 q-12 42 -6 86"/><path d="M658 106 q-10 48 -4 90"/><path d="M604 130 q-8 42 -2 80"/>
+   <path d="M758 138 q-10 36 -6 72"/></g>
+ <g stroke="#465A4D" stroke-width="2.2" opacity=".22" fill="none" stroke-linecap="round">
+   <path d="M30 168 q54 10 106 22M14 206 q72 12 134 26M582 174 q64 -12 126 -22M620 212 q64 -14 126 -26"/></g>
+ <path d="M0 222 q200 -10 400 -4 q200 6 400 -8 L800 420 L0 420Z" fill="#84987A"/>
+ <path d="M0 262 q200 -8 400 -2 q200 6 400 -6 L800 420 L0 420Z" fill="#748868"/>
+ <path d="M366 232 L434 232 L740 420 L60 420Z" fill="url(#road${u})"/>
+ <g>
+   <path d="M366 232 L434 232 L457 246 L343 246Z" fill="#8A6FB0"/>
+   <path d="M343 246 L457 246 L483 262 L317 262Z" fill="#5468AE"/>
+   <path d="M317 262 L483 262 L514 281 L286 281Z" fill="#3E8FB8"/>
+   <path d="M286 281 L514 281 L551 304 L249 304Z" fill="#57A167"/>
+   <path d="M249 304 L551 304 L595 331 L205 331Z" fill="#EFDA5E"/>
+   <path d="M205 331 L595 331 L662 372 L138 372Z" fill="#FCAE52"/>
+   <path d="M138 372 L662 372 L740 420 L60 420Z" fill="#F07B58"/></g>
+ <g stroke="#F8F4E8" stroke-width="2" opacity=".3"><path d="M366 232 L60 420M434 232 L740 420"/></g>
+ <g opacity=".92">
+   <path d="M292 244 L312 228 L332 244Z" fill="#B5563E"/><rect x="298" y="242" width="30" height="22" fill="#EFE6D4"/>
+   <path d="M212 268 L238 248 L264 268Z" fill="#3D7079"/><rect x="218" y="266" width="42" height="30" fill="#E9E0CE"/>
+   <path d="M112 306 L142 282 L172 306Z" fill="#A84C3A"/><rect x="118" y="304" width="50" height="36" fill="#E5DCCA"/>
+   <path d="M468 244 L488 228 L508 244Z" fill="#C08A2C"/><rect x="472" y="242" width="30" height="22" fill="#EFE6D4"/>
+   <path d="M536 268 L562 248 L588 268Z" fill="#48684E"/><rect x="540" y="266" width="42" height="30" fill="#E9E0CE"/>
+   <path d="M628 306 L658 282 L688 306Z" fill="#3A6072"/><rect x="632" y="304" width="50" height="36" fill="#E5DCCA"/></g>
+ <g fill="#3E4E58" opacity=".26"><rect x="309" y="248" width="6" height="8"/><rect x="234" y="274" width="7" height="10"/>
+   <rect x="138" y="314" width="8" height="12"/><rect x="484" y="248" width="6" height="8"/>
+   <rect x="556" y="274" width="7" height="10"/><rect x="652" y="314" width="8" height="12"/></g>
+ <g>
+   <path d="M348 186 L452 186 L452 234 L348 234Z" fill="#BCDAE8"/>
+   <path d="M338 188 L400 140 L462 188 Z" fill="#547C92"/>
+   <path d="M338 188 L400 140 L462 188" stroke="#F8FBFC" stroke-width="3.4" fill="none" stroke-linejoin="round"/>
+   <path d="M378 146 L378 234 L422 234 L422 146Z" fill="#CCE4EF"/>
+   <path d="M371 148 L400 100 L429 148 Z" fill="#456A80"/>
+   <path d="M371 148 L400 100 L429 148" stroke="#F8FBFC" stroke-width="3.4" fill="none" stroke-linejoin="round"/>
+   <path d="M400 100 V76" stroke="#F8FBFC" stroke-width="3.4" stroke-linecap="round"/>
+   <path d="M392 85 h16" stroke="#F8FBFC" stroke-width="3" stroke-linecap="round"/>
+   <path d="M392 234 v-21a8 8 0 0 1 16 0v21z" fill="#33505F"/>
+   <g fill="#39586B"><path d="M358 222v-14a7 7 0 0 1 14 0v14z"/><path d="M428 222v-14a7 7 0 0 1 14 0v14z"/>
+     <path d="M394 184v-11a6 6 0 0 1 12 0v11z"/></g>
+   <path d="M378 146 v88 M422 146 v88 M348 186 v48 M452 186 v48" stroke="#F8FBFC" stroke-width="2.4" opacity=".9"/>
+ </g>`,
+
+/* ---- Heimaey: the town seen from Eldfell's rim, harbour to the right, mesas behind.
+        The subject is the view rather than the cone, so the red scoria the viewer is standing on
+        is a foreground band, not a mountain. It sits in the bottom third where art()'s caption
+        veil is heaviest, which suits it, being nearly black already.
+        Order matters: sea, then the land the town stands on, then the mesas, then the roofs.
+        A first pass drew the sea as a full-width band and the houses floated on it. ---- */
+volcano:`<defs>
+ ${G(u,'sky',[['0','#2C8CCE'],['.42','#7CBEE4'],['.78','#BEDCEA'],['1','#D8E9EF']])}
+ ${G(u,'sea',[['0','#1E76AE'],['.5','#146294'],['1','#0C4A76']])}
+ ${G(u,'mesa',[['0','#7CA659'],['.44','#57813F'],['1','#3B5D32']])}
+ ${G(u,'crag',[['0','#4A5940'],['.5','#333F2E'],['1','#1F2820']])}
+ ${G(u,'land',[['0','#8C9A76'],['.5','#77855F'],['1','#5E6B4B']])}
+ ${G(u,'sco',[['0','#8A4132'],['.42','#5A281F'],['1','#2A1310']])}</defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <g fill="#FFFFFF" opacity=".78">
+   <ellipse cx="640" cy="52" rx="46" ry="15"/><ellipse cx="690" cy="46" rx="34" ry="12"/>
+   <ellipse cx="742" cy="58" rx="40" ry="13"/><ellipse cx="486" cy="74" rx="30" ry="9"/></g>
+ <!-- The landscape rides up so the caption always lands on scoria, never on roofs. Sized for the
+      NARROW case: the art box is shorter on a phone, so the caption covers the bottom ~47% of the
+      viewBox there against ~24% on a wide card. That is why the scoria owns the lower half here,
+      and it is why the other scenes get away with less: their lower halves are already dark. -->
+ <g transform="translate(0,-76)">
+ <path d="M330 148 L432 142 L520 147 L620 139 L720 145 L800 141 L800 158 L330 158Z" fill="#8FB4C6" opacity=".55"/>
+ <rect y="152" width="800" height="146" fill="url(#sea${u})"/>
+ <path d="M0 168 L44 150 L96 142 L142 154 L190 146 L232 164 L258 188 L268 226 L0 234Z" fill="url(#mesa${u})"/>
+ <path d="M0 196 L54 180 L112 184 L172 196 L232 214 L268 226 L0 234Z" fill="url(#crag${u})" opacity=".6"/>
+ <path d="M284 234 L294 186 L328 172 L420 166 L502 170 L548 186 L570 210 L584 242 L284 242Z" fill="url(#mesa${u})"/>
+ <path d="M284 234 L294 186 L328 172 L346 176 L336 242 L284 242Z" fill="url(#crag${u})" opacity=".72"/>
+ <path d="M502 170 L548 186 L570 210 L584 242 L520 242 L508 196Z" fill="url(#crag${u})" opacity=".38"/>
+ <path d="M456 166 V142" stroke="#DCE6E4" stroke-width="2.2" opacity=".8" stroke-linecap="round"/>
+ <g stroke="#2E3A2A" stroke-width="2.4" opacity=".28" fill="none" stroke-linecap="round">
+   <path d="M320 198 q22 20 30 40"/><path d="M366 190 q18 24 24 46"/><path d="M60 190 q20 18 28 36"/></g>
+ <path d="M0 238 C140 230 330 240 470 246 C530 249 572 250 604 248 L604 420 L0 420Z" fill="url(#land${u})"/>
+ <path d="M604 252 L800 244 L800 300 L604 306Z" fill="url(#sea${u})"/>
+ <path d="M596 250 L800 242 L800 262 L596 270Z" fill="#3C4C54"/>
+ <g fill="#E6EAEA">
+   <rect x="608" y="230" width="32" height="18"/><rect x="648" y="234" width="24" height="14"/>
+   <rect x="682" y="232" width="28" height="16"/><rect x="720" y="236" width="22" height="12"/></g>
+ <g fill="#C9D2D4"><rect x="608" y="230" width="32" height="4"/><rect x="682" y="232" width="28" height="4"/></g>
+ <path d="M666 286 L790 281 L786 296 L670 300Z" fill="#22303A"/>
+ <path d="M664 268 L790 263 L792 284 L668 288Z" fill="#F4F7F8"/>
+ <path d="M684 252 L762 249 L764 268 L686 270Z" fill="#FBFDFD"/>
+ <path d="M700 240 L740 238 L742 251 L702 252Z" fill="#EEF3F4"/>
+ <rect x="714" y="229" width="9" height="11" fill="#C4562F"/>
+ <g fill="#5C7480" opacity=".8"><rect x="690" y="258" width="6" height="5"/><rect x="706" y="257" width="6" height="5"/>
+   <rect x="722" y="257" width="6" height="5"/><rect x="738" y="256" width="6" height="5"/></g>
+ <path d="M604 300 C660 306 720 316 800 322 L800 420 L604 420Z" fill="#5E6B4B"/>
+ <g fill="#EFEAE0">
+   <rect x="18" y="248" width="21" height="11"/><rect x="52" y="246" width="19" height="11"/><rect x="84" y="249" width="22" height="11"/>
+   <rect x="120" y="247" width="20" height="11"/><rect x="154" y="250" width="21" height="11"/><rect x="190" y="248" width="19" height="11"/>
+   <rect x="224" y="251" width="22" height="11"/><rect x="260" y="249" width="20" height="11"/><rect x="294" y="252" width="21" height="11"/>
+   <rect x="330" y="250" width="19" height="11"/><rect x="364" y="252" width="22" height="11"/><rect x="400" y="251" width="20" height="11"/>
+   <rect x="434" y="253" width="21" height="11"/><rect x="470" y="252" width="19" height="11"/><rect x="504" y="254" width="22" height="11"/>
+   <rect x="540" y="253" width="20" height="11"/></g>
+ <g><path d="M15 248 L28 240 L42 248Z" fill="#B8412F"/><path d="M49 246 L61 238 L74 246Z" fill="#2E6E8E"/>
+   <path d="M81 249 L95 241 L109 249Z" fill="#4A7C59"/><path d="M117 247 L130 239 L143 247Z" fill="#C9973A"/>
+   <path d="M151 250 L164 242 L178 250Z" fill="#8E4B6B"/><path d="M187 248 L199 240 L212 248Z" fill="#B8412F"/>
+   <path d="M221 251 L235 243 L249 251Z" fill="#2E6E8E"/><path d="M257 249 L270 241 L283 249Z" fill="#7A8288"/>
+   <path d="M291 252 L304 244 L318 252Z" fill="#4A7C59"/><path d="M327 250 L339 242 L352 250Z" fill="#C9973A"/>
+   <path d="M361 252 L375 244 L389 252Z" fill="#B8412F"/><path d="M397 251 L410 243 L423 251Z" fill="#2E6E8E"/>
+   <path d="M431 253 L444 245 L458 253Z" fill="#8E4B6B"/><path d="M467 252 L479 244 L492 252Z" fill="#4A7C59"/>
+   <path d="M501 254 L515 246 L529 254Z" fill="#B8412F"/><path d="M537 253 L550 245 L563 253Z" fill="#C9973A"/></g>
+ <g fill="#F2EDE3">
+   <rect x="8" y="268" width="25" height="13"/><rect x="46" y="266" width="22" height="13"/><rect x="82" y="269" width="26" height="13"/>
+   <rect x="122" y="267" width="23" height="13"/><rect x="158" y="270" width="25" height="13"/><rect x="196" y="268" width="22" height="13"/>
+   <rect x="232" y="271" width="26" height="13"/><rect x="272" y="269" width="23" height="13"/><rect x="308" y="272" width="25" height="13"/>
+   <rect x="346" y="270" width="22" height="13"/><rect x="382" y="273" width="26" height="13"/><rect x="422" y="271" width="23" height="13"/>
+   <rect x="458" y="274" width="25" height="13"/><rect x="496" y="272" width="22" height="13"/><rect x="532" y="275" width="26" height="13"/></g>
+ <g><path d="M4 268 L20 258 L37 268Z" fill="#2E6E8E"/><path d="M42 266 L57 256 L72 266Z" fill="#B8412F"/>
+   <path d="M77 269 L95 259 L113 269Z" fill="#C9973A"/><path d="M118 267 L133 257 L149 267Z" fill="#4A7C59"/>
+   <path d="M153 270 L170 260 L188 270Z" fill="#B8412F"/><path d="M192 268 L207 258 L222 268Z" fill="#8E4B6B"/>
+   <path d="M227 271 L245 261 L263 271Z" fill="#2E6E8E"/><path d="M268 269 L283 259 L299 269Z" fill="#C9973A"/>
+   <path d="M303 272 L320 262 L338 272Z" fill="#4A7C59"/><path d="M342 270 L357 260 L372 270Z" fill="#B8412F"/>
+   <path d="M377 273 L395 263 L413 273Z" fill="#7A8288"/><path d="M418 271 L433 261 L449 271Z" fill="#2E6E8E"/>
+   <path d="M453 274 L470 264 L488 274Z" fill="#C9973A"/><path d="M492 272 L507 262 L522 272Z" fill="#B8412F"/>
+   <path d="M527 275 L545 265 L563 275Z" fill="#4A7C59"/></g>
+ <g stroke="#8C9490" stroke-width="2" opacity=".3" stroke-linecap="round">
+   <path d="M0 264 h570M0 285 h548"/></g>
+ </g>
+ <path d="M0 206 C140 226 320 240 480 238 C620 236 722 224 800 212 L800 420 L0 420Z" fill="url(#sco${u})"/>
+ <path d="M0 206 C140 226 320 240 480 238 C620 236 722 224 800 212 L800 226 C722 238 620 250 480 252 C320 254 140 240 0 220Z" fill="#93503C" opacity=".5"/>
+ <g fill="#2A1712" opacity=".5">
+   <ellipse cx="120" cy="344" rx="32" ry="11"/><ellipse cx="330" cy="362" rx="38" ry="12"/>
+   <ellipse cx="540" cy="350" rx="30" ry="10"/><ellipse cx="700" cy="332" rx="24" ry="9"/>
+   <ellipse cx="230" cy="404" rx="42" ry="13"/><ellipse cx="600" cy="398" rx="36" ry="12"/></g>
+ <g fill="#6B3627" opacity=".38">
+   <ellipse cx="210" cy="318" rx="24" ry="8"/><ellipse cx="440" cy="326" rx="28" ry="9"/><ellipse cx="640" cy="308" rx="22" ry="7"/></g>`,
+
+/* ---- Reykjavik at dusk, the church in silhouette ---- */
+dusk:`<defs>
+ ${G(u,'sky',[['0','#2C4562'],['.4','#7A6079'],['.72','#D5804F'],['1','#F2C387']])}
+ ${G(u,'wat',[['0','#2B4257'],['1','#182839']])}</defs>
+ <rect width="800" height="420" fill="url(#sky${u})"/>
+ <circle cx="622" cy="238" r="30" fill="#FFE3AC"/>
+ <ellipse cx="622" cy="238" rx="98" ry="56" fill="#FFD08A" opacity=".26"/>
+ <path d="M0 164 q150 -14 260 6 q120 22 230 -8 q110 -26 220 4" stroke="#FFD3A0" stroke-width="7" opacity=".2" fill="none" stroke-linecap="round"/>
+ <path d="M0 250 L112 208 L206 238 L308 196 L400 230 L484 200 L570 236 L672 204 L760 230 L800 216 L800 300 L0 300Z" fill="#334760" opacity=".9"/>
+ ${church(400,296,.82,'#1D2B39','#13202C','dusk')}
+ <rect y="290" width="800" height="42" fill="#22303F"/>
+ <g fill="#16222E">
+   <path d="M34 312 L62 288 L90 312Z"/><rect x="40" y="310" width="44" height="22"/>
+   <path d="M104 314 L130 292 L156 314Z"/><rect x="110" y="312" width="40" height="20"/>
+   <path d="M172 312 L200 288 L228 312Z"/><rect x="178" y="310" width="44" height="22"/>
+   <path d="M566 314 L592 292 L618 314Z"/><rect x="572" y="312" width="40" height="20"/>
+   <path d="M632 312 L660 288 L688 312Z"/><rect x="638" y="310" width="44" height="22"/>
+   <path d="M702 314 L728 294 L754 314Z"/><rect x="708" y="312" width="38" height="20"/></g>
+ <g fill="#FFCB86"><rect x="50" y="316" width="7" height="8"/><rect x="68" y="316" width="7" height="8"/>
+   <rect x="120" y="318" width="6" height="7"/><rect x="188" y="316" width="7" height="8"/>
+   <rect x="580" y="318" width="6" height="7"/><rect x="648" y="316" width="7" height="8"/>
+   <rect x="718" y="318" width="6" height="7"/></g>
+ <rect y="332" width="800" height="88" fill="url(#wat${u})"/>
+ <path d="M592 332 L652 332 L700 420 L544 420Z" fill="#FFD08A" opacity=".2"/>
+ <path d="M60 352 h110 M420 376 h150 M200 400 h180" stroke="#3E5A72" stroke-width="4" opacity=".55" stroke-linecap="round"/>`
+
+  };
+  return `<svg viewBox="0 0 800 ${h}" preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">`
+    + (photo
+        ? `<image href="assets/images/${encodeURI(photo)}" x="0" y="0" width="800" height="420" preserveAspectRatio="xMidYMid slice"/>`
+        : (scenes[k]||scenes.gullfoss))
+    + `<defs>${V}</defs><rect width="800" height="420" fill="url(#v${u})"/></svg>`;
+}
+
+/* ============ data ============ */
+const days=[
+{
+  id:'aug9', pill:['Sun','9'], date:'Sunday 9 August',
+  place:'Golden Circle & Sky Lagoon', badge:'Pre-cruise', kind:'gullfoss',
+  photo:'golden-circle.webp',
+  meta:['Guide <b>Kuba</b>','09:00 – 21:00','253 km'],
+  summary:'Rift valley, greenhouse lunch, geyser, waterfall, lagoon, dinner at nine',
+  pickup:'Skólavörðustígur 16A, 101 Reykjavík',
+  start:'Pickup at 09:00',
+  stops:[
+    {leg:['45 min','45 km'],t:'09:45 – 11:40 · 1 hr 55',ttl:'Þingvellir',pron:'THING-vet-lir',i:'canyon',desc:'The rift where the North American and Eurasian plates pull apart, and where the Alþing met from 930.'},
+    {leg:['50 min','55 km'],t:'12:30 – 14:00 · 90 min',ttl:'Friðheimar',pron:'FRITH-hay-mar',i:'food',desc:'Tomato soup served inside the working greenhouse. There is a wine bar.'},
+    {leg:['20 min','20 km'],t:'14:20 – 15:15 · 55 min',ttl:'Geysir',pron:'GAY-seer',i:'geyser',desc:'Strokkur goes off every five to ten minutes. The original Geysir rarely does anymore.'},
+    {leg:['10 min','10 km'],t:'15:25 – 16:25 · 1 hr',ttl:'Gullfoss',pron:'GUTL-foss',i:'falls'},
+    {leg:['1 hr 35','115 km'],t:'18:00 – 20:30 · 2.5 hrs',ttl:'Sky Lagoon',i:'spa',hero:1,desc:'Ocean-edge infinity pool and the seven-step ritual. Worth the long drive back into town. There is a bar and small plates on site, and with dinner not until nine it is a good place to pick up a snack.'},
+    {leg:['15 min','8 km'],t:'21:00',ttl:'Tapas barinn',i:'food',desc:'Tasting menu, booked for nine. Smart casual. The coach drops back at 8:45 pm and you walk to the restaurant from there, so the turnaround is fifteen minutes.'}
+  ]
+},
+{
+  id:'aug10', pill:['Mon','10'], date:'Monday 10 August',
+  place:'Reykjavík', pron:'RAYK-yah-veek', badge:'Embark', kind:'reykjavik',
+  photo:'reykjavik-start.webp',
+  ports:['Board 13:00','Sail 17:00'],
+  meta:['Star Pride','Central berth'],
+  note:{k:'soft',b:'Nothing booked',p:'Star Pride ties up in the middle of town, a short walk from Laugavegur and the old harbour. Boarding opens at one, so the morning is yours before the ship pulls out at five.'}
+},
+{
+  id:'aug11', pill:['Tue','11'], date:'Tuesday 11 August',
+  place:'Grundarfjörður', pron:'GRUN-dar-fyur-thur', badge:'Snæfellsnes Peninsula', kind:'kirkjufell',
+  photo:'grundarfjordur.webp',
+  ports:['In 08:00','Out 18:00'],
+  meta:['Guide <b>Pétur</b>','09:00 – 17:30','132 km'],
+  summary:'Kirkjufell, a lava tube and a black-pebble beach',
+  start:'Depart Grundarfjörður cruise port at 09:00',
+  stops:[
+    {leg:['5 min','3 km'],t:'09:05 – 09:45 · 40 min',ttl:'Kirkjufell',pron:'KIRK-yu-fetl',i:'view',desc:'The arrowhead mountain. Best angle is from across the little falls below it.'},
+    {leg:['40 min','38 km'],t:'10:25 – 11:05 · 40 min',ttl:'Bjarnarfoss',pron:'BYAR-nar-foss',i:'falls',desc:'Falls over a basalt cliff above Búðir. Your sheet spells it Bjarnafoss.'},
+    {leg:['20 min','20 km'],t:'11:25 – 13:55 · 2.5 hrs',ttl:'Arnarstapi',pron:'AR-nar-stah-pee',i:'bird',desc:'Basalt arches, a cliff path toward Hellnar, and nesting seabirds directly below you. Lunch here.'},
+    {leg:['15 min','10 km'],t:'14:10 – 15:30 · 80 min',ttl:'Vatnshellir',pron:'VATNS-het-lir',i:'cave',hero:1,desc:'An 8,000-year-old lava tube, 35 m down a spiral staircase. Helmets and lamps provided.'},
+    {leg:['10 min','6 km'],t:'15:40 – 16:30 · 50 min',ttl:'Djúpalónssandur',pron:'DYOO-pa-lohns-san-dur',i:'beach',desc:'Four lifting stones the old fishermen had to hoist, and rusted ribs of the Epine wreck.'}
+  ],
+  end:'17:30 back at the ship · 1 hr · 55 km'
+},
+{
+  id:'aug12', pill:['Wed','12'], date:'Wednesday 12 August',
+  place:'Ísafjörður', pron:'EE-sa-fyur-thur', badge:'Totality', kind:'eclipse',
+  photo:'isafjordur.webp',   /* the drawn eclipse scene stays, but on the Totality block below, not here */
+  ports:['In 08:00','Out 13:30'],
+  meta:['Guide <b>Rúnar</b>','4 hours','165 km'],
+  summary:'Dynjandi and Flateyri, then out to sea',
+  start:'Depart Ísafjörður cruise port at 08:30',
+  stops:[
+    {leg:['1 hr 15','85 km'],t:'09:45 – 10:45 · 1 hr',ttl:'Dynjandi',pron:'DIN-yan-dee',i:'falls',desc:'A hundred-metre bridal veil, seven falls in all. Fifteen minutes uphill from the car park.'},
+    {leg:['50 min','60 km'],t:'11:35 – 12:05 · 30 min',ttl:'Flateyri',pron:'FLAT-ay-ree',i:'town',desc:'The Old Bookstore has been run by the same family since 1914 and bills itself as the oldest original store in Iceland.'},
+    {leg:['25 min','20 km'],t:'12:30 – 13:30',ttl:'Back aboard, then the ship sails',i:'moon',hero:1,desc:'Star Pride repositions at sea for an unbroken horizon. This is the reason the itinerary exists.'}
+  ]
+},
+{
+  id:'aug13', pill:['Thu','13'], date:'Thursday 13 August',
+  place:'Húsavík', pron:'HOO-sa-veek', badge:'Whales', kind:'whale',
+  photo:'husavik.webp',
+  ports:['In 09:30','Out 18:00'],
+  meta:['Guide <b>Rúnar</b>','09:30 – 17:15','120 km'],
+  summary:'A canyon hike, then a RIB into Skjálfandi bay',
+  start:'Depart Húsavík cruise port at 09:30',
+  stops:[
+    {leg:['1 hr 05','60 km'],t:'10:35 – 12:20 · 1 hr 45',ttl:'Ásbyrgi',pron:'OWS-beer-gee',i:'hike',desc:'A horseshoe canyon 3.5 km long and over a kilometre wide, said to be the hoofprint of Odin\'s eight-legged horse.'},
+    {leg:['no transfer listed',''],t:'12:20 – 13:20 · 1 hr',ttl:'Lunch at Veggur',pron:'VEG-gur',i:'food'},
+    {leg:['30 min','40 km'],t:'13:50 – 14:15 · 25 min',ttl:'Tjörnes',pron:'TYUR-ness',i:'bird',desc:'Fossil beds and puffin cliffs. A short stop.'},
+    {leg:['20 min','20 km'],t:'14:35 – 17:00 · 2 hr 25',ttl:'RIB whale watching',i:'whale',hero:1,desc:'Humpback, minke and white-beaked dolphin in Skjálfandi bay. Dress warmer than you think.'}
+  ],
+  end:'17:15 gear drop-off and walk back to the ship'
+},
+{
+  id:'aug14', pill:['Fri','14'], date:'Friday 14 August',
+  place:'Seyðisfjörður', pron:'SAY-thiss-fyur-thur', badge:'Overnight in port', kind:'fjord',
+  photo:'seydisfjordur.webp',
+  ports:['In 09:30','Overnight'],
+  meta:['Guides <b>Rúnar</b> and <b>Pétur</b>','09:30 – 17:35','121 km'],
+  summary:'Fjord viewpoints, Egilsstaðir lunch, floating baths',
+  start:'Depart Seyðisfjörður cruise port at 09:30',
+  stops:[
+    {leg:['45 min','25 km'],t:'10:15 – 10:35 · 20 min',ttl:'Mjóifjörður',pron:'MYOH-ee-fyur-thur',i:'view',desc:'Photo stop above the narrow fjord.'},
+    {leg:['30 min','15 km'],t:'11:05 – 11:50 · 45 min',ttl:'Klifbrekkufossar',pron:'KLIF-brek-ku-foss-ar',i:'falls',desc:'A seven-tier cascade, about 90 m top to bottom, on the road down into the fjord.'},
+    {leg:['50 min','35 km'],t:'12:40 – 13:50 · 70 min',ttl:'Egilsstaðir',pron:'EY-ils-stath-eer',i:'food',desc:'Lunch in the largest town in the east.'},
+    {leg:['10 min','6 km'],t:'14:00 – 16:30 · 2.5 hrs',ttl:'Vök Baths',pron:'VUHK',i:'spa',hero:1,desc:'Pools that float on Lake Urriðavatn. You climb out of the hot water straight into the lake.'},
+    {leg:['30 min','30 km'],t:'17:00 – 17:20 · 20 min',ttl:'Bjólfsfell',pron:'BYOWLFS-fetl',i:'view',desc:'Looks straight back down the fjord onto the ship.'}
+  ],
+  end:'17:35 back at the ship · 15 min · 10 km'
+},
+{
+  id:'aug15', pill:['Sat','15'], date:'Saturday 15 August',
+  place:'Seyðisfjörður', pron:'SAY-thiss-fyur-thur', badge:'Free morning', kind:'fjord',
+  photo:'iceland-colorful-houses.webp',
+  ports:['Alongside','Sail 12:30'],
+  meta:['Walk straight off the ship'],
+  note:{k:'soft',b:'Nothing booked, and that is fine',p:'The rainbow street runs from the pier up to the Blue Church, and a hiking path follows the Fjarðará river out of town. Windstar usually schedules its Sagas & Songs performance during this overnight, so check the daily programme.'}
+},
+{
+  id:'aug16', pill:['Sun','16'], date:'Sunday 16 August',
+  place:'Heimaey', pron:'HAY-ma-ay', badge:'Westman Islands', kind:'volcano',
+  photo:'heimaey.webp',
+  calls:[
+    {name:'Heimaey', t:['In 10:00','Out 16:30']},
+    {name:'Surtsey', t:['In 17:00','Out 19:00'], sub:'Sail-by, no landing'}
+  ],
+  meta:['6.5 hours ashore','Then two hours off Surtsey'],
+  note:{k:'soft',b:'Your longest open day',p:'Eldfell erupted through the town in 1973 and the islanders pumped seawater onto the lava to save the harbour. Eldheimar museum is built over a buried house, and the world\'s largest Atlantic puffin colony is here. The ship then stands off Surtsey, which rose from the sea in 1963 and is closed to everyone but scientists, so this one is watched from the rail.'}
+},
+{
+  id:'aug17', pill:['Mon','17'], date:'Monday 17 August',
+  place:'Reykjavík', pron:'RAYK-yah-veek', badge:'Disembark', kind:'dusk',
+  photo:'reykjavik-end.webp',
+  ports:['In 07:00','Off in the morning'],
+  meta:['End of voyage']
+}
+];
+
+/* ============ today, from the device clock ============ */
+const isoOf = d => `2026-08-${String(d.pill[1]).padStart(2,'0')}`;
+let DEV_NOW = null, DEV_KEY = '';            /* dev override; null means real time */
+const NOW = () => DEV_NOW===null ? Date.now() : DEV_NOW;
+let TODAY, todayDay;
+function computeToday(){
+  const n = new Date(NOW());
+  TODAY = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+  todayDay = days.find(d=>isoOf(d)===TODAY);
+}
+computeToday();
+
+/* ============ 12-hour display ============
+   days[] stays in 24h so it still reconciles line by line against the
+   operator's PDF. h12() converts on the way to the screen and is the only
+   place the display format is decided. A range keeps one meridiem when both
+   ends share it (9:45 – 11:40 am) and carries both when they differ. */
+const hr12=h=>(+h%12)||12, mer=h=>+h<12?'am':'pm';
+const h12=s=>String(s).replace(
+  /\b([01]?\d|2[0-3]):([0-5]\d)(?:(\s*–\s*)([01]?\d|2[0-3]):([0-5]\d))?\b/g,
+  (m,h1,m1,dash,h2,m2)=>{
+    if(h2===undefined) return `${hr12(h1)}:${m1} ${mer(h1)}`;
+    const a=mer(h1), b=mer(h2);
+    return a===b ? `${hr12(h1)}:${m1}${dash}${hr12(h2)}:${m2} ${b}`
+                 : `${hr12(h1)}:${m1} ${a}${dash}${hr12(h2)}:${m2} ${b}`;
+  });
+
+/* ============ render ============ */
+function stopHTML(s){
+  /* the car glyph is what marks a leg as a drive; the row carries no word for it */
+  const leg = s.leg ? `<li class="leg"><span class="bar"><i></i></span><span class="d">${I.car}<span>${s.leg[0]}${s.leg[1]?` · ${s.leg[1]}`:''}</span></span></li>` : '';
+  return leg + `<li class="stop ${s.hero?'hero':''}">
+    <span class="ic">${I[s.i]||''}</span>
+    <div>
+      <div class="time">${h12(s.t)}</div>
+      <div class="ttl">${s.ttl}${s.pron?`<span class="pron">${s.pron}</span>`:''}</div>
+      ${s.desc?`<div class="desc">${s.desc}</div>`:''}
+    </div>
+  </li>`;
+}
+
+function dayHTML(d,u){
+  /* most days are one call; the 16th is Heimaey then Surtsey, so `calls` wins when present */
+  const calls = d.calls || (d.ports ? [{t:d.ports}] : []);
+  /* .tt keeps the two times and their arrow together when the row wraps on a phone */
+  const ports = calls.map(c=>`<div class="ports">${I.ship}
+      ${c.name?`<span class="pn">${c.name}</span>`:''}
+      <span class="tt"><span class="t">${h12(c.t[0])}</span><span class="ar">→</span><span class="t">${h12(c.t[1])}</span></span>
+      ${c.sub?`<span class="sub">${c.sub}</span>`:''}
+    </div>`).join('');
+  const meta = d.meta ? `<div class="meta">${d.meta.map(m=>`<span>${h12(m)}</span>`).join('')}</div>` : '';
+  const ico = d.note && d.note.k==='warn' ? I.warn : I.info;
+  /* Where the day starts. It lives in the card body, not inside the collapsed timeline, because
+     it is the one thing the group has to act on before anything else happens. Time and address
+     are one target: the whole block opens Maps. */
+  const pickup = d.pickup ? `<a class="pickup" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.pickup)}" target="_blank" rel="noopener">
+      <span class="ic">${I.pin}</span>
+      <span class="tx"><span class="lbl">${h12(d.start||'Pickup')}</span><span class="ad">${d.pickup}</span></span>
+      <svg class="go" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+    </a>` : '';
+  return `<section class="day ${isoOf(d)===TODAY?'now':''}" id="${d.id}">
+    <div class="art">
+      ${art(d.kind,u,420,d.photo)}
+      ${d.badge?`<span class="badge">${d.badge}</span>`:''}
+      ${isoOf(d)===TODAY?`<span class="badge now">Today</span>`:''}
+      <div class="cap">
+        <div class="date">${d.date}</div>
+        <div class="place">${d.place}${d.pron?`<span class="pron">${d.pron}</span>`:''}</div>
+      </div>
+    </div>
+    <div class="body">
+      ${ports}${meta}${pickup}
+      ${d.note?`<div class="note ${d.note.k}">${ico}<div><b>${d.note.b}</b>${d.note.p}</div></div>`:''}
+      ${d.stops?`<details>
+        <summary><span><span class="lbl">Itinerary</span>${d.summary?` · ${d.summary}`:''}</span>
+        <span class="chev">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+        <div class="tl">
+          <ol class="stops">
+            ${d.start&&!d.pickup?`<li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.start)}</span></li>`:''}
+            ${d.stops.map(stopHTML).join('')}
+            ${d.end?`<li class="leg"><span class="bar"><i></i></span></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
+          </ol>
+        </div>
+      </details>`:''}
+    </div>
+  </section>`;
+}
+
+const ecHTML=`<section class="ec-block" id="eclipse">
+  <div class="art">${art('eclipse','EC',300)}</div>
+  <div class="ec-body">
+    <p class="ek">12 August, the reason for the route</p>
+    <h2>Totality<em>somewhere off the Westfjords</em></h2>
+    <p>${h12(`Star Pride leaves Ísafjörður at 13:30 to position at sea. Totality reaches the Westfjords around 17:43, and the longest view on the whole path, 2 minutes 18 seconds, falls in open water just west of there.`)}</p>
+    <p class="fine">Iceland's first total eclipse since 1954. Cloud is the only real risk, and nobody can promise otherwise.</p>
+  </div>
+</section>`;
+
+const arrow=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
+const agentHTML=`<section class="agent" id="advisor">
+  <svg class="vw" role="img" aria-label="VoyageWell" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1946.8773575 500">
+  <path fill="#fff" d="M380.6876096,311.3030585c-.0900269.0600586-.8200073.4000244-2.1100464,1l1.1500244-3.289978.960022,2.289978Z"/>
+  <g>
+    <path fill="#deb268" d="M1380.4033554,328.8532438c.2792821-5.3000844,2.5104011-12.2727236,6.1379308-20.6417734l23.4314566-51.8837155c3.9036738-9.7623224,5.8555107-15.9002532,5.8555107-18.9676496,0-3.0689654-1.3932726-3.6259606-5.5762285-3.6259606-1.9549749,0-3.0689654-1.3948416-3.0689654-3.3482475,0-1.6725548.8347084-2.5104011,2.5104011-2.5104011l27.8936946.2792821c1.9518369,0,3.0689654.2792821,3.0689654,1.6741238s-1.1171285,5.0208023-3.6275296,10.5985998l-10.0416046,22.8744614-18.1313722,40.7265515c-4.7415201,11.1555951-6.4140749,16.1763973-5.5793665,22.035046,1.1171285,8.0897677,5.3000844,9.4830403,13.3898521,9.4830403,6.9726392,0,14.7831247-3.0689654,23.9900209-9.2037582,0-11.4380152,3.9036738-25.1040114,11.9934414-41.0058336,15.6209711-31.5196553,39.8871361-58.0185083,55.7873893-58.0185083,4.7415201,0,6.9726392,2.231119,6.9726392,6.9726392,0,14.7846937-24.8247293,52.1614286-53.5562703,81.4515339,0,12.8312878,6.4172129,19.2453627,18.9692186,19.2453627,7.8104855,0,16.7349616-4.1829559,26.500422-12.2727236,19.803927-16.4556795,35.4248981-43.7939478,35.4248981-69.1772414,0-4.7415201-2.7896833-9.4830403-3.0689654-10.3208867-.2792821-.8362774-2.7896833-5.3000844-2.7896833-8.926045,0-5.8570797,5.5793665-10.3208867,11.4348772-10.3208867,6.696495,0,10.0447426,4.7430891,10.0447426,13.9468473,0,11.4364462-4.7446582,26.500422-13.9484163,44.6302252-18.9692186,36.5435956-50.4873049,67.7823997-80.8914007,67.7823997-12.5520057,0-19.807065-5.3000844-22.3174661-15.8971152-15.0624068,12.2727236-27.0558483,18.4075163-35.9803243,18.4075163-16.7380996,0-26.2211399-7.2519213-24.8278673-23.9868829ZM1510.9473526,235.1289863c0-1.9534059-.8378464-3.0689654-2.5104011-3.0689654-12.2727236,0-41.5628288,46.304349-46.0250669,75.8721674,26.7797041-27.3366994,48.535468-61.9253201,48.535468-72.803202Z"/>
+    <path fill="#deb268" d="M1548.0353914,325.5049963c-1.1139905-11.9934414,2.7896833-25.9418578,11.4380152-42.3991062,17.572808-32.3575017,48.535468-59.6926321,74.7566079-59.6926321,15.0624068,0,22.8728924,5.0208023,23.7076007,13.6675652.5585643,6.9742082-3.0658274,16.4572485-10.6001688,25.6625756-15.338551,18.4106543-42.6768193,32.3575017-68.339395,32.3575017-1.3932726,0-6.693357,0-7.5312034-.2792821-2.5104011,6.9726392-3.0689654,12.5520057-2.7896833,17.2935258,1.1171285,12.2758616,7.8104855,19.807065,20.0832091,19.807065,18.6899365,0,42.1213931-15.6209711,55.7905273-38.2161503.2761441-.8378464.8347084-1.1155595,1.3932726-1.1155595,1.6725548,0,3.0689654,1.3932726,3.0689654,3.3466785,0,.8362774,0,1.3948416-.2792821,1.9534059-15.9002532,27.0558483-42.9561015,49.9287406-73.3601973,49.9287406-17.0173817,0-26.2211399-7.5312034-27.3382684-22.3143281ZM1637.0196977,236.2445458c-13.3898521-11.7157283-52.7215619,22.3143281-62.4838843,52.7184239,37.3767349,0,80.3359744-36.8197397,62.4838843-52.7184239Z"/>
+    <path fill="#deb268" d="M1645.1031894,338.057002c0-8.0897677,3.9036738-18.4106543,10.6001688-33.193779,22.035046-47.9769037,67.2222665-142.0823786,67.2222665-148.4980225,0-3.0689654-1.1139905-3.3482475-5.2969464-3.3482475-1.9549749,0-3.0689654-1.3948416-3.0689654-3.3466785,0-1.6741238.8347084-2.5104011,2.5104011-2.5104011l6.4140749.2792821,10.0416046.2777131,11.4380152-.2777131c1.9518369,0,2.7896833.5569953,2.7896833,1.9518369,0,2.5104011-49.9318786,106.3781984-68.0632508,149.61672-5.8555107,13.9452783-8.924476,22.5936102-8.924476,25.6594376,0,2.5104011,1.1139905,3.0689654,4.1829559,3.0689654,6.4172129,0,18.1313722-8.0897677,27.0589863-20.3624912.8347084-.8347084,1.3932726-1.1139905,1.9518369-1.1139905,1.3932726,0,2.7896833,1.3932726,2.7896833,2.7896833,0,.5554263,0,.8347084-.2792821,1.1139905-6.1379308,12.2727236-32.9144969,39.0524277-50.2080228,39.0524277-7.5312034,0-11.1587331-3.6275296-11.1587331-11.1587331Z"/>
+    <path fill="#deb268" d="M1709.5294966,338.057002c0-8.0897677,3.9068118-18.4106543,10.6001688-33.193779,22.038184-47.9769037,67.2254045-142.0823786,67.2254045-148.4980225,0-3.0689654-1.1171285-3.3482475-5.3000844-3.3482475-1.9518369,0-3.0689654-1.3948416-3.0689654-3.3466785,0-1.6741238.8378464-2.5104011,2.5104011-2.5104011l6.4172129.2792821,10.0416046.2777131,11.4348772-.2777131c1.9549749,0,2.7896833.5569953,2.7896833,1.9518369,0,2.5104011-49.9287406,106.3781984-68.0601128,149.61672-5.8586487,13.9452783-8.927614,22.5936102-8.927614,25.6594376,0,2.5104011,1.1171285,3.0689654,4.1860939,3.0689654,6.4140749,0,18.1313722-8.0897677,27.0558483-20.3624912.8378464-.8347084,1.3964106-1.1139905,1.9518369-1.1139905,1.3964106,0,2.7896833,1.3932726,2.7896833,2.7896833,0,.5554263,0,.8347084-.2792821,1.1139905-6.1347928,12.2727236-32.9144969,39.0524277-50.2080228,39.0524277-7.5312034,0-11.1587331-3.6275296-11.1587331-11.1587331Z"/>
+  </g>
+  <path fill="#FCFDFF" d="M539.2934542,150.3762749c54.6733988,0,98.7434908,44.9095074,98.7434908,100.1399014,0,55.5081072-44.070092,100.4191835-98.7434908,100.4191835s-99.0227729-44.9110764-99.0227729-100.4191835c0-55.230394,44.3493741-100.1399014,99.0227729-100.1399014ZM539.2934542,157.9074783c-42.9561015,0-77.8255733,41.5628288-77.8255733,92.608698,0,51.3251513,34.8694718,92.8879801,77.8255733,92.8879801s77.8224353-41.5628288,77.8224353-92.8879801c0-51.0458691-34.8663338-92.608698-77.8224353-92.608698Z"/>
+  <path fill="#FCFDFF" d="M730.6236769,230.7106803l35.4248981-52.4407108,2.5104011-3.9052428c4.462238-7.2519213,11.9934414-21.7573329-2.7896833-21.7573329v-3.9052428h40.4457003v3.9052428c-11.9934414,0-17.2935258,5.5793665-31.2388042,26.2211399l-.8378464,1.1155595-.5585643,1.1155595-36.8181707,54.3925477v80.3344054c0,22.038184,4.462238,28.4522589,17.0142437,28.4522589v3.9068118h-52.1629976v-3.9068118c11.1587331,0,15.9002532-5.5793665,16.7380996-23.1521745v-75.5928853l-52.7215619-77.8224353c-5.8555107-7.2534903-14.2245604-15.0639758-22.8728924-15.0639758v-3.9052428h52.1629976v3.9052428c-15.0624068,0-2.231119,20.9210555,2.231119,28.4522589l33.4730612,49.6510275Z"/>
+  <path fill="#FCFDFF" d="M821.35585,317.7415808c.2792821-.8378464.5585643-1.3964106.5585643-1.9549749v.2792821l52.7184239-150.6272063,5.8586487-16.7365306.2792821-.5569953,1.1171285.5569953h6.1347928l64.9942855,167.0844547.2792821.8378464,4.1829559,10.6001688c3.9036738,8.0897677,10.0416046,17.0142437,17.8520901,17.0142437v3.9068118h-52.1629976v-3.9068118c11.7172973,0,17.8520901-4.7415201,11.7172973-23.9868829l-17.2935258-44.3525121h-73.3633353l-13.9452783,39.8871361-.2792821.5585643-1.3932726,3.9068118c-6.1379308,19.2453627,0,23.9868829,11.4348772,23.9868829v3.9068118h-40.4457003v-3.9068118c9.7623224,0,17.0142437-13.6659962,20.3624912-22.8728924l1.3932726-3.6243916ZM879.0982142,176.5974148l-32.0797885,91.4915695h67.5046866l-35.4248981-91.4915695Z"/>
+  <path fill="#FCFDFF" d="M1143.9486723,289.2877529c0-21.7573329-8.6451939-28.4522589-17.572808-28.4522589v-3.9036738h53.8355524v3.9036738c-8.927614,0-17.572808,6.694926-17.572808,28.4522589v43.5162347c-78.9395638,42.3975372-181.8691484,8.6451939-181.3105842-82.2878113-.5585643-93.7242575,108.5058132-126.9180365,188.2832233-78.6618507l-10.0416046,29.2885363c-22.8728924-71.6860735-153.4168895-55.228825-157.0412812,49.3733144,3.0658274,89.5397326,99.5813371,114.3644618,141.4203101,74.4773258v-35.7057492Z"/>
+  <path fill="#FCFDFF" d="M1244.0885736,156.5126367v84.2396482h54.6702608c12.5520057-2.5104011,16.4588175-9.4830403,16.4588175-16.4572485h3.9036738v40.7249825h-3.9036738c0-7.2519213-3.9068118-13.9468473-16.4588175-16.7365306h-54.6702608v92.0517027h61.3667558c22.035046,0,28.4491209-11.7172973,28.4491209-23.9900209h3.9068118v31.8005064h-128.8714424v-3.9068118c11.1587331,0,15.9002532-5.5793665,16.7380996-23.1521745v-145.3271219c-.8378464-17.572808-5.5793665-23.1521745-16.7380996-23.1521745v-3.9052428h128.8714424v31.7989374h-3.9068118c0-12.2727236-6.4140749-23.9884519-28.4491209-23.9884519h-61.3667558Z"/>
+  <path fill="#fff" d="M380.6876096,311.3030585c-.0900269.0600586-.8200073.4000244-2.1100464,1l1.1500244-3.289978.960022,2.289978Z"/>
+  <g>
+    <g>
+      <path fill="#deb268" d="M293.4875974,254.8864484l-65.1099854-23.8099976c2.3699951-13.3999634,9.5999756-54.3099976,10.5299683-59.5599976l1.0900269-.2399902,50.6199951,76.2300415.0100098.0099487.0099487.0300293,2.8500366,7.3399658Z"/>
+      <path fill="#deb268" d="M293.4875974,254.8864484l-65.1099854-23.8099976c2.3699951-13.3999634,9.5999756-54.3099976,10.5299683-59.5599976l1.0900269-.2399902,50.6199951,76.2300415.0100098.0099487.0099487.0300293,2.8500366,7.3399658Z"/>
+      <path fill="#deb268" d="M299.3575925,269.9664655c-.8300171.0800171-1.710022.1600342-2.6400146.2399902h-.0299683l-73.5500488-4.0999756-36.4799805-3.289978c-5.9000244-16.7300415-14.1900024-40.2400513-15.3099976-43.4300537l47.2700195,17.2900391,79.0299683,28.9099731v.0100098l1.1500244,2.9400024.5599976,1.4299927Z"/>
+      <path fill="#deb268" d="M311.837573,302.0564923c-42.1499634,19.1399536-99.2699585,44.9799805-100.0999756,45.4799805l-77.0400391-81.4299927,45.6700439,4.7999878,9.4899902,1,32.1799927,3.3800049,12.210022.5900269,62.2299805,3h.0200195l6.4400024.3099976,8.8999634,22.8699951Z"/>
+    </g>
+    <path fill="#FCFDFF" d="M439.3475828,147.9264875v3.9099731c-10.039978,0-17.0200195,13.6700439-20.3599854,22.8699951l-1.4000244,3.6300049c-.2799683.8300171-.5599976,1.3900146-.5599976,1.9500122v-.2799683l-52.7199707,150.6299438-6.1300049,16.7300415v.5599976l-1.4000244-.5599976h-5.8599854l-17.7600098-45.6600342-.0999756-.25-2.9899902-7.6999512-5.2600098-13.5100098-3.3699951-8.6600342-35.5100098-91.2999878-.2800293-.8400269-4.1799927-10.5999756c-3.9099731-8.0899658-10.039978-17.0100098-17.8499756-17.0100098v-3.9099731h52.1599731v3.9099731c-11.7199707,0-17.8599854,4.7399902-11.7199707,23.9899902l37.6300049,96.8900146,3.2999878,8.5,1.8900146,4.8699951,2.8199463,7.2600098.2700195.7000122,9.8800049,25.4299927,48.8099976-139.1900024.2800293-.5599976,1.3999634-3.9000244c6.1300049-19.25,0-23.9899902-11.7199707-23.9899902v-3.9099731h40.7299805Z"/>
+  </g>
+</svg>
+  <div class="who">
+    <div>
+      <h2>Jeffrey Donovan</h2>
+      <div class="role">VoyageWell · based in Utah</div>
+    </div>
+  </div>
+  <p>Jeffrey planned this trip and is the person to contact if anything needs to change. One advisor start to finish, rather than a call centre.</p>
+  <div class="acts">
+    <a href="https://voyagewell.com/" target="_blank" rel="noopener">
+      <span>voyagewell.com<span class="u" style="display:block">Luxury travel, planned personally</span></span>${arrow}</a>
+    <a href="mailto:booking@voyagewell.com">
+      <span>Email Jeffrey<span class="u" style="display:block">booking@voyagewell.com</span></span>${arrow}</a>
+  </div>
+</section>`;
+
+const main=document.getElementById('main');
+
+/* ---- itinerary panel: animated open and close ----
+   <details> will not transition its own height, so the panel is driven by
+   hand: we take over the summary click, keep `open` true for the whole of a
+   close, and animate .tl from its measured height. Delegated on main because
+   renderAll() replaces main.innerHTML and would drop per-element listeners. */
+const reduceMo = matchMedia('(prefers-reduced-motion:reduce)');
+const EASE = 'cubic-bezier(.22,.61,.36,1)';
+
+main.addEventListener('click', e=>{
+  const sum = e.target.closest('summary'); if(!sum) return;
+  const det = sum.parentElement, tl = det.querySelector('.tl');
+  if(!tl || reduceMo.matches) return;   /* let the browser snap it open */
+  e.preventDefault();
+  if(det.dataset.sliding) return;       /* ignore taps mid-flight */
+
+  const opening = !det.open;
+  det.dataset.sliding = '1';
+  det.classList.add('sliding');
+  if(opening) det.open = true;          /* must be open to measure or to show */
+
+  const full = tl.getBoundingClientRect().height;
+  /* longer panels take a little longer, but never enough to feel slow */
+  const ms = Math.min(380, Math.max(230, full*.55));
+  const rows = tl.querySelector('ol.stops');
+
+  const slide = tl.animate(
+    [{height:'0px', opacity:0},{height:full+'px', opacity:1}],
+    {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
+  /* the rows settle down into place rather than arriving flat */
+  if(rows) rows.animate(
+    [{transform:'translateY(-7px)'},{transform:'none'}],
+    {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
+
+  slide.onfinish = ()=>{
+    if(!opening) det.open = false;
+    det.classList.remove('sliding');
+    delete det.dataset.sliding;
+  };
+});
+
+/* ---- nav: buttons, manual scroll, no hash ---- */
+const pills=document.getElementById('pills');
+const nav=document.getElementById('nav');
+let links=[], sections=[], lock=0;
+
+function renderAll(){
+  computeToday();
+  main.innerHTML = days.map((d,i)=>(d.id==='aug13'?ecHTML:'')+dayHTML(d,i)).join('') + agentHTML;
+  pills.innerHTML = days.map(d=>{
+    const now = isoOf(d)===TODAY;
+    return `<button class="pill ${now?'today':''}" data-for="${d.id}"><span class="d">${now?'Today':d.pill[0]}</span><span class="n">${d.pill[1]}</span></button>`;
+  }).join('');
+  links=[...pills.querySelectorAll('.pill')];
+  sections=days.map(d=>document.getElementById(d.id));
+  cdMode=''; lastDate=null; tick();
+  setCurrent(todayDay ? todayDay.id : days[0].id);
+}
+
+function centerPill(btn){
+  const target = btn.offsetLeft - (pills.clientWidth - btn.offsetWidth)/2;
+  const max = pills.scrollWidth - pills.clientWidth;
+  pills.scrollTo({left:Math.max(0,Math.min(target,max)), behavior:'smooth'});
+}
+function setCurrent(id){
+  links.forEach(l=>l.setAttribute('aria-current', String(l.dataset.for===id)));
+  const on=links.find(l=>l.dataset.for===id);
+  if(on) centerPill(on);
+}
+function goTo(id){
+  const el=document.getElementById(id); if(!el) return;
+  lock=Date.now()+1100;
+  setCurrent(id);
+  const y=el.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 20;
+  window.scrollTo({top:Math.max(0,y), behavior:'smooth'});
+}
+pills.addEventListener('click',e=>{
+  const b=e.target.closest('.pill'); if(!b) return;
+  e.preventDefault(); goTo(b.dataset.for);
+});
+
+/* scroll spy: last section whose top has crossed the line under the nav */
+let ticking=false;
+function spy(){
+  ticking=false;
+  if(Date.now()<lock) return;
+  const line=nav.offsetHeight+40;
+  let cur=days[0].id;
+  for(const s of sections){
+    if(!s) continue;
+    if(s.getBoundingClientRect().top<=line) cur=s.id; else break;
+  }
+  if(links.find(l=>l.dataset.for===cur)?.getAttribute('aria-current')!=='true') setCurrent(cur);
+}
+addEventListener('scroll',()=>{
+  if(!ticking){ ticking=true; requestAnimationFrame(spy); }
+  totop.classList.toggle('show', scrollY>700);
+},{passive:true});
+
+const totop=document.getElementById('totop');
+totop.onclick=()=>{ lock=Date.now()+1100; setCurrent(days[0].id); window.scrollTo({top:0,behavior:'smooth'}); };
+
+/* ---- minimal Iceland map, shown once the countdown runs out ---- */
+const COAST="M56.9 175.5 L61.1 174.5 Q63 174 65.0 174.0 L68.0 174.0 Q70 174 72.0 174.0 L72.0 174.0 Q74 174 76.0 173.7 L79.0 173.3 Q81 173 83.0 173.4 L84.0 173.6 Q86 174 88.0 173.7 L91.0 173.3 Q93 173 95.0 172.7 L98.0 172.3 Q100 172 101.5 173.0 L101.5 173.0 Q103 174 105.0 174.0 L106.0 174.0 Q108 174 109.2 175.6 L116.8 185.4 Q118 187 119.6 188.2 L123.4 190.8 Q125 192 126.9 192.7 L134.1 195.3 Q136 196 137.9 196.7 L145.1 199.3 Q147 200 149.0 200.3 L157.0 201.7 Q159 202 160.0 202.0 L160.0 202.0 Q161 202 161.5 201.0 L161.5 201.0 Q162 200 164.0 200.0 L166.0 200.0 Q168 200 169.5 201.0 L169.5 201.0 Q171 202 172.7 201.0 L178.3 198.0 Q180 197 181.8 196.2 L185.2 194.8 Q187 194 188.9 193.5 L192.1 192.5 Q194 192 195.9 191.4 L198.1 190.6 Q200 190 201.9 189.4 L210.1 186.6 Q212 186 213.9 185.3 L218.1 183.7 Q220 183 221.8 182.2 L229.2 178.8 Q231 178 232.6 176.8 L236.4 174.2 Q238 173 239.5 171.7 L242.5 169.3 Q244 168 244.0 166.0 L244.0 164.0 Q244 162 245.6 160.8 L253.4 155.2 Q255 154 256.6 152.8 L261.4 149.2 Q263 148 265.0 148.0 L281.0 148.0 Q283 148 284.4 146.6 L290.6 140.4 Q292 139 292.0 137.0 L292.0 132.0 Q292 130 293.4 128.6 L294.6 127.4 Q296 126 297.2 124.4 L297.8 123.6 Q299 122 297.4 120.8 L293.6 118.2 Q292 117 294.0 117.2 L301.0 117.8 Q303 118 303.7 116.1 L304.3 114.9 Q305 113 306.9 113.5 L307.1 113.5 Q309 114 308.0 113.0 L308.0 113.0 Q307 112 309.0 111.6 L310.0 111.4 Q312 111 310.4 109.8 L306.6 107.2 Q305 106 307.0 105.8 L311.0 105.2 Q313 105 314.7 103.9 L317.3 102.1 Q319 101 317.0 100.8 L303.0 99.2 Q301 99 303.0 98.9 L314.0 98.1 Q316 98 317.9 97.4 L320.1 96.6 Q322 96 321.0 94.3 L320.0 92.7 Q319 91 317.0 91.0 L310.0 91.0 Q308 91 309.9 90.5 L313.1 89.5 Q315 89 316.5 88.5 L316.5 88.5 Q318 88 316.0 88.0 L309.0 88.0 Q307 88 309.0 87.6 L314.0 86.4 Q316 86 316.5 84.5 L316.5 84.5 Q317 83 315.0 83.2 L309.0 83.8 Q307 84 308.9 83.3 L313.1 81.7 Q315 81 315.0 79.5 L315.0 79.5 Q315 78 313.0 78.0 L311.0 78.0 Q309 78 310.6 76.8 L312.4 75.2 Q314 74 314.5 72.5 L314.5 72.5 Q315 71 313.3 69.9 L310.7 68.1 Q309 67 311.0 66.8 L316.0 66.2 Q318 66 316.0 65.6 L302.0 62.4 Q300 62 298.4 63.2 L297.6 63.8 Q296 65 295.1 63.2 L291.9 56.8 Q291 55 290.0 53.5 L290.0 53.5 Q289 52 287.1 52.6 L281.9 54.4 Q280 55 281.3 53.5 L285.7 48.5 Q287 47 287.6 45.1 L288.4 42.9 Q289 41 289.8 39.2 L291.2 35.8 Q292 34 290.0 33.7 L279.0 32.3 Q277 32 278.0 30.3 L280.0 26.7 Q281 25 282.4 23.6 L290.6 15.4 Q292 14 290.2 14.8 L282.8 18.2 Q281 19 279.6 20.4 L274.4 25.6 Q273 27 271.6 28.4 L266.4 33.6 Q265 35 263.5 33.7 L255.5 26.3 Q254 25 253.0 23.3 L250.0 17.7 Q249 16 249.0 14.0 L249.0 6.0 Q249 4 247.0 4.0 L246.0 4.0 Q244 4 242.5 5.3 L237.5 9.7 Q236 11 236.0 13.0 L236.0 17.0 Q236 19 235.6 21.0 L233.4 33.0 Q233 35 232.5 34.0 L232.5 34.0 Q232 33 230.2 32.2 L221.8 28.8 Q220 28 218.6 26.6 L218.4 26.4 Q217 25 215.6 26.4 L213.4 28.6 Q212 30 211.6 32.0 L211.4 33.0 Q211 35 210.4 36.9 L208.6 42.1 Q208 44 206.0 44.0 L205.0 44.0 Q203 44 201.8 42.4 L197.2 36.6 Q196 35 194.5 33.7 L191.5 31.3 Q190 30 189.5 31.0 L189.5 31.0 Q189 32 188.4 33.9 L186.6 39.1 Q186 41 186.3 43.0 L188.7 56.0 Q189 58 188.0 56.2 L184.0 48.8 Q183 47 181.6 45.6 L177.4 41.4 Q176 40 175.2 38.2 L173.8 34.8 Q173 33 171.7 31.5 L168.3 27.5 Q167 26 166.0 27.0 L166.0 27.0 Q165 28 164.0 29.5 L164.0 29.5 Q163 31 161.8 29.4 L161.2 28.6 Q160 27 159.0 28.7 L151.0 42.3 Q150 44 149.9 46.0 L149.1 61.0 Q149 63 148.0 61.3 L145.0 55.7 Q144 54 142.5 52.7 L137.5 48.3 Q136 47 134.9 45.3 L124.1 29.7 Q123 28 123.1 30.0 L123.9 47.0 Q124 49 124.2 51.0 L124.8 57.0 Q125 59 123.6 60.4 L119.4 64.6 Q118 66 116.6 64.6 L116.4 64.4 Q115 63 114.4 61.1 L112.6 55.9 Q112 54 111.4 55.9 L109.6 62.1 Q109 64 108.6 66.0 L107.4 72.0 Q107 74 106.1 72.2 L104.9 69.8 Q104 68 103.6 66.0 L103.4 65.0 Q103 63 103.1 65.0 L103.9 93.0 Q104 95 103.6 93.0 L100.4 76.0 Q100 74 99.8 72.0 L99.2 65.0 Q99 63 97.6 64.4 L97.4 64.6 Q96 66 95.0 67.7 L94.0 69.3 Q93 71 92.5 69.1 L91.5 64.9 Q91 63 89.5 62.0 L89.5 62.0 Q88 61 86.8 59.4 L86.2 58.6 Q85 57 86.9 56.4 L89.1 55.6 Q91 55 90.2 53.2 L88.8 49.8 Q88 48 89.4 46.6 L92.6 43.4 Q94 42 92.1 41.3 L90.9 40.7 Q89 40 89.7 38.1 L90.3 36.9 Q91 35 89.8 33.4 L89.2 32.6 Q88 31 87.4 29.1 L86.6 26.9 Q86 25 84.5 23.7 L76.5 17.3 Q75 16 73.2 15.0 L65.8 11.0 Q64 10 62.1 10.5 L61.9 10.5 Q60 11 58.0 10.8 L49.0 10.2 Q47 10 47.6 11.9 L48.4 14.1 Q49 16 47.1 16.5 L43.9 17.5 Q42 18 43.2 19.6 L50.8 30.4 Q52 32 53.4 33.4 L63.6 43.6 Q65 45 63.2 44.1 L48.8 36.9 Q47 36 45.4 34.8 L44.6 34.2 Q43 33 41.8 31.4 L40.2 29.6 Q39 28 37.0 27.6 L36.0 27.4 Q34 27 32.5 27.5 L32.5 27.5 Q31 28 32.7 29.0 L36.3 31.0 Q38 32 36.0 31.7 L27.0 30.3 Q25 30 25.0 32.0 L25.0 33.0 Q25 35 26.9 35.7 L31.1 37.3 Q33 38 31.0 38.0 L24.0 38.0 Q22 38 22.0 39.5 L22.0 39.5 Q22 41 23.8 41.9 L30.2 45.1 Q32 46 30.0 45.8 L24.0 45.2 Q22 45 21.1 46.8 L20.9 47.2 Q20 49 21.9 49.5 L39.1 54.5 Q41 55 39.0 55.3 L24.0 57.7 Q22 58 20.1 58.6 L17.9 59.4 Q16 60 17.9 60.6 L20.1 61.4 Q22 62 20.0 62.2 L16.0 62.8 Q14 63 15.9 63.7 L17.1 64.3 Q19 65 17.0 65.2 L11.0 65.8 Q9 66 8.0 66.5 L8.0 66.5 Q7 67 5.1 67.7 L3.9 68.3 Q2 69 3.0 70.0 L3.0 70.0 Q4 71 5.5 71.0 L5.5 71.0 Q7 71 9.0 71.0 L14.0 71.0 Q16 71 18.0 71.0 L21.0 71.0 Q23 71 24.9 70.5 L36.1 67.5 Q38 67 39.5 67.0 L39.5 67.0 Q41 67 43.0 66.6 L44.0 66.4 Q46 66 47.5 66.0 L47.5 66.0 Q49 66 50.9 65.4 L56.1 63.6 Q58 63 60.0 63.0 L71.0 63.0 Q73 63 73.5 64.5 L73.5 64.5 Q74 66 73.0 67.7 L71.0 71.3 Q70 73 72.0 73.0 L76.0 73.0 Q78 73 79.7 74.0 L83.3 76.0 Q85 77 83.1 77.5 L78.9 78.5 Q77 79 75.6 80.4 L74.4 81.6 Q73 83 71.3 84.1 L66.7 86.9 Q65 88 66.9 88.7 L80.1 93.3 Q82 94 80.1 94.5 L68.9 97.5 Q67 98 65.0 97.7 L56.0 96.3 Q54 96 52.3 97.1 L40.7 104.9 Q39 106 37.0 106.2 L28.0 106.8 Q26 107 24.0 106.7 L22.0 106.3 Q20 106 18.2 106.9 L17.8 107.1 Q16 108 16.7 109.9 L19.3 116.1 Q20 118 21.9 117.3 L26.1 115.7 Q28 115 29.8 114.2 L33.2 112.8 Q35 112 37.0 111.9 L53.0 111.1 Q55 111 56.8 111.9 L63.2 115.1 Q65 116 66.3 117.5 L69.7 121.5 Q71 123 72.4 124.4 L76.6 128.6 Q78 130 77.3 131.9 L73.7 142.1 Q73 144 74.7 143.0 L76.3 142.0 Q78 141 80.0 140.9 L92.0 140.1 Q94 140 92.1 140.5 L84.9 142.5 Q83 143 81.7 144.5 L79.3 147.5 Q78 149 77.7 151.0 L77.3 153.0 Q77 155 77.0 157.0 L77.0 158.0 Q77 160 75.5 160.5 L75.5 160.5 Q74 161 72.0 161.4 L66.0 162.6 Q64 163 62.0 163.4 L61.0 163.6 Q59 164 57.8 162.4 L56.2 160.6 Q55 159 55.0 160.5 L55.0 160.5 Q55 162 55.0 164.0 L55.0 166.0 Q55 168 55.0 170.0 L55.0 174.0 Q55 176 56.9 175.5 Z";
+const ROUTE="M77 155 L67.7 150.1 Q60 146 52.9 140.5 L49.1 137.5 Q42 132 34.0 128.0 L30.0 126.0 Q22 122 15.7 117.5 L14.3 116.5 Q8 112 8.0 106.6 L8.0 105.4 Q8 100 14.3 98.2 L15.7 97.8 Q22 96 29.6 100.5 L31.4 101.5 Q39 106 33.1 101.5 L31.9 100.5 Q26 96 19.7 90.6 L18.3 89.4 Q12 84 6.6 77.7 L5.4 76.3 Q0 70 -2.2 61.9 L-2.8 60.1 Q-5 52 -3.7 43.9 L-3.3 42.1 Q-2 34 4.3 27.7 L5.7 26.3 Q12 20 20.1 17.3 L21.9 16.7 Q30 14 35.1 21.4 L37.9 25.6 Q43 33 41.6 24.4 L41.4 22.6 Q40 14 47.7 9.4 L52.3 6.6 Q60 2 68.9 0.9 L101.1 -2.9 Q110 -4 119.0 -4.3 L156.0 -5.7 Q165 -6 173.5 -3.0 L196.5 5.0 Q205 8 207.0 16.8 L209.0 26.2 Q211 35 217.4 28.6 L225.6 20.4 Q232 14 239.0 8.4 L245.0 3.6 Q252 -2 260.9 -0.6 L281.1 2.6 Q290 4 295.4 11.2 L296.6 12.8 Q302 20 306.3 27.9 L311.7 38.1 Q316 46 319.5 54.3 L322.5 61.7 Q326 70 325.1 76.3 L324.9 77.7 Q324 84 320.9 83.5 L320.1 83.5 Q317 83 312.5 83.5 L311.5 83.5 Q307 84 312.9 85.8 L314.1 86.2 Q320 88 324.3 95.9 L327.7 102.1 Q332 110 331.4 119.0 L330.6 131.0 Q330 140 323.8 146.5 L312.2 158.5 Q306 165 298.0 169.0 L268.0 184.0 Q260 188 251.4 190.6 L208.6 203.4 Q200 206 191.0 206.7 L159.0 209.3 Q150 210 141.5 207.0 L135.5 205.0 Q127 202 118.2 200.0 L108.8 198.0 Q100 196 91.5 193.2 L78.5 188.8 Q70 186 62.6 180.8 L57.4 177.2 Q50 172 48.2 166.6 L47.8 165.4 Q46 160 52.3 156.4 L53.7 155.6 Q60 152 67.7 153.3 L77 155";
+const PORTS=[['Reykjavík',77,155],['Grundarfjörður',39,106],['Ísafjörður',43,33],['Húsavík',211,35],['Seyðisfjörður',307,84],['Heimaey',127,202]];
+
+function icelandMap(here){
+  const marks=PORTS.map(([n,x,y])=>{
+    if(n===here) return `<g class="pulse" transform="translate(${x} ${y})">
+      <circle class="p1" r="4" fill="none" stroke="#B04D28" stroke-width="1.3" vector-effect="non-scaling-stroke"/>
+      <circle class="p2" r="4" fill="none" stroke="#B04D28" stroke-width="1.3" vector-effect="non-scaling-stroke"/>
+      <circle class="p3" r="4" fill="none" stroke="#B04D28" stroke-width="1.3" vector-effect="non-scaling-stroke"/>
+      <circle r="4.4" fill="#B04D28"/></g>`;
+    return `<circle cx="${x}" cy="${y}" r="3" fill="#FBF8F3" stroke="#31696F" stroke-width="1.6"/>`;
+  }).join('');
+  return `<svg viewBox="-12 -10 348 226" role="img" aria-label="Map of Iceland with the five ports of call">
+    <path d="${ROUTE}" fill="none" stroke="#31696F" stroke-width="1.4" stroke-dasharray="3.5 3" opacity=".42" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${COAST}" fill="#EDE6D8" stroke="#B3A48B" stroke-width="1" stroke-linejoin="round"/>
+    <ellipse cx="127" cy="202" rx="4.6" ry="3.2" fill="#EDE6D8" stroke="#B3A48B" stroke-width="1"/>
+    ${marks}
+  </svg>`;
+}
+
+/* countdown to the 9th, then the map */
+const START_ISO='2026-08-09', END_ISO='2026-08-17';
+const startLocal = new Date(2026,7,9,0,0,0).getTime();
+const BOARD=Date.UTC(2026,7,10,8,0,0), END=Date.UTC(2026,7,17,7,0,0);
+const cd=document.getElementById('cd');
+const hero=document.getElementById('hero');
+let cdMode='', lastDate=null;
+
+function tick(){
+  computeToday();
+  hero.classList.toggle('done', TODAY > END_ISO);
+  if(lastDate!==null && TODAY!==lastDate){ lastDate=TODAY; refreshToday(); }
+  lastDate=TODAY;
+
+  if(TODAY < START_ISO){
+    cdMode='count';
+    let s=Math.max(0,Math.floor((startLocal-NOW())/1000));
+    const d=Math.floor(s/86400); s-=d*86400;
+    const h=Math.floor(s/3600);  s-=h*3600;
+    const m=Math.floor(s/60);    s-=m*60;
+    const c=(n,l)=>`<div class="cd-cell"><div class="cd-num">${String(n).padStart(2,'0')}</div><div class="cd-lab">${l}</div></div>`;
+    cd.className='countdown'; cd.innerHTML=c(d,'days')+c(h,'hrs')+c(m,'min')+c(s,'sec');
+    return;
+  }
+  if(cdMode==='map') return;
+  cdMode='map';
+  const i = todayDay ? days.indexOf(todayDay) : -1;
+  const here = i===0 ? 'Reykjavík' : (i>0 ? todayDay.place.split(' ')[0] : null);
+  const cap = i===0 ? `<b>Golden Circle today.</b> You board tomorrow.`
+            : i>0  ? `<b>Day ${i} of 8.</b> ${todayDay.place}.`
+                   : `Reykjavík to Reykjavík, 9 to 17 August 2026.`;
+  cd.className='mapwrap';
+  cd.innerHTML = icelandMap(here) + `<div class="mapcap">${cap}</div>`;
+}
+
+/* the page may sit open for days, so update in place rather than needing a reload */
+function refreshToday(){
+  links.forEach(l=>{
+    const d = days.find(x=>x.id===l.dataset.for); if(!d) return;
+    const on = isoOf(d)===TODAY;
+    l.classList.toggle('today', on);
+    const lab=l.querySelector('.d'); if(lab) lab.textContent = on ? 'Today' : d.pill[0];
+  });
+  days.forEach(d=>{
+    const sec = document.getElementById(d.id); if(!sec) return;
+    const art = sec.querySelector('.art'); if(!art) return;
+    const on = isoOf(d)===TODAY;
+    sec.classList.toggle('now', on);   /* the card's ember treatment moves with the badge */
+    let b = art.querySelector('.badge.now');
+    if(on && !b){ b=document.createElement('span'); b.className='badge now'; b.textContent='Today'; art.appendChild(b); }
+    if(!on && b) b.remove();
+  });
+  cdMode='';
+}
+
+/* catch up after sleep, backgrounding or a bfcache restore */
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) tick(); });
+addEventListener('pageshow',()=>tick());
+
+setInterval(tick,1000);
+
+/* ==== DEV PANEL: delete this block before sharing ==== */
+const dev=document.getElementById('dev');
+const devDate=document.getElementById('devdate');
+function setDev(key){
+  DEV_KEY = key || '';
+  DEV_NOW = DEV_KEY ? Date.parse(DEV_KEY+'T14:00:00') : null;
+  devDate.value = DEV_KEY;
+  renderAll(); devState();
+}
+function devState(){
+  const now=NOW();
+  const when = DEV_NOW===null
+    ? 'real time, '+new Date(now).toDateString()
+    : 'simulating '+new Date(now).toDateString();
+  const i = todayDay ? days.indexOf(todayDay) : -1;
+  const phase = TODAY<START_ISO ? 'countdown showing'
+    : i===0 ? 'map showing, pre-cruise day'
+    : i>0 ? `map showing, day ${i} of 8`
+    : 'map showing, voyage over';
+  dev.querySelector('.state').innerHTML =
+    `<b>${when}</b><br>${phase}<br>today marker: <b>${todayDay?todayDay.place:'none'}</b>`;
+  dev.querySelectorAll('button.j').forEach(b=>b.dataset.on = (b.dataset.d===DEV_KEY)?'1':'0');
+  dev.querySelector('.go').style.opacity = todayDay ? 1 : .4;
+}
+dev.querySelector('.tog').onclick=()=>{ dev.classList.toggle('open'); devState(); };
+dev.addEventListener('click',e=>{ const b=e.target.closest('button.j'); if(b) setDev(b.dataset.d); });
+devDate.addEventListener('change',e=>setDev(e.target.value));
+dev.querySelector('.go').onclick=()=>{ if(todayDay) goTo(todayDay.id); };
+/* ==== end dev panel ==== */
+
+renderAll();
+devState();
+</script>
+
+<div class="wrap">
+  <footer>
+    <div class="rule"></div>
+    Land excursion times from your operator's sheet.<br>
+    Ship port times now match <b>Windstar's published itinerary</b>, linked at the top. The 17 August arrival is not listed there and is the one time still unconfirmed.<br><br>
+Pronunciations are rough English approximations.<br>
+    Everything but the fonts is built into this file, so it keeps working with no connection.
+  </footer>
+</div>
+
+</body>
+</html>

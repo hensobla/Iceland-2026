@@ -1,0 +1,7 @@
+# Full-resolution PNG masters (~36 MB). Deliberately not tracked.
+# These are the sources the shipped WebPs are encoded from — see NOTES.md §13.
+# They exist only on the machine that made them, so back them up separately.
+assets/images/archive/
+
+# macOS
+.DS_Store
