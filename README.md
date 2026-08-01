@@ -2,7 +2,7 @@
 
 A single-page microsite for a private Iceland trip, 9–17 August 2026: a Windstar *Star Pride* round-trip from Reykjavík wrapped around five private land days, plus the total solar eclipse on 12 August.
 
-Everything lives in **`iceland-2026.html`** — markup, styles and script in one file, no build step and no dependencies. The only other runtime assets are the nine painted day images in `assets/images/`.
+Everything lives in **`index.html`** — markup, styles and script in one file, no build step and no dependencies. The only other runtime assets are the nine painted day images in `assets/images/`.
 
 ## Running it
 
@@ -12,7 +12,7 @@ Any static server from this directory:
 python3 -m http.server 4321
 ```
 
-Then open `http://localhost:4321/iceland-2026.html`.
+Then open `http://localhost:4321`.
 
 Opening the file directly with `file://` works too, though some browsers block the images that way. It cannot be moved on its own — the `assets` folder has to travel with it.
 

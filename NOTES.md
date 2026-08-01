@@ -1,6 +1,6 @@
 # Iceland 2026 — site notes
 
-Context and decisions for `iceland-2026.html`. Read this before editing.
+Context and decisions for `index.html`. Read this before editing.
 
 **What it is:** a single-file microsite for a private Iceland trip, 9–17 August 2026. Windstar *Star Pride* cruise plus five private land days. Built to be shared as a link with a travel group. One file, ~78 KB, ~1,115 lines, no build step, no dependencies.
 
@@ -12,7 +12,7 @@ These are not preferences. Each one was discovered by shipping something that br
 
 **No *remote* images.** An early version pulled photographs from Wikimedia Commons via `Special:FilePath` and **not one loaded**; remote requests are blocked in the viewing environment. Do not reintroduce them. The logo and monogram are inline SVG (see §8).
 
-⚠️ **The file is no longer self-contained.** All nine day cards now use painted PNGs from `assets/images/`, referenced by relative path. `iceland-2026.html` on its own renders those cards empty. **The folder has to travel with the file**, which gives up the one-link property the site was built around. See §13 before sharing.
+⚠️ **The file is no longer self-contained.** All nine day cards now use painted PNGs from `assets/images/`, referenced by relative path. `index.html` on its own renders those cards empty. **The folder has to travel with the file**, which gives up the one-link property the site was built around. See §13 before sharing.
 
 **No hash navigation.** `<a href="#aug12">` was treated as a document navigation and tried to leave the page. Every in-page jump is a `<button>` plus `window.scrollTo()`. Do not add anchor links.
 
