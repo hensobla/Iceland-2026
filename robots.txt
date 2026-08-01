@@ -1,0 +1,5 @@
+# This page is meant to be reachable by link and nothing else. It carries a pickup
+# address, the exact dates the group is away, and an advisor's email address.
+# The <head> also sets <meta name="robots" content="noindex, nofollow">.
+User-agent: *
+Disallow: /

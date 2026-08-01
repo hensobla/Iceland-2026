@@ -96,10 +96,6 @@
   .source a:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-bottom-color:transparent}
   .source a svg{flex:none;opacity:.6}
   h1{font-size:clamp(38px,11.5vw,54px);line-height:1.04;margin:0;font-variation-settings:'opsz' 60}
-  h1 em{
-    display:block;font-style:italic;font-weight:400;color:var(--moss);
-    font-size:.44em;line-height:1.34;margin-top:14px;letter-spacing:0;
-  }
   /* the hero reuses the day card's middot line, so "what ship" reads the same
      way here as "which guide" does further down */
   .hero .meta{margin-top:18px;font-size:15px}
@@ -329,27 +325,6 @@
   }
   .totop.show{opacity:1;pointer-events:auto;transform:none}
 
-  /* ==== DEV PANEL: delete this block before sharing ==== */
-  #dev{position:fixed;left:14px;bottom:16px;z-index:80;display:flex;flex-direction:column;
-       align-items:flex-start;gap:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-  #dev .tog{background:#16232A;color:#8FC9C0;border-radius:11px;padding:8px 12px;letter-spacing:.08em;
-       box-shadow:0 8px 22px -10px rgba(0,0,0,.55);opacity:.75}
-  #dev.open .tog{opacity:1}
-  #dev .panel{display:none;background:#16232A;color:#D6E2E0;border-radius:14px;padding:14px;
-       width:min(290px,calc(100vw - 28px));box-shadow:0 16px 38px -14px rgba(0,0,0,.65)}
-  #dev.open .panel{display:block}
-  #dev h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7A9793;font-weight:400}
-  #dev .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-  #dev button.j,#dev button.go{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-       color:#E3EDEB;border-radius:8px;padding:6px 9px;font:inherit;line-height:1.2}
-  #dev button.j[data-on="1"]{background:#B04D28;border-color:#B04D28;color:#fff}
-  #dev input[type=date]{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-       color:#E3EDEB;border-radius:8px;padding:7px 9px;font:inherit}
-  #dev .state{margin-top:10px;color:#87ADA8;line-height:1.6}
-  #dev .state b{color:#DCE9E6;font-weight:400}
-  #dev .go{width:100%;margin-top:9px;text-align:center}
-  /* ==== end dev panel ==== */
-
   @media (min-width:520px){ .body{padding:21px} }
   @media (prefers-reduced-motion:reduce){
     *{transition-duration:.01ms !important}
@@ -371,7 +346,7 @@
       <path fill="#182429" d="M378.9321147,205.5955968v11.5133608c34.5400824,0,52.6247775,14.0095599,34.5400824,70.7100944l-61.8465354,159.2502269-31.6359344,81.3574968-70.913447,182.5825992L105.2618795,300.9623425l-.8158977-1.6809233-4.0751352-11.4623672c-18.0846951-56.7005346,0-70.7100944,34.4890888-70.7100944v-11.5133608H14.8869101v11.5133608c29.5980559,0,50.1285784,40.2964518,59.9610158,67.3986196l4.1261288,10.698085c.8158977,2.4455164,1.6305516,4.9417155,1.6305516,4.9417155l155.3277616,443.771839,18.085317,49.3136135v1.6302406l4.1261288-1.6302406h17.2190476l72.2380369-185.7410933,31.3312166-80.5425319,87.929142-225.9868624.8146539-2.4961991,12.3286366-31.2286075c11.5127389-23.7906928,29.5980559-50.1285784,52.6247775-50.1285784v-11.5133608h-153.69721Z"/>
     </svg>
     <span class="eyebrow">9 – 17 August 2026</span>
-    <h1>Iceland<em>Around the island, and one dark afternoon</em></h1>
+    <h1>Iceland</h1>
     <div class="meta"><span><b>Star Pride</b></span><span>Windstar</span><span>Reykjavík round-trip</span></div>
     <p class="lede">Five private land days ashore, run by <strong>Rúnar</strong>, with Kuba and Pétur.</p>
     <div id="cd" class="countdown"></div>
@@ -387,27 +362,6 @@
 <button class="totop" id="totop" aria-label="Back to top">
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-
-<!-- ==== DEV PANEL: delete this block before sharing ==== -->
-<div id="dev">
-  <div class="panel">
-    <h4>Simulate date</h4>
-    <div class="row">
-      <button class="j" data-d="">real</button>
-      <button class="j" data-d="2026-08-09">9th</button>
-      <button class="j" data-d="2026-08-10">10th</button>
-      <button class="j" data-d="2026-08-12">12th</button>
-      <button class="j" data-d="2026-08-14">14th</button>
-      <button class="j" data-d="2026-08-16">16th</button>
-      <button class="j" data-d="2026-08-20">after</button>
-    </div>
-    <input type="date" id="devdate" value="">
-    <div class="state"></div>
-    <button class="go">scroll to marked day</button>
-  </div>
-  <button class="tog">DEV</button>
-</div>
-<!-- ==== end dev panel ==== -->
 
 <script>
 /* ============ icons ============ */
@@ -1329,38 +1283,7 @@ addEventListener('pageshow',()=>tick());
 
 setInterval(tick,1000);
 
-/* ==== DEV PANEL: delete this block before sharing ==== */
-const dev=document.getElementById('dev');
-const devDate=document.getElementById('devdate');
-function setDev(key){
-  DEV_KEY = key || '';
-  DEV_NOW = DEV_KEY ? Date.parse(DEV_KEY+'T14:00:00') : null;
-  devDate.value = DEV_KEY;
-  renderAll(); devState();
-}
-function devState(){
-  const now=NOW();
-  const when = DEV_NOW===null
-    ? 'real time, '+new Date(now).toDateString()
-    : 'simulating '+new Date(now).toDateString();
-  const i = todayDay ? days.indexOf(todayDay) : -1;
-  const phase = TODAY<START_ISO ? 'countdown showing'
-    : i===0 ? 'map showing, pre-cruise day'
-    : i>0 ? `map showing, day ${i} of 8`
-    : 'map showing, voyage over';
-  dev.querySelector('.state').innerHTML =
-    `<b>${when}</b><br>${phase}<br>today marker: <b>${todayDay?todayDay.place:'none'}</b>`;
-  dev.querySelectorAll('button.j').forEach(b=>b.dataset.on = (b.dataset.d===DEV_KEY)?'1':'0');
-  dev.querySelector('.go').style.opacity = todayDay ? 1 : .4;
-}
-dev.querySelector('.tog').onclick=()=>{ dev.classList.toggle('open'); devState(); };
-dev.addEventListener('click',e=>{ const b=e.target.closest('button.j'); if(b) setDev(b.dataset.d); });
-devDate.addEventListener('change',e=>setDev(e.target.value));
-dev.querySelector('.go').onclick=()=>{ if(todayDay) goTo(todayDay.id); };
-/* ==== end dev panel ==== */
-
 renderAll();
-devState();
 </script>
 
 <div class="wrap">

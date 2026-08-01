@@ -35,9 +35,9 @@ The nine day images are WebP at 1200px wide, which is a little over 2× the 584p
 cwebp -q 82 -resize 1200 0 archive/name.png -o name.webp
 ```
 
-## Before sharing
+## Search indexing
 
-`NOTES.md` §11 lists the removable blocks. The **dev panel** — the date simulator in the bottom-left corner — is still in the file and should come out before this goes to the group.
+The page is meant to be reachable by link and nothing else — it carries a pickup address, the dates the group is away, and an advisor's email. `robots.txt` disallows all crawlers and the `<head>` sets `noindex, nofollow`. Remove both to be indexed normally.
 
 ## Accuracy
 

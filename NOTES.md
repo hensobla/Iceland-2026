@@ -234,7 +234,13 @@ The other four match. The 17 August arrival is not listed on that page at all an
 
 ## 11. Removable blocks
 
-**Dev panel** — search `DEV PANEL`. Three blocks: CSS near the media queries, markup above `<script>`, wiring at the bottom of the script. Provides date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. Nothing else references `DEV_NOW` or `DEV_KEY`. It is the last removable block, and it is wrapped in HTML comments so it deletes cleanly.
+**The dev panel has been removed.** It was three blocks marked `DEV PANEL`: CSS near the media queries, markup above `<script>`, and wiring at the bottom of the script. It gave date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It came out before the site went public.
+
+> Removing it was **not** as clean as this section used to claim. A bare `devState();` call sat on its own line after `renderAll()`, *outside* every marked block, and deleting the blocks left it behind to throw a `ReferenceError` on load. If you restore the panel from git history, restore that call too — and if you strip anything else, grep for callers rather than trusting the fences.
+
+`let DEV_NOW = null, DEV_KEY = '';` and `NOW()` are deliberately still there. `NOW()` is the indirection every clock read goes through, and it now simply always returns `Date.now()`. Leave it: re-adding the panel means restoring the blocks, not rewiring the clock.
+
+To bring it back, `git log` the file and revert the removal commit.
 
 **The scheduling issues section has been deleted.** It held the two ship-versus-coach timing conflicts (12 August departing an hour before the ship docked, 14 August departing the exact minute it docked) and sat above the advisor card, which is now the natural closer as intended. Its `.flags` / `.flag` CSS and the `flagsHTML` reference in `renderAll()` went with it.
 
