@@ -204,7 +204,9 @@
   }
   .art .badge.now{left:auto;right:14px;background:var(--ember);color:#fff}
 
-  .body{padding:17px}
+  /* the gutter is a variable because the itinerary's hero wash has to bleed out by exactly
+     this much to reach the card edges, and it changes at the 520px breakpoint */
+  .body{--gut:17px;padding:var(--gut)}
 
   .ports{
     display:flex;align-items:center;flex-wrap:wrap;gap:9px;background:var(--glacier-pale);
@@ -231,33 +233,40 @@
   .note.soft{background:var(--paper-2);color:var(--ink-2)}
   .note.soft b{color:var(--ink)}
 
-  details{margin-top:15px}
+  /* ---- the itinerary, flattened ----
+     This used to be a bordered, filled box sitting inside the card, with the timeline as a
+     second box below it. Three surfaces stacked — page, card, drawer — and the two outer ones
+     carried no information. It is now part of the card: no fill, no border, no radius. A single
+     hairline separates it from the body above, which is a divider rather than another container.
+     The affordance moves entirely onto the chevron and the label, since there is no longer a
+     box edge to lift on hover. */
+  details{margin-top:16px;border-top:1px solid var(--line-2);padding-top:4px}
   details summary{
     list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
-    border:1px solid #DDD3C3;border-radius:12px;padding:10px 10px 10px 14px;
-    font-size:15.5px;color:var(--ink-3);cursor:pointer;background:#FCFAF5;
-    transition:background .18s ease,border-color .18s ease,transform .12s ease;
+    padding:11px 0;font-size:15.5px;color:var(--ink-3);cursor:pointer;
+    transition:color .18s ease,transform .12s ease;
   }
   details summary::-webkit-details-marker{display:none}
-  /* Hover moves the edge, never the fill. The background fill belongs to [open] alone, so a
-     closed summary sitting under the cursor cannot be mistaken for an open one — they used to
-     be the same colour. Gated on a real pointer because on touch :hover latches after a tap
-     and stays put until you tap something else, which read as the drawer never closing. */
+  /* Gated on a real pointer: on touch :hover latches after a tap and stays put until you tap
+     something else, which read as the drawer never closing. */
   @media (hover:hover) and (pointer:fine){
-    details summary:hover{border-color:#CDC1AE}
-    details summary:hover .chev{border-color:#BEB09A}
+    details summary:hover .lbl{color:var(--glacier)}
+    details summary:hover .chev{border-color:#BEB09A;background:var(--paper-2)}
   }
   details summary:active{transform:scale(.994)}
-  details summary:focus-visible{outline:2px solid var(--glacier);outline-offset:2px}
-  details summary .lbl{font-weight:500;color:var(--ink)}
+  details summary:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:8px}
+  details summary .lbl{font-weight:500;color:var(--ink);transition:color .18s ease}
+  /* the one piece of chrome left, and the whole affordance: a ring that rotates */
   details summary .chev{
     flex:none;width:30px;height:30px;border-radius:50%;background:#fff;
     border:1px solid #DDD3C3;display:grid;place-items:center;color:var(--ink-2);
-    transition:transform .25s ease,border-color .18s ease;
+    transition:transform .25s ease,border-color .18s ease,background .18s ease;
   }
-  details[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0;background:var(--paper-2)}
-  details[open] summary .chev{transform:rotate(180deg)}
-  .tl{--tl-bg:#FCFAF6;background:var(--tl-bg);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:4px 16px 16px}
+  details[open] summary .lbl{color:var(--glacier)}
+  details[open] summary .chev{transform:rotate(180deg);border-color:#C7BCA6}
+  /* --tl-bg is what the drive icons use to mask the dotted spine. It follows the surface the
+     timeline now sits on, which is the card itself. */
+  .tl{--tl-bg:var(--card);padding:0 0 4px}
   /* height is animated in JS; this only clips the rows while it runs */
   details.sliding .tl{overflow:hidden}
 
@@ -297,12 +306,13 @@
     border:1px solid var(--glacier);color:var(--glacier);margin-top:2px;
   }
   /* The stop of the day. The wash is painted by a pseudo-element rather than as the row's own
-     background so it can bleed out through .tl's 16px gutters and meet both edges of the panel;
-     as a plain background it stopped short on each side and read as a floating rectangle.
+     background so it can bleed out to both card edges; as a plain background it stopped short
+     on each side and read as a floating rectangle. It used to bleed through .tl's 16px gutters —
+     now that the timeline is flush with the card body, it bleeds by the body's own gutter.
      z-index:-1 keeps it under the text, and isolation stops that -1 escaping the row. */
   .stop.hero{isolation:isolate}
   .stop.hero::after{
-    content:'';position:absolute;z-index:-1;inset:0 -16px;
+    content:'';position:absolute;z-index:-1;inset:0 calc(-1 * var(--gut,17px));
     background:
       radial-gradient(110% 80% at 8% 0%,#FFEFD6 0%,rgba(255,239,214,0) 62%),
       radial-gradient(95% 70% at 98% 6%,#DFEFEE 0%,rgba(223,239,238,0) 64%),
@@ -383,7 +393,7 @@
   }
   .totop.show{opacity:1;pointer-events:auto;transform:none}
 
-  @media (min-width:520px){ .body{padding:21px} }
+  @media (min-width:520px){ .body{--gut:21px} }
   @media (prefers-reduced-motion:reduce){
     *{transition-duration:.01ms !important}
     .pulse .p1{animation:none;transform:scale(5);opacity:.16}

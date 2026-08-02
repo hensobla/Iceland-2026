@@ -198,6 +198,15 @@ There are exactly **two deliberate 700s**: the "TODAY" nav label, and the day ca
 
 Duration scales with panel height (230–380 ms), and a `sliding` flag drops taps that land mid-animation.
 
+**The itinerary is flat, and that is the point.** It used to be a bordered, filled box inside the card, with the timeline as a second box below it. That put three surfaces in front of the reader — page, card, drawer — and the two outer ones carried no information. It now has no fill, no border and no radius: a hairline separates it from the body above, and the timeline sits directly on the card. Two surfaces, one of which is the content.
+
+Two things quietly depend on that panel having had a background, and both are now wired to the card instead:
+
+- **`--tl-bg`** is what the drive icons fill themselves with to mask the dotted spine behind them. It follows whatever surface the timeline sits on, so it is `var(--card)` now. Change the surface, change this, or the spine runs through the car glyphs.
+- **The hero wash** bleeds sideways to meet both card edges. It used to bleed by `.tl`'s 16px gutter; it now bleeds by `--gut`, the day body's own padding, which is 17px and becomes 21px at the 520px breakpoint. That is why the padding is a variable rather than a literal.
+
+With no box edge to lift, the affordance moved onto the **chevron and the label**: the ring tints and fills on hover, the label goes glacier on hover and stays glacier while open, and the chevron still rotates. Removing any one of those leaves the row looking like static text.
+
 **`cursor: pointer` on `<summary>`.** The Itinerary panels didn't read as tappable and the cause was the browser default cursor for `<summary>`, not the visual design. The circled chevron, the faint tint and the press-scale are secondary.
 
 **Specificity trap.** `<main>` also carries `class="wrap"`, so `main { padding-top }` loses to `.wrap { padding: 0 18px }` regardless of source order. Top spacing is set on `main.wrap`. Two earlier attempts to add that margin were silent no-ops.
