@@ -1,5 +1,20 @@
 # Iceland 2026 — site notes
 
+> ## 🚧 BEFORE MERGING `itinerary-flat` INTO `main`
+>
+> **The dev panel is back in this branch and must come out again.** It was restored deliberately, to test the flattened itinerary against simulated dates. It is the date simulator in the bottom-left corner, and `main` is public — the live link the group has does not want it.
+>
+> Search `DEV PANEL`. There are **four** places, not three:
+>
+> 1. CSS, just above the `@media (min-width:520px)` rule
+> 2. Markup, immediately before `<script>`
+> 3. Wiring, after `setInterval(tick,1000)`
+> 4. **A bare `devState();` call after `renderAll()`**, outside every fenced block and flagged with its own comment
+>
+> That fourth one is the trap. Stripping only the three fenced blocks leaves it behind to throw a `ReferenceError` on load, which is exactly what happened the first time. Leave `let DEV_NOW = null, DEV_KEY = '';` and `NOW()` in place — `NOW()` is the indirection every clock read goes through and simply returns real time without the panel.
+>
+> Verify after removing: no `DEV PANEL` or `devState` left in the file, and the page loads with a clean console.
+
 Context and decisions for `index.html`. Read this before editing.
 
 **What it is:** a single-file microsite for a private Iceland trip, 9–17 August 2026. Windstar *Star Pride* cruise plus five private land days. Built to be shared as a link with a travel group. One file, ~78 KB, ~1,115 lines, no build step, no dependencies.
@@ -254,9 +269,11 @@ The other four match. The 17 August arrival is not listed on that page at all an
 
 ## 11. Removable blocks
 
-**The dev panel has been removed.** It was three blocks marked `DEV PANEL`: CSS near the media queries, markup above `<script>`, and wiring at the bottom of the script. It gave date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It came out before the site went public.
+**The dev panel is present on `itinerary-flat` and absent from `main`.** It is date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It was stripped before the site went public, then restored on this branch to test the flattened itinerary across dates. **See the checklist at the top of this file before merging.**
 
-> Removing it was **not** as clean as this section used to claim. A bare `devState();` call sat on its own line after `renderAll()`, *outside* every marked block, and deleting the blocks left it behind to throw a `ReferenceError` on load. If you restore the panel from git history, restore that call too — and if you strip anything else, grep for callers rather than trusting the fences.
+> Removing it is **not** as clean as this section once claimed. A bare `devState();` call sits on its own line after `renderAll()`, *outside* every marked block. Deleting only the fenced blocks leaves it behind to throw a `ReferenceError` on load, which is what happened the first time. It now carries its own `DEV PANEL` comment so a grep finds it. If you strip anything else in this file, grep for callers rather than trusting the fences.
+
+All the dev CSS is scoped under `#dev`, which matters now: the expand button also uses a class called `.tog`, and `#dev .tog` is a different thing entirely. Keep both scoped.
 
 `let DEV_NOW = null, DEV_KEY = '';` and `NOW()` are deliberately still there. `NOW()` is the indirection every clock read goes through, and it now simply always returns `Date.now()`. Leave it: re-adding the panel means restoring the blocks, not rewiring the clock.
 
