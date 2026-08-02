@@ -250,7 +250,11 @@
     transition:color .18s ease;
   }
   details summary .hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  details summary .pv{display:block;margin-top:7px;line-height:1.45;max-width:46ch}
+  /* Measured off the BUTTON, not the label. The button is the tall thing in that row and the
+     label sits centred inside it, so a margin that looked right under the word left the pill
+     crowded by half as much. 15px clears the pill; the label ends up with more, which is
+     correct — it groups the label with its button and sets the preview apart as content. */
+  details summary .pv{display:block;margin-top:15px;line-height:1.5;max-width:46ch}
   details summary::-webkit-details-marker{display:none}
   /* Gated on a real pointer: on touch :hover latches after a tap and stays put until you tap
      something else, which read as the drawer never closing. */
