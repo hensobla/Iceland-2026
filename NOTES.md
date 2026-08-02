@@ -1,20 +1,5 @@
 # Iceland 2026 — site notes
 
-> ## 🚧 BEFORE MERGING `itinerary-flat` INTO `main`
->
-> **The dev panel is back in this branch and must come out again.** It was restored deliberately, to test the flattened itinerary against simulated dates. It is the date simulator in the bottom-left corner, and `main` is public — the live link the group has does not want it.
->
-> Search `DEV PANEL`. There are **four** places, not three:
->
-> 1. CSS, just above the `@media (min-width:520px)` rule
-> 2. Markup, immediately before `<script>`
-> 3. Wiring, after `setInterval(tick,1000)`
-> 4. **A bare `devState();` call after `renderAll()`**, outside every fenced block and flagged with its own comment
->
-> That fourth one is the trap. Stripping only the three fenced blocks leaves it behind to throw a `ReferenceError` on load, which is exactly what happened the first time. Leave `let DEV_NOW = null, DEV_KEY = '';` and `NOW()` in place — `NOW()` is the indirection every clock read goes through and simply returns real time without the panel.
->
-> Verify after removing: no `DEV PANEL` or `devState` left in the file, and the page loads with a clean console.
-
 Context and decisions for `index.html`. Read this before editing.
 
 **What it is:** a single-file microsite for a private Iceland trip, 9–17 August 2026. Windstar *Star Pride* cruise plus five private land days. Built to be shared as a link with a travel group. One file, ~78 KB, ~1,115 lines, no build step, no dependencies.
@@ -48,12 +33,11 @@ These are not preferences. Each one was discovered by shipping something that br
   <nav class="nav">          ← sticky day pills (populated by JS)
   <main class="wrap">        ← everything else (populated by JS)
   back-to-top button
-  DEV PANEL markup           ← removable
   <script>                   ← 741 lines
   footer
 ```
 
-The `<script>` runs top to bottom in this order: **icons → artwork → day data → render functions → nav/scroll → clock/map → dev panel → `renderAll()`**. Nothing executes until `renderAll()` at the very bottom.
+The `<script>` runs top to bottom in this order: **icons → artwork → day data → render functions → nav/scroll → clock/map → `renderAll()`**. Nothing executes until `renderAll()` at the very bottom.
 
 ---
 
@@ -108,7 +92,7 @@ The spy itself is a plain "last section whose top has crossed the line" check on
 
 ## 5. Time behaviour
 
-Every clock read goes through **`NOW()`**, never `Date.now()` directly. That indirection is what makes the dev panel work.
+Every clock read goes through **`NOW()`**, never `Date.now()` directly. That indirection is what let the dev panel simulate dates; with the panel gone it simply returns real time, and it stays because restoring the panel means restoring blocks, not rewiring the clock.
 
 | Window | Hero shows |
 |---|---|
@@ -224,6 +208,14 @@ Two things quietly depend on that panel having had a background, and both are no
 - **`--tl-bg`** is what the drive icons fill themselves with to mask the dotted spine behind them. It follows whatever surface the timeline sits on, so it is `var(--card)` now. Change the surface, change this, or the spine runs through the car glyphs.
 - **The hero wash** bleeds sideways to meet both card edges. It used to bleed by `.tl`'s 16px gutter; it now bleeds by `--gut`, the day body's own padding, which is 17px and becomes 21px at the 520px breakpoint. That is why the padding is a variable rather than a literal.
 
+**There are two ways to close a panel.** The header button, and a second `Collapse` at the **foot of the timeline**. A long day runs well past a phone screen, and having to scroll back up to the header to shut it is the kind of friction nobody reports but everybody feels. The foot button lives inside `.tl`, so a closed `<details>` leaves it in the DOM and never renders it — no hide rule needed.
+
+> Closing from the foot deletes everything above the button, so the viewport would be left looking at the *next* card. It therefore calls `goTo()` on the day it belongs to once the animation finishes, landing you back on that card's header.
+
+**One function drives every open and close.** `slidePanel(det, scrollBackTo)` is called directly by both buttons. The foot button originally worked by synthesising a click on the `<summary>`, which **races the native `<details>` toggle**: when the default action landed first, the handler saw an already-closed panel and re-opened it. Do not reintroduce a synthetic summary click — call `slidePanel()`.
+
+**The control sits beside the label, not opposite it.** `justify-content:flex-start` with a 14px gap. Space-between put roughly 370px of dead air between a word and its own button on a 584px card.
+
 **The summary is two lines, not one.** `.hd` holds the label and the button as a space-between row; the preview sits beneath at full width. All three used to share one line, and once the control grew a word it was crowded — worst on a phone, where the preview wrapped to four lines *beside* the button. Splitting it also parks the button at the same point on every card at every width, so it stops moving as the preview length changes from day to day. No media query: the two-line form is simply better at both ends.
 
 With no box edge to lift, the affordance is an explicit **pill button that names its action**: "Expand ⌄" becoming "Collapse ⌃". A bare rotating chevron asked the reader to infer both that it was pressable and what it would do; the word says it.
@@ -273,7 +265,7 @@ The other four match. The 17 August arrival is not listed on that page at all an
 
 ## 11. Removable blocks
 
-**The dev panel is present on `itinerary-flat` and absent from `main`.** It is date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It was stripped before the site went public, then restored on this branch to test the flattened itinerary across dates. **See the checklist at the top of this file before merging.**
+**The dev panel has been removed again.** It is date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It was restored on the `itinerary-flat` branch to test the flattened itinerary across dates, then stripped before that branch merged.
 
 > Removing it is **not** as clean as this section once claimed. A bare `devState();` call sits on its own line after `renderAll()`, *outside* every marked block. Deleting only the fenced blocks leaves it behind to throw a `ReferenceError` on load, which is what happened the first time. It now carries its own `DEV PANEL` comment so a grep finds it. If you strip anything else in this file, grep for callers rather than trusting the fences.
 

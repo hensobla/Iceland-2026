@@ -254,7 +254,9 @@
     font-size:15.5px;color:var(--ink-3);cursor:pointer;
     transition:color .18s ease;
   }
-  details summary .hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  /* the control sits beside the label, not pushed to the far edge — at 584px wide,
+     space-between put ~370px of dead air between a word and its own button */
+  details summary .hd{display:flex;align-items:center;justify-content:flex-start;gap:14px}
   /* Measured off the BUTTON, not the label. The button is the tall thing in that row and the
      label sits centred inside it, so a margin that looked right under the word left the pill
      crowded by half as much. 15px clears the pill; the label ends up with more, which is
@@ -275,13 +277,23 @@
      it is deliberately INK, not glacier: glacier is the ports bar and the pickup tile, which
      are information. This is a control, so it sits in the neutral family and takes no meaning
      from the palette. Ember is spoken for too — that is "today" and the hero stop. */
-  details summary .tog{
+  details .tog{
     flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
     min-width:99px;padding:7px 12px;border-radius:999px;
     background:transparent;border:1.25px solid #34434A;color:var(--ink);
-    font-size:13px;font-weight:500;letter-spacing:.005em;line-height:1;
+    font:500 13px/1 var(--sans);letter-spacing:.005em;cursor:pointer;
     transition:background .18s ease,color .18s ease,border-color .18s ease,transform .12s ease;
   }
+  /* The second way out, at the foot of an open panel. A long day runs well past a phone
+     screen, and having to scroll back up to the header to close it is the kind of thing
+     nobody reports but everybody feels. It sits inside .tl, so a closed <details> leaves
+     it in the DOM but never renders it — no separate hide rule needed. */
+  .tog-end{margin:6px 0 2px}
+  @media (hover:hover) and (pointer:fine){
+    .tog-end:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+  }
+  .tog-end:active{transform:scale(.96)}
+  .tog-end:focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
   /* one word is shown at a time; min-width above stops the button resizing as they swap */
   details summary .wo{display:none}
   details[open] summary .wc{display:none}
@@ -417,27 +429,6 @@
   }
   .totop.show{opacity:1;pointer-events:auto;transform:none}
 
-  /* ==== DEV PANEL: delete this block before sharing ==== */
-  #dev{position:fixed;left:14px;bottom:16px;z-index:80;display:flex;flex-direction:column;
-       align-items:flex-start;gap:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
-  #dev .tog{background:#16232A;color:#8FC9C0;border-radius:11px;padding:8px 12px;letter-spacing:.08em;
-       box-shadow:0 8px 22px -10px rgba(0,0,0,.55);opacity:.75}
-  #dev.open .tog{opacity:1}
-  #dev .panel{display:none;background:#16232A;color:#D6E2E0;border-radius:14px;padding:14px;
-       width:min(290px,calc(100vw - 28px));box-shadow:0 16px 38px -14px rgba(0,0,0,.65)}
-  #dev.open .panel{display:block}
-  #dev h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#7A9793;font-weight:400}
-  #dev .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-  #dev button.j,#dev button.go{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-       color:#E3EDEB;border-radius:8px;padding:6px 9px;font:inherit;line-height:1.2}
-  #dev button.j[data-on="1"]{background:#B04D28;border-color:#B04D28;color:#fff}
-  #dev input[type=date]{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
-       color:#E3EDEB;border-radius:8px;padding:7px 9px;font:inherit}
-  #dev .state{margin-top:10px;color:#87ADA8;line-height:1.6}
-  #dev .state b{color:#DCE9E6;font-weight:400}
-  #dev .go{width:100%;margin-top:9px;text-align:center}
-  /* ==== end dev panel ==== */
-
   @media (min-width:520px){ .body{--gut:21px} }
   @media (prefers-reduced-motion:reduce){
     *{transition-duration:.01ms !important}
@@ -475,27 +466,6 @@
 <button class="totop" id="totop" aria-label="Back to top">
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-
-<!-- ==== DEV PANEL: delete this block before sharing ==== -->
-<div id="dev">
-  <div class="panel">
-    <h4>Simulate date</h4>
-    <div class="row">
-      <button class="j" data-d="">real</button>
-      <button class="j" data-d="2026-08-09">9th</button>
-      <button class="j" data-d="2026-08-10">10th</button>
-      <button class="j" data-d="2026-08-12">12th</button>
-      <button class="j" data-d="2026-08-14">14th</button>
-      <button class="j" data-d="2026-08-16">16th</button>
-      <button class="j" data-d="2026-08-20">after</button>
-    </div>
-    <input type="date" id="devdate" value="">
-    <div class="state"></div>
-    <button class="go">scroll to marked day</button>
-  </div>
-  <button class="tog">DEV</button>
-</div>
-<!-- ==== end dev panel ==== -->
 
 <script>
 /* ============ icons ============ */
@@ -1174,6 +1144,8 @@ function dayHTML(d,u){
             ${d.stops.map(stopHTML).join('')}
             ${d.end?`<li class="gap"></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
           </ol>
+          <button class="tog tog-end" type="button">Collapse
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
         </div>
       </details>`:''}
     </div>
@@ -1245,24 +1217,31 @@ const main=document.getElementById('main');
 const reduceMo = matchMedia('(prefers-reduced-motion:reduce)');
 const EASE = 'cubic-bezier(.22,.61,.36,1)';
 
-main.addEventListener('click', e=>{
-  const sum = e.target.closest('summary'); if(!sum) return;
-  const det = sum.parentElement, tl = det.querySelector('.tl');
-  if(!tl || reduceMo.matches) return;   /* let the browser snap it open */
-  e.preventDefault();
-  if(det.dataset.sliding) return;       /* ignore taps mid-flight */
+/* One function drives every open and close, and it is called directly rather than by
+   synthesising a click on the summary. That synthetic click races the native <details>
+   toggle: if the default action lands first, this code sees an already-closed panel and
+   re-opens it — which is exactly what the foot button did before. */
+function slidePanel(det, scrollBackTo){
+  const tl = det.querySelector('.tl');
+  if(!tl || det.dataset.sliding) return;
+
+  if(reduceMo.matches){                      /* no animation, just flip it */
+    det.open = !det.open;
+    if(!det.open && scrollBackTo) goTo(scrollBackTo);
+    return;
+  }
 
   const opening = !det.open;
   det.dataset.sliding = '1';
   det.classList.add('sliding');
-  if(opening) det.open = true;          /* must be open to measure or to show */
+  if(opening) det.open = true;               /* must be open to measure or to show */
 
   const full = tl.getBoundingClientRect().height;
   /* longer panels take a little longer, but never enough to feel slow */
   const ms = Math.min(380, Math.max(230, full*.55));
   const rows = tl.querySelector('ol.stops');
 
-  const slide = tl.animate(
+  const anim = tl.animate(
     [{height:'0px', opacity:0},{height:full+'px', opacity:1}],
     {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
   /* the rows settle down into place rather than arriving flat */
@@ -1270,11 +1249,29 @@ main.addEventListener('click', e=>{
     [{transform:'translateY(-7px)'},{transform:'none'}],
     {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
 
-  slide.onfinish = ()=>{
+  anim.onfinish = ()=>{
     if(!opening) det.open = false;
     det.classList.remove('sliding');
     delete det.dataset.sliding;
+    if(!opening && scrollBackTo) goTo(scrollBackTo);
   };
+}
+
+main.addEventListener('click', e=>{
+  /* The foot button closes the panel it sits in. Collapsing from down there removes
+     everything above it, so the viewport would be left looking at the next card —
+     hence scrolling back to the header of the day being closed. */
+  const foot = e.target.closest('.tog-end');
+  if(foot){
+    const det = foot.closest('details'), sec = foot.closest('.day');
+    if(det && det.open) slidePanel(det, sec ? sec.id : null);
+    return;
+  }
+  const sum = e.target.closest('summary'); if(!sum) return;
+  const det = sum.parentElement;
+  if(!det.querySelector('.tl')) return;
+  if(!reduceMo.matches) e.preventDefault();  /* we drive it; the browser does it under reduced motion */
+  slidePanel(det);
 });
 
 /* ---- nav: buttons, manual scroll, no hash ---- */
@@ -1430,38 +1427,7 @@ addEventListener('pageshow',()=>tick());
 
 setInterval(tick,1000);
 
-/* ==== DEV PANEL: delete this block before sharing ==== */
-const dev=document.getElementById('dev');
-const devDate=document.getElementById('devdate');
-function setDev(key){
-  DEV_KEY = key || '';
-  DEV_NOW = DEV_KEY ? Date.parse(DEV_KEY+'T14:00:00') : null;
-  devDate.value = DEV_KEY;
-  renderAll(); devState();
-}
-function devState(){
-  const now=NOW();
-  const when = DEV_NOW===null
-    ? 'real time, '+new Date(now).toDateString()
-    : 'simulating '+new Date(now).toDateString();
-  const i = todayDay ? days.indexOf(todayDay) : -1;
-  const phase = TODAY<START_ISO ? 'countdown showing'
-    : i===0 ? 'map showing, pre-cruise day'
-    : i>0 ? `map showing, day ${i} of 8`
-    : 'map showing, voyage over';
-  dev.querySelector('.state').innerHTML =
-    `<b>${when}</b><br>${phase}<br>today marker: <b>${todayDay?todayDay.place:'none'}</b>`;
-  dev.querySelectorAll('button.j').forEach(b=>b.dataset.on = (b.dataset.d===DEV_KEY)?'1':'0');
-  dev.querySelector('.go').style.opacity = todayDay ? 1 : .4;
-}
-dev.querySelector('.tog').onclick=()=>{ dev.classList.toggle('open'); devState(); };
-dev.addEventListener('click',e=>{ const b=e.target.closest('button.j'); if(b) setDev(b.dataset.d); });
-devDate.addEventListener('change',e=>setDev(e.target.value));
-dev.querySelector('.go').onclick=()=>{ if(todayDay) goTo(todayDay.id); };
-/* ==== end dev panel ==== */
-
 renderAll();
-devState();   /* DEV PANEL: this call is outside the fenced blocks — delete it too */
 </script>
 
 <div class="wrap">
