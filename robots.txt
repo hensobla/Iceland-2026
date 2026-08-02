@@ -3,3 +3,35 @@
 # The <head> also sets <meta name="robots" content="noindex, nofollow">.
 User-agent: *
 Disallow: /
+
+# Link-preview fetchers are the exception. Several of them honour robots.txt, so the
+# blanket Disallow above would otherwise strip the preview card off any link shared
+# into a group chat and leave a bare grey box. These agents read the og: tags in the
+# <head> to build that card; they are not search crawlers and put nothing in an index.
+# A named group replaces the * group outright for that agent, so each needs its own
+# Allow — there is no way to write this as a single exception.
+# Apple publishes no token for the iMessage fetcher; it has been observed identifying
+# as facebookexternalhit, so that first entry is the one covering iMessage.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Slackbot-LinkExpanding
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
