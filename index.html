@@ -173,10 +173,15 @@
     scroll-margin-top:104px;margin-bottom:34px;background:var(--card);
     border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;
   }
-  /* today: ember edge, a pale halo to hold it off the paper, and a warm cast below */
+  /* Today: ember edge, a pale halo to hold it off the paper, and a warm cast below.
+     The edge is 2px, not 1px. A hairline stroke on an 18px radius has very little to
+     antialias with around the arc, so at fractional widths or browser zoom the corners
+     render lighter than the straight runs and the ring looks like it stops short of
+     wrapping. Two integer pixels carry the curve. Halo pulled to 3px to keep the pair
+     in balance now that the stroke is heavier. */
   .day.now{
-    border-color:var(--ember);
-    box-shadow:0 0 0 4px var(--ember-pale),
+    border-width:2px;border-color:var(--ember);
+    box-shadow:0 0 0 3px var(--ember-pale),
                0 2px 5px rgba(176,77,40,.10),
                0 20px 40px -20px rgba(176,77,40,.55);
   }
@@ -1174,8 +1179,12 @@ function dayHTML(d,u){
   </section>`;
 }
 
-const ecHTML=`<section class="ec-block" id="eclipse">
-  <div class="art">${art('eclipse','EC',300)}</div>
+/* A function, not a const string: it has to re-read TODAY on every render so the Today chip
+   can appear on it the way it does on a day card. The block is about 12 August, so it wears
+   the chip on the 12th alongside the Ísafjörður card above it. */
+const ecISO = () => { const d = days.find(x=>x.id==='aug12'); return d ? isoOf(d) : ''; };
+const ecHTML = () => `<section class="ec-block" id="eclipse">
+  <div class="art">${art('eclipse','EC',300)}${ecISO()===TODAY?`<span class="badge now">Today</span>`:''}</div>
   <div class="ec-body">
     <p class="ek">12 August, the reason for the route</p>
     <h2>Totality<em>somewhere off the Westfjords</em></h2>
@@ -1274,7 +1283,7 @@ let links=[], sections=[], lock=0;
 
 function renderAll(){
   computeToday();
-  main.innerHTML = days.map((d,i)=>(d.id==='aug13'?ecHTML:'')+dayHTML(d,i)).join('') + agentHTML;
+  main.innerHTML = days.map((d,i)=>(d.id==='aug13'?ecHTML():'')+dayHTML(d,i)).join('') + agentHTML;
   pills.innerHTML = days.map(d=>{
     const now = isoOf(d)===TODAY;
     return `<button class="pill ${now?'today':''}" data-for="${d.id}"><span class="d">${now?'Today':d.pill[0]}</span><span class="n">${d.pill[1]}</span></button>`;
@@ -1402,6 +1411,15 @@ function refreshToday(){
     if(on && !b){ b=document.createElement('span'); b.className='badge now'; b.textContent='Today'; art.appendChild(b); }
     if(!on && b) b.remove();
   });
+  /* the Totality block carries the chip too, and has to be patched here as well — this path
+     runs on date rollover without rebuilding main, so a render-time-only chip would go stale */
+  const ecArt = document.querySelector('#eclipse .art');
+  if(ecArt){
+    const on = ecISO()===TODAY;
+    let b = ecArt.querySelector('.badge.now');
+    if(on && !b){ b=document.createElement('span'); b.className='badge now'; b.textContent='Today'; ecArt.appendChild(b); }
+    if(!on && b) b.remove();
+  }
   cdMode='';
 }
 

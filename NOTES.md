@@ -191,6 +191,10 @@ The paste is derived from `logo-white.svg`, not identical to it: the `<defs><sty
 
 ## 9. Design decisions
 
+**The Today ember edge is 2px, not 1px.** A hairline stroke on an 18px radius has almost nothing to antialias with around the arc, so at fractional card widths or browser zoom the corners render lighter than the straight runs and the ring looks like it stops short of wrapping. Two integer pixels carry the curve. The pale halo came down from 4px to 3px to keep the pair balanced. Do not take the stroke back to 1px, and do not make it fractional.
+
+**The Totality block wears the Today chip too**, on the 12th, alongside the Ísafjörður card above it. That forced `ecHTML` from a const string into a **function**, since it has to re-read `TODAY` on every render. Two consequences: call it as `ecHTML()` in `renderAll()`, and patch it in `refreshToday()` as well — that path runs on date rollover *without* rebuilding `main`, so a render-time-only chip would go stale at midnight.
+
 **Today is marked twice, at two scales.** The ember "Today" chip identifies the card once you are looking at it; `.day.now` makes the card findable while scrolling past. That treatment is an ember border, a 4px `--ember-pale` halo holding it off the paper, and a warm ember cast in the drop shadow. Ember is reserved for *now* and for the one `hero` stop per day. Spending it anywhere else costs both.
 
 **The hero is one line per level, and nothing repeats a level.** Mark (whose it is), eyebrow (when), h1 plus its italic (what), middot row (which ship, which route), lede (who runs the land days). Anything secondary goes *below* the countdown: the glance line and the Windstar link. An earlier version put the source link between the lede and the countdown as a bordered card, which gave a reference the same weight as the headline and broke the run from title to countdown.
