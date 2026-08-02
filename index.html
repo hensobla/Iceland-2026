@@ -269,7 +269,8 @@
   }
   details summary:active .tog{transform:scale(.96)}
   details summary:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:8px}
-  details summary .lbl{font-weight:500;color:var(--ink);transition:color .18s ease}
+  /* a touch larger than the preview beneath it, so the row reads as a heading over its blurb */
+  details summary .lbl{font-size:17px;font-weight:500;color:var(--ink);transition:color .18s ease}
   /* The expand control. It says what it does rather than relying on an arrow being read, and
      it is deliberately INK, not glacier: glacier is the ports bar and the pickup tile, which
      are information. This is a control, so it sits in the neutral family and takes no meaning
