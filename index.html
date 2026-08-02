@@ -229,26 +229,44 @@
   details summary:hover .chev{border-color:#BEB09A}
   details[open] summary{border-bottom-left-radius:0;border-bottom-right-radius:0;background:var(--paper-2)}
   details[open] summary .chev{transform:rotate(180deg)}
-  .tl{background:#FCFAF6;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:4px 16px 16px}
+  .tl{--tl-bg:#FCFAF6;background:var(--tl-bg);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:4px 16px 16px}
   /* height is animated in JS; this only clips the rows while it runs */
   details.sliding .tl{overflow:hidden}
 
+  /* ---- the dotted spine ----
+     One line runs the length of the timeline. Every row draws its own slice of it over its
+     full height, so the slices butt up against each other and read as one continuous line.
+     The icons sit on top with an opaque fill and are the only thing that breaks it, which
+     is why each row declares --ctr: the distance from its top edge down to its icon centre,
+     used to start the line on the first icon and stop it on the last rather than in mid-air. */
   ol.stops{list-style:none;margin:0;padding:0}
-  .rail{display:flex;align-items:center;gap:10px;padding:11px 0;color:var(--ink-3);font-size:14px}
-  .rail .ic{
-    flex:none;width:26px;height:26px;border-radius:50%;background:#fff;
-    border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-3);
+  ol.stops>li{position:relative}
+  ol.stops>li::before{
+    content:'';position:absolute;left:13px;top:0;bottom:0;width:1px;
+    background:repeating-linear-gradient(to bottom,var(--line) 0 3px,transparent 3px 7px);
   }
-  .leg{display:flex;align-items:center;gap:10px;padding:2px 0;color:var(--ink-3);font-size:13.5px}
-  .leg .bar{width:26px;display:flex;justify-content:center;flex:none}
-  .leg .bar i{display:block;width:1px;height:26px;background:repeating-linear-gradient(to bottom,var(--line) 0 3px,transparent 3px 7px)}
-  .leg .d{display:inline-flex;align-items:center;gap:6px}
-  .leg .d svg{flex:none;opacity:.72}
+  ol.stops>li:first-child::before{top:var(--ctr,0px)}
+  ol.stops>li:last-child::before{bottom:auto;height:var(--ctr,100%)}
+  /* every icon slot is the same 26px column, so the breaks in the line all line up */
+  ol.stops .ic{flex:none;width:26px;height:26px;display:grid;place-items:center;position:relative}
 
-  .stop{position:relative;display:flex;gap:10px;padding:10px 0}
+  /* icons pin to the top of their row so --ctr holds even when the text beside them wraps,
+     which it does on a phone; the text centres itself against the icon while it is one line */
+  .rail{--ctr:27px;display:flex;align-items:flex-start;gap:10px;padding:14px 0;color:var(--ink-3);font-size:14px}
+  .rail .ic{border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-3)}
+  .rail>span:not(.ic){display:flex;align-items:center;min-height:26px;line-height:1.45}
+  .leg{--ctr:23px;display:flex;align-items:flex-start;gap:10px;padding:10px 0;color:var(--ink-3);font-size:13.5px}
+  /* no ring on this one — the car glyph alone masks the line, so a drive stays quieter than a stop */
+  .leg .ic{background:var(--tl-bg)}
+  .leg .ic svg{opacity:.72}
+  .leg .d{display:flex;align-items:center;min-height:26px;line-height:1.45}
+  /* the pause before the drive back to the ship: nothing to say, just line */
+  li.gap{height:14px}
+
+  .stop{--ctr:30px;display:flex;gap:10px;padding:15px 0}
   .stop .ic{
-    flex:none;width:26px;height:26px;border-radius:50%;background:#fff;
-    border:1px solid var(--glacier);color:var(--glacier);display:grid;place-items:center;margin-top:2px;
+    border-radius:50%;background:#fff;
+    border:1px solid var(--glacier);color:var(--glacier);margin-top:2px;
   }
   .stop.hero .ic{border-color:var(--ember);background:var(--ember);color:#fff}
   .stop .time{font-size:13px;letter-spacing:.04em;color:var(--glacier);font-variant-numeric:tabular-nums;font-weight:500}
@@ -987,7 +1005,7 @@ const h12=s=>String(s).replace(
 /* ============ render ============ */
 function stopHTML(s){
   /* the car glyph is what marks a leg as a drive; the row carries no word for it */
-  const leg = s.leg ? `<li class="leg"><span class="bar"><i></i></span><span class="d">${I.car}<span>${s.leg[0]}${s.leg[1]?` · ${s.leg[1]}`:''}</span></span></li>` : '';
+  const leg = s.leg ? `<li class="leg"><span class="ic">${I.car}</span><span class="d">${s.leg[0]}${s.leg[1]?` · ${s.leg[1]}`:''}</span></li>` : '';
   return leg + `<li class="stop ${s.hero?'hero':''}">
     <span class="ic">${I[s.i]||''}</span>
     <div>
@@ -1038,7 +1056,7 @@ function dayHTML(d,u){
           <ol class="stops">
             ${d.start&&!d.pickup?`<li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.start)}</span></li>`:''}
             ${d.stops.map(stopHTML).join('')}
-            ${d.end?`<li class="leg"><span class="bar"><i></i></span></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
+            ${d.end?`<li class="gap"></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
           </ol>
         </div>
       </details>`:''}
