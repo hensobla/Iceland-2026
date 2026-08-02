@@ -205,9 +205,16 @@ Two things quietly depend on that panel having had a background, and both are no
 - **`--tl-bg`** is what the drive icons fill themselves with to mask the dotted spine behind them. It follows whatever surface the timeline sits on, so it is `var(--card)` now. Change the surface, change this, or the spine runs through the car glyphs.
 - **The hero wash** bleeds sideways to meet both card edges. It used to bleed by `.tl`'s 16px gutter; it now bleeds by `--gut`, the day body's own padding, which is 17px and becomes 21px at the 520px breakpoint. That is why the padding is a variable rather than a literal.
 
-With no box edge to lift, the affordance moved onto the **chevron and the label**. The chevron is a filled 36px button, not a hairline ring — glacier-pale closed, solid glacier with a white glyph open. It carries the whole "press me" signal now, so the two states differ in **fill as well as rotation** and it reads as a toggle without being read. The label goes glacier on hover and stays glacier while open. Weaken any of that and the row goes back to looking like static text.
+With no box edge to lift, the affordance is now an explicit **pill button that names its action**: "Expand ⌄" becoming "Collapse ⌃". A bare rotating chevron asked the reader to infer both that it was pressable and what it would do; the word says it.
 
-> The tap target is the **whole summary row**, 72px tall on a phone, not the 36px circle. The circle is the signal; the row is the hit area.
+**It is ink, not glacier, and that is deliberate.** Glacier is the ports bar and the pickup tile, which are *information*. Ember is "today" and the hero stop. This is a *control*, so it sits in the neutral family and borrows meaning from nothing. Putting it in glacier made it read as another data chip.
+
+Two details that stop it feeling cheap:
+
+- **Both words live in the markup**, one hidden per state, rather than being swapped by `::after { content }`. Generated content is not reliably exposed to assistive tech, and `<summary>` should carry a real label.
+- **`min-width:116px`** because "Collapse" is wider than "Expand" and the button would otherwise resize as it toggles, jerking the row.
+
+> The tap target is the **whole summary row**, 72px tall on a phone, not just the pill. The pill is the signal; the row is the hit area.
 
 **`cursor: pointer` on `<summary>`.** The Itinerary panels didn't read as tappable and the cause was the browser default cursor for `<summary>`, not the visual design. The circled chevron, the faint tint and the press-scale are secondary.
 
