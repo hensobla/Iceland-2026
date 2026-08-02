@@ -205,7 +205,9 @@ Two things quietly depend on that panel having had a background, and both are no
 - **`--tl-bg`** is what the drive icons fill themselves with to mask the dotted spine behind them. It follows whatever surface the timeline sits on, so it is `var(--card)` now. Change the surface, change this, or the spine runs through the car glyphs.
 - **The hero wash** bleeds sideways to meet both card edges. It used to bleed by `.tl`'s 16px gutter; it now bleeds by `--gut`, the day body's own padding, which is 17px and becomes 21px at the 520px breakpoint. That is why the padding is a variable rather than a literal.
 
-With no box edge to lift, the affordance moved onto the **chevron and the label**: the ring tints and fills on hover, the label goes glacier on hover and stays glacier while open, and the chevron still rotates. Removing any one of those leaves the row looking like static text.
+With no box edge to lift, the affordance moved onto the **chevron and the label**. The chevron is a filled 36px button, not a hairline ring — glacier-pale closed, solid glacier with a white glyph open. It carries the whole "press me" signal now, so the two states differ in **fill as well as rotation** and it reads as a toggle without being read. The label goes glacier on hover and stays glacier while open. Weaken any of that and the row goes back to looking like static text.
+
+> The tap target is the **whole summary row**, 72px tall on a phone, not the 36px circle. The circle is the signal; the row is the hit area.
 
 **`cursor: pointer` on `<summary>`.** The Itinerary panels didn't read as tappable and the cause was the browser default cursor for `<summary>`, not the visual design. The circled chevron, the faint tint and the press-scale are secondary.
 
