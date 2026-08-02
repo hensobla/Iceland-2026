@@ -205,7 +205,9 @@ Two things quietly depend on that panel having had a background, and both are no
 - **`--tl-bg`** is what the drive icons fill themselves with to mask the dotted spine behind them. It follows whatever surface the timeline sits on, so it is `var(--card)` now. Change the surface, change this, or the spine runs through the car glyphs.
 - **The hero wash** bleeds sideways to meet both card edges. It used to bleed by `.tl`'s 16px gutter; it now bleeds by `--gut`, the day body's own padding, which is 17px and becomes 21px at the 520px breakpoint. That is why the padding is a variable rather than a literal.
 
-With no box edge to lift, the affordance is now an explicit **pill button that names its action**: "Expand ⌄" becoming "Collapse ⌃". A bare rotating chevron asked the reader to infer both that it was pressable and what it would do; the word says it.
+**The summary is two lines, not one.** `.hd` holds the label and the button as a space-between row; the preview sits beneath at full width. All three used to share one line, and once the control grew a word it was crowded — worst on a phone, where the preview wrapped to four lines *beside* the button. Splitting it also parks the button at the same point on every card at every width, so it stops moving as the preview length changes from day to day. No media query: the two-line form is simply better at both ends.
+
+With no box edge to lift, the affordance is an explicit **pill button that names its action**: "Expand ⌄" becoming "Collapse ⌃". A bare rotating chevron asked the reader to infer both that it was pressable and what it would do; the word says it.
 
 **It is ink, not glacier, and that is deliberate.** Glacier is the ports bar and the pickup tile, which are *information*. Ember is "today" and the hero stop. This is a *control*, so it sits in the neutral family and borrows meaning from nothing. Putting it in glacier made it read as another data chip.
 

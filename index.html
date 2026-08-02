@@ -241,11 +241,16 @@
      The affordance moves entirely onto the chevron and the label, since there is no longer a
      box edge to lift on hover. */
   details{margin-top:16px;border-top:1px solid var(--line-2);padding-top:4px}
+  /* Two lines, not one. The label and the control hold the top row so the button lands in the
+     same place on every card at every width; the preview gets the full width beneath it. All
+     three used to compete for one line, which was tight on a phone and cramped even on desktop. */
   details summary{
-    list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:11px 0;font-size:15.5px;color:var(--ink-3);cursor:pointer;
-    transition:color .18s ease,transform .12s ease;
+    list-style:none;display:block;padding:11px 0;
+    font-size:15.5px;color:var(--ink-3);cursor:pointer;
+    transition:color .18s ease;
   }
+  details summary .hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  details summary .pv{display:block;margin-top:7px;line-height:1.45;max-width:46ch}
   details summary::-webkit-details-marker{display:none}
   /* Gated on a real pointer: on touch :hover latches after a tap and stays put until you tap
      something else, which read as the drawer never closing. */
@@ -1108,9 +1113,9 @@ function dayHTML(d,u){
       ${ports}${meta}${pickup}
       ${d.note?`<div class="note ${d.note.k}">${ico}<div><b>${d.note.b}</b>${d.note.p}</div></div>`:''}
       ${d.stops?`<details>
-        <summary><span><span class="lbl">Itinerary</span>${d.summary?` · ${d.summary}`:''}</span>
+        <summary><span class="hd"><span class="lbl">Itinerary</span>
         <span class="tog"><span class="w wc">Expand</span><span class="w wo">Collapse</span>
-        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></span>${d.summary?`<span class="pv">${d.summary}</span>`:''}</summary>
         <div class="tl">
           <ol class="stops">
             ${d.start&&!d.pickup?`<li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.start)}</span></li>`:''}
