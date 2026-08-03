@@ -1936,7 +1936,14 @@ function closeSheet(){
     /* the opener can be gone: renderAll() rebuilds main at midnight and takes every day
        button with it, so fall back rather than focusing a node no longer in the document */
     const back = sheetFrom && sheetFrom.isConnected ? sheetFrom : mbtn;
-    if(!kbdInput) document.documentElement.setAttribute('data-nofv','');
+    if(!kbdInput){
+      document.documentElement.setAttribute('data-nofv','');
+      /* Lifted again the moment focus leaves, as well as on the next keystroke. The flag
+         suppresses every focus ring on the page while it is set, and it only ever needs to
+         cover the one element being handed focus back, so it should not outlive it. Without
+         this a touch-only reader carries it for the rest of the session. */
+      back.addEventListener('blur',()=>document.documentElement.removeAttribute('data-nofv'),{once:true});
+    }
     back.focus({preventScroll:true});
   }, ms);
 }
