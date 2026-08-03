@@ -605,8 +605,6 @@
   /* --tl-bg is what the drive icons use to mask the dotted spine. It follows the surface the
      timeline now sits on, which is the card itself. */
   .tl{--tl-bg:var(--card);padding:0 0 4px}
-  /* height is animated in JS; this only clips the rows while it runs */
-  details.sliding .tl{overflow:hidden}
 
   /* ---- the dotted spine ----
      One line runs the length of the timeline. Every row draws its own slice of it over its
@@ -1561,90 +1559,10 @@ const agentHTML=`<section class="agent" id="advisor">
 
 const main=document.getElementById('main');
 
-/* ---- itinerary panel: animated open and close ----
-   <details> will not transition its own height, so the panel is driven by
-   hand: we take over the summary click, keep `open` true for the whole of a
-   close, and animate .tl from its measured height. Delegated on main because
-   renderAll() replaces main.innerHTML and would drop per-element listeners. */
+/* Survives the itinerary panel that used to own it: the sheet reads it to decide whether a
+   close waits for its animation or just ends. Declared here rather than beside closeSheet
+   because the media query wants asking once, not per open. */
 const reduceMo = matchMedia('(prefers-reduced-motion:reduce)');
-const EASE = 'cubic-bezier(.22,.61,.36,1)';
-
-/* One function drives every open and close, and it is called directly rather than by
-   synthesising a click on the summary. That synthetic click races the native <details>
-   toggle: if the default action lands first, this code sees an already-closed panel and
-   re-opens it — which is exactly what the foot button did before. */
-function slidePanel(det, scrollBackTo){
-  const tl = det.querySelector('.tl');
-  if(!tl || det.dataset.sliding) return;
-
-  if(reduceMo.matches){                      /* no animation, just flip it */
-    det.open = !det.open;
-    if(!det.open && scrollBackTo) goTo(scrollBackTo);
-    return;
-  }
-
-  const opening = !det.open;
-  det.dataset.sliding = '1';
-  det.classList.add('sliding');
-  if(opening) det.open = true;               /* must be open to measure or to show */
-
-  const full = tl.getBoundingClientRect().height;
-  /* longer panels take a little longer, but never enough to feel slow */
-  const ms = Math.min(380, Math.max(230, full*.55));
-  const rows = tl.querySelector('ol.stops');
-
-  /* Closing from the foot button: the ride back up starts HERE, in the same frame as the
-     collapse, rather than waiting for onfinish. Run one after the other it read as two
-     separate events — the panel shut, a beat passed, then the page moved on its own — and
-     the second one was the jarring half, because nothing the finger did seemed to cause it.
-     Together they are one gesture: the panel folds up and the card comes back to meet you.
-     The target is safe to measure now, before any of it moves. The button is below the card's
-     top and everything collapsing is below it too, so the card's own position in the document
-     is the one thing the close cannot change. It runs longer than the fold — the fold has a
-     few hundred pixels to travel and the scroll usually has the better part of a screen —
-     so the page keeps gliding for a moment after the panel is shut, and settles rather than
-     stops. Panel height is a fair proxy for the distance back up, so scaling off `ms` scales
-     off the distance. */
-  if(!opening && scrollBackTo) goTo(scrollBackTo, Math.round(ms * 1.6));
-
-  const anim = tl.animate(
-    [{height:'0px', opacity:0},{height:full+'px', opacity:1}],
-    {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
-  /* the rows settle down into place rather than arriving flat */
-  if(rows) rows.animate(
-    [{transform:'translateY(-7px)'},{transform:'none'}],
-    {duration:ms, easing:EASE, direction:opening?'normal':'reverse'});
-
-  anim.onfinish = ()=>{
-    if(!opening) det.open = false;
-    det.classList.remove('sliding');
-    delete det.dataset.sliding;
-  };
-}
-
-main.addEventListener('click', e=>{
-  /* The foot button closes the panel it sits in. Collapsing from down there removes
-     everything above it, so the viewport would be left looking at the next card —
-     hence scrolling back to the header of the day being closed. */
-  const foot = e.target.closest('.tog-end');
-  if(foot){
-    const det = foot.closest('details'), sec = foot.closest('.day');
-    if(det && det.open) slidePanel(det, sec ? sec.id : null);
-    return;
-  }
-  const sum = e.target.closest('summary'); if(!sum) return;
-  const det = sum.parentElement;
-  if(!det.querySelector('.tl')) return;
-  /* Always prevented, in both motion modes, because slidePanel owns the `open` flag in both.
-     This used to leave the default action in place under reduced motion and let the browser
-     do the toggling — but slidePanel's reduced-motion branch flips `open` too, and a summary
-     click runs its listeners *before* the default action. So the panel opened during dispatch
-     and the browser shut it again on the way out: two toggles, no change, and the itinerary
-     could not be opened at all by anyone browsing with reduced motion on. It is the whole
-     content of the page, so this was worth more than the animation it was protecting. */
-  e.preventDefault();
-  slidePanel(det);
-});
 
 /* ---- nav: buttons, manual scroll, no hash ---- */
 const pills=document.getElementById('pills');
@@ -1674,64 +1592,12 @@ function setCurrent(id){
   const on=links.find(l=>l.dataset.for===id);
   if(on) centerPill(on);
 }
-/* ---- a scroll we can time ----
-   Only for scrolls that have to keep step with something else moving on screen. The pills
-   below hand off to the browser's own smooth scroll and need none of this.
-   Two things the native one cannot do. It takes no duration, so it cannot be paced against
-   an animation running beside it. And it cannot be trusted while the document is shrinking
-   underneath it, which is exactly what a closing panel does: the reachable maximum drops
-   mid-flight and the scroll lands clamped somewhere short. This re-reads that maximum every
-   frame instead.
-   The one thing native does that a hand-rolled scroll must not lose is getting out of the
-   way the instant the user takes over — so a wheel, a touch or a key ends it on the spot.
-   Without that, holding the page hostage for half a second would be worse than the problem
-   being fixed. */
-const TAKEOVER = ['wheel','touchstart','keydown'];
-let glideRAF = 0, glideOff = null;
-/* Anything that scrolls by another route calls this first. A glide left running would keep
-   overwriting the new scroll every frame until it finished, and its listeners would outlive
-   it and cancel the *next* glide instead of their own. */
-function stopGlide(){ cancelAnimationFrame(glideRAF); if(glideOff) glideOff(); }
-
-function glideTo(y, ms){
-  stopGlide();
-  const from = window.scrollY, t0 = performance.now();
-  const off = ()=>{ TAKEOVER.forEach(e=>removeEventListener(e, stop)); glideOff = null; };
-  function stop(){ cancelAnimationFrame(glideRAF); off(); }
-  glideOff = off;
-
-  function frame(now){
-    const t = Math.min(1, (now - t0)/ms);
-    /* Eased at both ends, so it leaves gently and arrives gently rather than snapping away
-       from the button and braking at the top. Quadratic, not cubic: the fold beside it is
-       eased out only and is already well along in its first few frames, and a cubic entry
-       is lazy enough there to read as the page setting off after the panel rather than with
-       it — which is the whole thing being fixed. */
-    const k = t<.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2)/2;
-    const max = Math.max(0, document.documentElement.scrollHeight - innerHeight);
-    window.scrollTo(0, Math.min(from + (y - from)*k, max));
-    if(t<1) glideRAF = requestAnimationFrame(frame); else off();
-  }
-  /* Bound on the next frame, not this one. Enter on a focused button fires its click while
-     that same keydown is still on its way up to window, so binding here would hand the
-     scroll straight back to a key the user already finished pressing and kill it before it
-     moved a pixel. One frame of delay puts the binding safely after the dispatch. */
-  glideRAF = requestAnimationFrame(now =>{
-    TAKEOVER.forEach(e=>addEventListener(e, stop, {passive:true}));
-    frame(now);
-  });
-}
-
-/* ms drives it by hand and is passed only where the pacing matters; without it the browser
-   scrolls at its own speed, which is right for a pill tap and has nothing to keep step with */
-function goTo(id, ms){
+function goTo(id){
   const el=document.getElementById(id); if(!el) return;
-  stopGlide();
   lock=Date.now()+1100;
   setCurrent(id);
   const y=Math.max(0, el.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 20);
-  if(ms && !reduceMo.matches) glideTo(y, ms);
-  else window.scrollTo({top:y, behavior:'smooth'});
+  window.scrollTo({top:y, behavior:'smooth'});
 }
 pills.addEventListener('click',e=>{
   const b=e.target.closest('.pill'); if(!b) return;
@@ -1757,7 +1623,7 @@ addEventListener('scroll',()=>{
 },{passive:true});
 
 const totop=document.getElementById('totop');
-totop.onclick=()=>{ stopGlide(); lock=Date.now()+1100; setCurrent(days[0].id); window.scrollTo({top:0,behavior:'smooth'}); };
+totop.onclick=()=>{ lock=Date.now()+1100; setCurrent(days[0].id); window.scrollTo({top:0,behavior:'smooth'}); };
 
 /* ============ FLOATING MENU ============
    Self-contained: nothing above this line refers to anything below it, so the whole block

@@ -480,9 +480,9 @@ The whole feature is four pieces and nothing outside them refers in: the `FLOATI
 
 ---
 
-## 15. The itinerary as a sheet (experiment, branch `details-sheet`)
+## 15. The itinerary as a sheet
 
-**Unmerged.** An alternative to §9's expand/collapse: the card's `<details>` panel is replaced by a **Details ＋** button that raises the day's timeline in the phrasebook's sheet. Written to be looked at and then either merged or deleted whole.
+The card's `<details>` panel is gone. A **Details ＋** button raises the day's timeline in the phrasebook's sheet instead, so both things on the page that open a body of text open the same way. Began as the `details-sheet` branch and merged.
 
 ### What changed
 
@@ -499,9 +499,13 @@ The whole feature is four pieces and nothing outside them refers in: the `FLOATI
 
 > `sheetBody.scrollTop = 0` runs **after** `showModal()` and unconditionally. Before it the dialog is `display:none`, the scroller has no layout and the assignment is dropped; and skipping it when the sheet is already open drops you halfway down another day's timeline.
 
-### What it would cost
+### What it cost
 
-Adopting this **deletes the work in `3b4028d`**. `slidePanel`, `glideTo` and `stopGlide` are all still in the file on this branch and none of them is reachable: the foot Collapse button was `glideTo`'s only caller, and there is no `<details>` left for `slidePanel` to drive. That is the fold-and-ride-back-up gesture, the rAF scroll that re-reads the reachable maximum every frame, and the reduced-motion double-toggle fix. They are left in place deliberately so the branch reverts cleanly and so the two can be compared side by side. **If this merges, strip them in the same commit** rather than leaving three unreachable functions and a dead `main` click handler behind.
+Merging this **removed the work in `3b4028d`**. `slidePanel`, `glideTo` and `stopGlide` all became unreachable the moment the `<details>` went: the foot Collapse button was `glideTo`'s only caller, and there was no panel left for `slidePanel` to drive. That was the fold-and-ride-back-up gesture, the rAF scroll that re-read the reachable maximum every frame, and the reduced-motion double-toggle fix. All of it, plus the dead `summary`/`.tog-end` click handler and the `details.sliding` clip, came out in one commit rather than being left to mislead a grep. **It is recoverable from history at `3b4028d`** if the inline fold is ever wanted back.
+
+> One thing nearly went with it. `const reduceMo` was declared *inside* the itinerary-panel block, above `slidePanel`, and `closeSheet` still reads it to decide whether a close waits for its animation. Cutting the block by its comment boundaries took the declaration too and would have thrown a `ReferenceError` on load, which on this page means a blank screen. It now sits beside `const main`. Cutting a fenced block is not the same as cutting everything the fence contains: §11 makes this point about the dev panel and it applies to every block in the file.
+
+`goTo` lost its `ms` parameter with the glide, so it is back to one argument and the browser's own smooth scroll. `totop` lost its `stopGlide()` call. Both re-checked: pill navigation scrolls, and back-to-top reaches 0 from 3000px, though it takes longer than a second to get there and a test that waits 900ms will call it a failure.
 
 The sheet also gives up two things the inline panel had: the timeline no longer sits in the reading flow of the day it belongs to, and the card behind it is hidden while it is open, so the ports bar and pickup tile cannot be read at the same time as the stops.
 
