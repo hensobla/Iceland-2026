@@ -341,19 +341,26 @@
     border-radius:50%;background:#fff;
     border:1px solid var(--glacier);color:var(--glacier);margin-top:2px;
   }
-  /* The stop of the day. The wash is painted by a pseudo-element rather than as the row's own
-     background so it can bleed out to both card edges; as a plain background it stopped short
-     on each side and read as a floating rectangle. It used to bleed through .tl's 16px gutters —
-     now that the timeline is flush with the card body, it bleeds by the body's own gutter.
-     z-index:-1 keeps it under the text, and isolation stops that -1 escaping the row. */
-  .stop.hero{isolation:isolate}
-  .stop.hero::after{
-    content:'';position:absolute;z-index:-1;inset:0 calc(-1 * var(--gut,17px));
+  /* The stop of the day. The wash has to bleed out to both card edges — held inside the row's
+     own box it stops short on each side and reads as a floating rectangle — so the row widens
+     itself by the body's gutter and pays it back as padding.
+     It used to do this with a z-index:-1 ::after pinned to `inset:0 calc(-1 * gut)` instead.
+     That put the bleed on its own negative stacking layer, out of flow, inside a rounded
+     overflow:hidden card, and iOS Safari intermittently failed to raster the right-hand strip:
+     a bare white bar down the edge of exactly one gutter's width, covering however much of the
+     row a dropped tile happened to span. Pinching to zoom forced a repaint and it vanished,
+     which is the tell. Background on the row itself is in normal flow with nothing to compose,
+     so there is no separate layer left to lose. The spine is measured from the row's left edge,
+     so it moves with the margin and is pushed back below. */
+  .stop.hero{
+    margin-left:calc(-1 * var(--gut,17px));margin-right:calc(-1 * var(--gut,17px));
+    padding-left:var(--gut,17px);padding-right:var(--gut,17px);
     background:
       radial-gradient(110% 80% at 8% 0%,#FFEFD6 0%,rgba(255,239,214,0) 62%),
       radial-gradient(95% 70% at 98% 6%,#DFEFEE 0%,rgba(223,239,238,0) 64%),
       var(--paper);
   }
+  ol.stops>li.stop.hero::before{left:calc(13px + var(--gut,17px))}
   .stop.hero .ic{border-color:var(--ember);background:var(--ember);color:#fff}
   .stop .time{font-size:13px;letter-spacing:.04em;color:var(--glacier);font-variant-numeric:tabular-nums;font-weight:500}
   .stop.hero .time{color:var(--ember)}
@@ -979,7 +986,7 @@ const days=[
   start:'Depart Grundarfjörður cruise port at 09:00',
   stops:[
     {leg:['5 min','3 km'],t:'09:05 – 09:45 · 40 min',ttl:'Kirkjufell',pron:'KIRK-yu-fetl',i:'view',desc:'The arrowhead mountain. Best angle is from across the little falls below it.'},
-    {leg:['40 min','38 km'],t:'10:25 – 11:05 · 40 min',ttl:'Bjarnarfoss',pron:'BYAR-nar-foss',i:'falls',desc:'Falls over a basalt cliff above Búðir. Your sheet spells it Bjarnafoss.'},
+    {leg:['40 min','38 km'],t:'10:25 – 11:05 · 40 min',ttl:'Bjarnarfoss',pron:'BYAR-nar-foss',i:'falls',desc:'Falls over a basalt cliff above Búðir, with the old turf farm and black church below.'},
     {leg:['20 min','20 km'],t:'11:25 – 13:55 · 2.5 hrs',ttl:'Arnarstapi',pron:'AR-nar-stah-pee',i:'bird',desc:'Basalt arches, a cliff path toward Hellnar, and nesting seabirds directly below you. Lunch here.'},
     {leg:['15 min','10 km'],t:'14:10 – 15:30 · 80 min',ttl:'Vatnshellir',pron:'VATNS-het-lir',i:'cave',hero:1,desc:'An 8,000-year-old lava tube, 35 m down a spiral staircase. Helmets and lamps provided.'},
     {leg:['10 min','6 km'],t:'15:40 – 16:30 · 50 min',ttl:'Djúpalónssandur',pron:'DYOO-pa-lohns-san-dur',i:'beach',desc:'Four lifting stones the old fishermen had to hoist, and rusted ribs of the Epine wreck.'}
@@ -1010,7 +1017,7 @@ const days=[
   start:'Depart Húsavík cruise port at 09:30',
   stops:[
     {leg:['1 hr 05','60 km'],t:'10:35 – 12:20 · 1 hr 45',ttl:'Ásbyrgi',pron:'OWS-beer-gee',i:'hike',desc:'A horseshoe canyon 3.5 km long and over a kilometre wide, said to be the hoofprint of Odin\'s eight-legged horse.'},
-    {leg:['no transfer listed',''],t:'12:20 – 13:20 · 1 hr',ttl:'Lunch at Veggur',pron:'VEG-gur',i:'food',desc:'Fish, lamb and soup on the edge of Vatnajökull National Park, and beer from the breweries nearby.'},
+    {t:'12:20 – 13:20 · 1 hr',ttl:'Lunch at Veggur',pron:'VEG-gur',i:'food',desc:'Fish, lamb and soup on the edge of Vatnajökull National Park, and beer from the breweries nearby.'},
     {leg:['30 min','40 km'],t:'13:50 – 14:15 · 25 min',ttl:'Tjörnes',pron:'TYUR-ness',i:'bird',desc:'Fossil beds and puffin cliffs. A short stop.'},
     {leg:['20 min','20 km'],t:'14:35 – 17:00 · 2 hr 25',ttl:'RIB whale watching',i:'whale',hero:1,desc:'Humpback, minke and white-beaked dolphin in Skjálfandi bay. Dress warmer than you think.'}
   ],
@@ -1022,6 +1029,8 @@ const days=[
   photo:'seydisfjordur.webp',
   ports:['In 09:30','Overnight'],
   meta:['Guides <b>Rúnar</b> and <b>Pétur</b>','09:30 – 17:35','121 km'],
+  /* times inside a note are not run through h12(), so they are written out in 12-hour form */
+  note:{k:'soft',b:'Sagas & Songs at the Blue Church',p:'A complimentary Windstar event, scheduled into this overnight: a local duo singing and telling Icelandic sagas inside the blue church at the top of the rainbow street, about 45 minutes, with drinks, canapés and a ring dance outside afterwards. It runs late afternoon or early evening, so it lands after the 5:35 pm return. Windstar sets the hour on board rather than publishing it in advance — it will be in the daily programme, and Jeffrey can confirm it with the ship before you sail.'},
   summary:'Fjord viewpoints, Egilsstaðir lunch, floating baths',
   start:'Depart Seyðisfjörður cruise port at 09:30',
   stops:[
@@ -1039,7 +1048,7 @@ const days=[
   photo:'iceland-colorful-houses.webp',
   ports:['Alongside','Sail 12:30'],
   meta:['Walk straight off the ship'],
-  note:{k:'soft',b:'Nothing booked, and that is fine',p:'The rainbow street runs from the pier up to the Blue Church, and a hiking path follows the Fjarðará river out of town. Windstar usually schedules its Sagas & Songs performance during this overnight, so check the daily programme.'}
+  note:{k:'soft',b:'Nothing booked, and that is fine',p:'The rainbow street runs from the pier up to the Blue Church, and a hiking path follows the Fjarðará river out of town.'}
 },
 {
   id:'aug16', pill:['Sun','16'], date:'Sunday 16 August',
