@@ -345,15 +345,17 @@ The other four match. The 17 August arrival is not listed on that page at all an
 
 ## 11. Removable blocks
 
-**The dev panel has been removed again.** It is date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. It was restored on the `itinerary-flat` branch to test the flattened itinerary across dates, then stripped before that branch merged.
+**The dev panel has been removed again.** It is date simulation (presets plus a date picker), a live state readout, and a jump to the marked day. Restored on `itinerary-flat` to test the flattened itinerary across dates and stripped before that branch merged; restored a third time on `dev-panel` and stripped again on the same terms.
+
+> **To bring it back, cherry-pick the `archive/dev-panel` tag.** That is the third restore kept as a tag rather than a branch, so deleting the branch could not orphan it, and it is the cleanest restore point there is: 73 insertions, all four sites, nothing else in the commit, and it sits directly on the commit this paragraph was written on. Prefer it to `84e2e41`, which is the same panel against a much older `index.html`.
+
+> There is a **`pre-push` hook in `.git/hooks`** on the machine this was last stripped on. It refuses any push whose `origin/main` tip has `DEV PANEL` in `index.html`, which is the backstop for the strip being forgotten — it has been forgotten once. `pre-push` and not `pre-commit`, because merging a branch into `main` usually fast-forwards, which creates no commit and runs no commit hook. Hooks are untracked, so a fresh clone does not have it and nothing in this repo will recreate it; `--no-verify` bypasses it. Treat it as a convenience that happens to exist, not as protection you can rely on.
 
 > Removing it is **not** as clean as this section once claimed. A bare `devState();` call sits on its own line after `renderAll()`, *outside* every marked block. Deleting only the fenced blocks leaves it behind to throw a `ReferenceError` on load, which is what happened the first time. It now carries its own `DEV PANEL` comment so a grep finds it. If you strip anything else in this file, grep for callers rather than trusting the fences.
 
 All the dev CSS is scoped under `#dev`, which matters now: the expand button also uses a class called `.tog`, and `#dev .tog` is a different thing entirely. Keep both scoped.
 
 `let DEV_NOW = null, DEV_KEY = '';` and `NOW()` are deliberately still there. `NOW()` is the indirection every clock read goes through, and it now simply always returns `Date.now()`. Leave it: re-adding the panel means restoring the blocks, not rewiring the clock.
-
-To bring it back, `git log` the file and revert the removal commit.
 
 **The scheduling issues section has been deleted.** It held the two ship-versus-coach timing conflicts (12 August departing an hour before the ship docked, 14 August departing the exact minute it docked) and sat above the advisor card, which is now the natural closer as intended. Its `.flags` / `.flag` CSS and the `flagsHTML` reference in `renderAll()` went with it.
 
