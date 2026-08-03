@@ -301,7 +301,12 @@
   .sheet{
     padding:0;border:0;color:var(--ink);background:var(--card);
     width:min(520px,calc(100vw - 32px));max-width:none;
-    max-height:min(80vh,700px);max-height:min(80svh,700px);
+    /* height, not max-height. A dialog is height:fit-content, so the sheet used to be as
+       tall as whatever was poured into it: the phrasebook always overflowed and sat at the
+       cap, while a three-stop day came out barely half as tall. Same control, same surface,
+       two different sizes depending on which one you pressed. It is a fixed panel now and
+       short days simply have room to spare at the foot. */
+    height:min(80vh,700px);height:min(80svh,700px);
     border-radius:20px;overflow:hidden;
     box-shadow:0 1px 3px rgba(14,22,32,.12), 0 44px 80px -34px rgba(14,22,32,.6);
     /* the UA centres a modal dialog with inset:0 and margin:auto, so transform is free to
@@ -316,10 +321,17 @@
 
   /* No rule under the header. Between the standfirst, the rule, the group label and the
      first row's own border there were four horizontal lines inside 60px, and the top of
-     the sheet read as ruled paper. The gap does the separating now, so it has to be big
-     enough to: see .ph-g:first-child. */
+     the sheet read as ruled paper. Whitespace does the separating instead.
+
+     The gap under the standfirst is the HEADER's padding, not the scroller's first child.
+     Both look identical at rest and only one survives a scroll: the header is a separate
+     flex item above the scroller, so its padding is a permanent band that the list is
+     clipped against, while padding on the first row scrolls away with the row and lets the
+     next one arrive hard against the type. That is the "cropped content running into the
+     sub-head" this fixes. The scroller keeps a smaller top pad so the two still add up to
+     the ~38px the phrasebook was tuned to. */
   .sheet-hd{
-    flex:none;display:flex;align-items:flex-start;gap:14px;padding:20px 20px 0;
+    flex:none;display:flex;align-items:flex-start;gap:14px;padding:20px 20px 21px;
   }
   /* Takes the slack so the close button is pinned to the right edge whatever the title is.
      Without it the text block sizes to its content and the X follows it inwards: invisible
@@ -351,20 +363,18 @@
     --gut:20px;
     flex:1;min-height:0;
     overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-    padding:0 20px calc(20px + env(safe-area-inset-bottom,0px));
+    padding:17px 20px calc(20px + env(safe-area-inset-bottom,0px));
   }
-  /* The timeline sits straight on the sheet, so the drive icons mask the spine with the
-     sheet's own background exactly as they do with the card's.
-     24px, not the 4px it uses on a card: the first row adds 14px of its own padding, so this
-     lands the first line about 38px below the standfirst and matches what .ph-g:first-child
-     does for the phrasebook. Same header, same gap under it, whichever thing raised it. */
-  .sheet-bd .tl{padding-top:24px}
+  /* Zero, both of these. The gap above the first row is the header's padding plus the
+     scroller's, set once above, so it is identical whichever thing raised the sheet and
+     there is no second place to keep in step. The timeline sits straight on the sheet and
+     the drive icons mask the spine with its background exactly as they do with the card's. */
+  .sheet-bd .tl{padding-top:0}
   .ph-g{
     font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);
     font-weight:500;margin:20px 0 2px;
   }
-  /* the only thing holding the list off the standfirst now that the rule is gone */
-  .ph-g:first-child{margin-top:38px}
+  .ph-g:first-child{margin-top:0}
   .ph{display:grid;grid-template-columns:1fr auto;column-gap:16px;padding:10px 0 9px;border-top:1px solid var(--line-2)}
   .ph .is{font-family:var(--serif);font-size:17px;font-weight:500;line-height:1.3}
   .ph .en{font-size:14px;color:var(--ink-3);text-align:right;line-height:1.3;padding-top:3px}
@@ -380,12 +390,13 @@
     /* a drawer on a phone, because the thumb is at the bottom and the list is long */
     .sheet{
       width:100%;max-width:100%;margin:auto auto 0;
-      border-radius:22px 22px 0 0;max-height:86vh;max-height:86svh;
+      border-radius:22px 22px 0 0;
+      height:86vh;height:86svh;    /* fixed, for the reason given on .sheet above */
       opacity:1;transform:translateY(100%);
       transition:transform 380ms var(--e-drawer);
     }
     .sheet.in{transform:none}
-    .sheet-hd{padding:19px 18px 0}
+    .sheet-hd{padding:19px 18px 19px}
     .sheet-bd{--gut:18px;padding-left:18px;padding-right:18px}
   }
 
@@ -475,6 +486,25 @@
   .ports .sub{flex:1 1 100%;font-size:13.5px;opacity:.72;letter-spacing:.01em}
 
   .meta{margin:12px 0 0;font-size:14.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:5px 0}
+  /* An excursion day's line is always the same two parts, guide then hours, so it is held to
+     one line and shrinks rather than wrapping. Only excursion days: the others say whatever
+     that day needs (16 August runs to "6.5 hours ashore · Then two hours off Surtsey") and
+     are better off wrapping than being squeezed to fit a shape they do not share.
+
+     Same method as the hero's middot row, and the same trap. 86px is 36 for .wrap's padding,
+     34 for the body's two gutters and 16 for the one separator margin, all of which are px
+     and none of which scale with the type. 21.4 is the longest of the five lines measured in
+     em against the WIDEST font in the stack at the SMALLEST size it can pick: 14 August's
+     "Guides Rúnar and Pétur · 9:30 am – 5:35 pm" in San Francisco, which is optically sized
+     and reaches 21.02em down at 10px against 20.02em at 14.5px. Figtree is only 19.12, so
+     sizing to Figtree would fit online and wrap on a phone with no connection (§8).
+
+     The gutter widens to 21px at 520px, which this ignores on purpose: the cap is reached at
+     about 410px, so the type is already full size long before that breakpoint matters. */
+  .meta.oneline{
+    flex-wrap:nowrap;white-space:nowrap;
+    font-size:min(14.5px, (100vw - 86px) / 21.4);
+  }
   .meta span:not(:first-child)::before{content:'·';margin:0 8px;opacity:.5}
   .meta b{font-weight:500;color:var(--ink-2)}
 
@@ -1226,7 +1256,7 @@ const days=[
   id:'aug9', pill:['Sun','9'], date:'Sunday 9 August',
   place:'Golden Circle & Sky Lagoon', badge:'Pre-cruise', kind:'gullfoss',
   photo:'golden-circle.webp',
-  meta:['Guide <b>Kuba</b>','09:00 – 21:00','253 km'],
+  meta:['Guide <b>Kuba</b>','09:00 – 21:00'],
   summary:'Rift valley, greenhouse lunch, geyser, waterfall, lagoon, dinner at nine',
   pickup:'Skólavörðustígur 16A, 101 Reykjavík',
   start:'Pickup at 09:00',
@@ -1252,7 +1282,7 @@ const days=[
   place:'Grundarfjörður', pron:'GRUN-dar-fyur-thur', badge:'Snæfellsnes Peninsula', kind:'kirkjufell',
   photo:'grundarfjordur.webp',
   ports:['In 08:00','Out 18:00'],
-  meta:['Guide <b>Pétur</b>','09:00 – 17:30','132 km'],
+  meta:['Guide <b>Pétur</b>','09:00 – 17:30'],
   summary:'Kirkjufell, a lava tube and a black-pebble beach',
   start:'Depart Grundarfjörður cruise port at 09:00',
   stops:[
@@ -1269,7 +1299,7 @@ const days=[
   place:'Ísafjörður', pron:'EE-sa-fyur-thur', badge:'Totality', kind:'eclipse',
   photo:'isafjordur.webp',   /* the drawn eclipse scene stays, but on the Totality block below, not here */
   ports:['In 08:00','Out 13:30'],
-  meta:['Guide <b>Rúnar</b>','4 hours','165 km'],
+  meta:['Guide <b>Rúnar</b>','08:30 – 12:30'],
   summary:'Dynjandi and Flateyri, then out to sea',
   start:'Depart Ísafjörður cruise port at 08:30',
   stops:[
@@ -1283,7 +1313,7 @@ const days=[
   place:'Húsavík', pron:'HOO-sa-veek', badge:'Whales', kind:'whale',
   photo:'husavik.webp',
   ports:['In 09:30','Out 18:00'],
-  meta:['Guide <b>Rúnar</b>','09:30 – 17:15','120 km'],
+  meta:['Guide <b>Rúnar</b>','09:30 – 17:15'],
   summary:'A canyon hike, then a RIB into Skjálfandi bay',
   start:'Depart Húsavík cruise port at 09:30',
   stops:[
@@ -1299,7 +1329,7 @@ const days=[
   place:'Seyðisfjörður', pron:'SAY-thiss-fyur-thur', badge:'Overnight in port', kind:'fjord',
   photo:'seydisfjordur.webp',
   ports:['In 09:30','Overnight'],
-  meta:['Guides <b>Rúnar</b> and <b>Pétur</b>','09:30 – 17:35','121 km'],
+  meta:['Guides <b>Rúnar</b> and <b>Pétur</b>','09:30 – 17:35'],
   summary:'Fjord viewpoints, Egilsstaðir lunch, floating baths',
   start:'Depart Seyðisfjörður cruise port at 09:30',
   stops:[
@@ -1406,7 +1436,9 @@ function dayHTML(d,u){
       <span class="tt"><span class="t">${h12(c.t[0])}</span><span class="ar">→</span><span class="t">${h12(c.t[1])}</span></span>
       ${c.sub?`<span class="sub">${c.sub}</span>`:''}
     </div>`).join('');
-  const meta = d.meta ? `<div class="meta">${d.meta.map(m=>`<span>${h12(m)}</span>`).join('')}</div>` : '';
+  /* Excursion days carry a fixed two-part line, guide then hours, and it is held to one
+     line (see .meta.oneline). The other days say whatever their day needs and still wrap. */
+  const meta = d.meta ? `<div class="meta${d.stops?' oneline':''}">${d.meta.map(m=>`<span>${h12(m)}</span>`).join('')}</div>` : '';
   const ico = d.note && d.note.k==='warn' ? I.warn : I.info;
   /* Where the day starts. It lives in the card body, not inside the collapsed timeline, because
      it is the one thing the group has to act on before anything else happens. Time and address

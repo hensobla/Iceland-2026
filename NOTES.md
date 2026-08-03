@@ -54,7 +54,7 @@ The `<script>` runs top to bottom in this order: **icons → artwork → day dat
 | `badge`, `kind` | corner label, and which SVG scene to draw |
 | `ports` | `['In 09:30','Out 18:00']` — ship times, rendered in the blue bar |
 | `calls` | only when a day has **more than one** port call. `[{name, t:[in,out], sub}]`, and it supersedes `ports`. The 16th is Heimaey then Surtsey. Single-call days keep using `ports`. |
-| `meta` | quiet middot line: guide, span, distance |
+| `meta` | quiet middot line. On an excursion day it is exactly two parts, **guide then hours**, and is held to one line (§15). Other days say whatever that day needs and may wrap. |
 | `note` | `{k:'soft'|'warn', b:heading, p:body}` |
 | `summary`, `start`, `stops[]`, `end` | the collapsible Itinerary panel |
 
@@ -500,3 +500,15 @@ The whole feature is four pieces and nothing outside them refers in: the `FLOATI
 Adopting this **deletes the work in `3b4028d`**. `slidePanel`, `glideTo` and `stopGlide` are all still in the file on this branch and none of them is reachable: the foot Collapse button was `glideTo`'s only caller, and there is no `<details>` left for `slidePanel` to drive. That is the fold-and-ride-back-up gesture, the rAF scroll that re-reads the reachable maximum every frame, and the reduced-motion double-toggle fix. They are left in place deliberately so the branch reverts cleanly and so the two can be compared side by side. **If this merges, strip them in the same commit** rather than leaving three unreachable functions and a dead `main` click handler behind.
 
 The sheet also gives up two things the inline panel had: the timeline no longer sits in the reading flow of the day it belongs to, and the card behind it is hidden while it is open, so the ports bar and pickup tile cannot be read at the same time as the stops.
+
+### Second pass on the sheet
+
+**Every sheet is the same height.** `height`, not `max-height`. A `<dialog>` is `height:fit-content`, so the sheet used to be as tall as whatever was poured into it: the phrasebook always overflowed and sat at the cap while a three-stop day came out about half as tall. Same control, same surface, two sizes depending on which one you pressed. Short days now have room to spare at the foot, which is the right trade.
+
+**The gap under the standfirst belongs to the header, not to the scroller's first child.** Both look identical at rest and only one survives a scroll: `.sheet-hd` is a separate flex item above `.sheet-bd`, so its `padding-bottom` is a permanent band that the list is clipped against, while padding on the first row scrolls away with that row and lets the next one arrive hard against the type. The two still add up to the ~38px the phrasebook was tuned to, and `.ph-g:first-child` and `.sheet-bd .tl` are both zero now so there is only one place to change it.
+
+**The excursion middot line is fixed at guide then hours.** It used to be guide, span, distance, and 12 August broke the pattern by printing `4 hours` where every other day printed a range. It is `08:30 – 12:30` now, which is the same four hours stated the same way as its neighbours. **The day total distance is gone from the page** as a result; per-drive distances are still on every leg in the timeline.
+
+`.meta.oneline` holds those five lines to one line and shrinks the type rather than wrapping, by the same method and with the same trap as the hero's middot row (§9): `86px` is 36 for `.wrap`'s padding, 34 for the body's two gutters and 16 for the one separator margin, none of which scale with the type; `21.4` is the longest line measured in em against the widest font in the stack **at the smallest size it can pick**, which is 14 August's two-guide line in San Francisco at 21.02em down at 10px against 20.02em at 14.5px. Figtree is 19.12, so sizing to Figtree would fit online and wrap offline.
+
+> Only excursion days get it. 16 August runs to "6.5 hours ashore · Then two hours off Surtsey", which is a genuinely different shape and is better wrapping than squeezed; sizing every day's line to that one would have cost the other eight about 9% of their type on a phone for nothing.
