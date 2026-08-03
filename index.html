@@ -315,6 +315,11 @@
     transition:opacity 180ms var(--e-out),transform 240ms var(--e-out);
   }
   .sheet[open]{display:flex;flex-direction:column}
+  /* The sheet holds the opening focus, so it must not draw a ring for it. This is a
+     container rather than a control: the modal being there is its own affordance, and the
+     ring would sit around the whole panel. The controls inside keep theirs, so tabbing to
+     the close button still shows one. */
+  .sheet:focus,.sheet:focus-visible{outline:none}
   .sheet.in{opacity:1;transform:none}
   .sheet::backdrop{background:rgba(14,22,32,0);transition:background 240ms var(--e-out)}
   .sheet.in::backdrop{background:rgba(14,22,32,.5)}
@@ -762,7 +767,11 @@
 
 <!-- One sheet, filled per open. It was the phrasebook's alone until the itinerary started
      using it too; there is no second dialog because there is never a second one on screen. -->
-<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+<!-- tabindex so the sheet itself can take the opening focus. Without it showModal() hands
+     focus to the first focusable thing inside, which is the close button, and Safari counts
+     that programmatic focus as :focus-visible: every tap on Details lit up a ring around
+     the X. Focus belongs on the dialog anyway, so aria-labelledby is what gets announced. -->
+<dialog class="sheet" id="sheet" tabindex="-1" aria-labelledby="sheet-title">
   <div class="sheet-hd">
     <div>
       <h2 id="sheet-title"></h2>
@@ -1859,7 +1868,14 @@ function openSheet({title, sub, html, from}){
   sheetSub.hidden=!sub;
   sheetBody.innerHTML=html;
   sheetFrom=from||null;
-  if(!sheet.open) sheet.showModal();
+  if(!sheet.open){
+    sheet.showModal();
+    /* Explicit, and not left to the dialog focusing steps. Which element those land on has
+       moved around between spec revisions and browsers, and the one they reach for first is
+       the close button, which then wears a focus ring on every tap. preventScroll because
+       focusing a box the height of the viewport otherwise makes iOS jump. */
+    sheet.focus({preventScroll:true});
+  }
   /* After showModal and unconditionally. Before it the dialog is still display:none, where
      the scroller has no layout and the assignment is dropped on the floor; and skipping it
      when the sheet is already open leaves a day opened from inside another one halfway down
