@@ -318,7 +318,14 @@
        cap, while a three-stop day came out barely half as tall. Same control, same surface,
        two different sizes depending on which one you pressed. It is a fixed panel now and
        short days simply have room to spare at the foot. */
+    /* Three declarations, each a fallback for the one after it, ending in a measurement
+       rather than a unit. Chrome on iOS resolves svh well under the viewport it actually
+       shows — a drawer asking for 86svh came up at roughly half the screen, while Safari
+       on the same phone was correct — so the last line uses --vh, which the script sets
+       from innerHeight. That is the engine reporting its own viewport, so it cannot
+       disagree with itself the way the unit does. See the note by setVH(). */
     height:min(80vh,700px);height:min(80svh,700px);
+    height:min(calc(var(--vh,1svh) * 80),700px);
     border-radius:20px;overflow:hidden;
     box-shadow:0 1px 3px rgba(14,22,32,.12), 0 44px 80px -34px rgba(14,22,32,.6);
     /* No panning starts anywhere on this dialog except inside .sheet-bd below.
@@ -435,7 +442,9 @@
     .sheet{
       width:100%;max-width:100%;margin:auto auto 0;
       border-radius:22px 22px 0 0;
-      height:86vh;height:86svh;    /* fixed, for the reason given on .sheet above */
+      /* fixed, for the reason given on .sheet above; measured, for the reason given there too */
+      height:86vh;height:86svh;
+      height:calc(var(--vh,1svh) * 86);
       opacity:1;transform:translateY(100%);
       transition:transform 380ms var(--e-drawer);
     }
@@ -838,6 +847,27 @@
 </dialog>
 
 <script>
+/* ============ viewport height, measured ============ */
+/* The sheet is a fixed fraction of the viewport, and svh is the unit for that: the small
+   viewport, browser chrome showing, so a drawer cannot resize under the reader when iOS
+   collapses its toolbars mid-scroll. Chrome on iOS resolves it wrong — 86svh came out at
+   roughly half the screen there, correct in Safari on the same phone — so --vh carries a
+   hundredth of innerHeight and the CSS multiplies it up. Same intent as svh, but taken
+   from the engine's own report of its viewport rather than its arithmetic on it.
+
+   Taken once here and again in openSheet, rather than on resize. Measuring at the moment
+   a sheet opens is what svh is approximating with its worst case: the viewport the reader
+   can see right now is the one to fill, whether iOS has its toolbars up or somebody just
+   dragged a desktop window shorter. Doing it on resize instead would re-measure while a
+   sheet was open — iOS fires resize as the toolbars slide away mid-scroll — and change
+   the height of a panel being read. Nothing is open when either of these two run.
+
+   orientationchange is the one exception, because it can happen with a sheet open and the
+   old height would be badly wrong. A frame later, since the new size is not ready yet. */
+const setVH = () => document.documentElement.style.setProperty('--vh', innerHeight/100 + 'px');
+setVH();
+addEventListener('orientationchange', () => requestAnimationFrame(setVH));
+
 /* ============ icons ============ */
 const S=(p,w=14)=>`<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 const I={
@@ -1804,6 +1834,7 @@ addEventListener('pointerdown',()=>{ kbdInput=false; },{capture:true});
    from a button most of a page further down, so there is no one element to return to. */
 function openSheet({title, sub, html, from}){
   if(sheetShut){ clearTimeout(sheetShut); sheetShut=0; }  /* reverses a close still in flight */
+  setVH();   /* size to the viewport as it is now; see the note by setVH */
   sheetTitle.textContent=title;
   sheetSub.textContent=sub||'';
   sheetSub.hidden=!sub;
