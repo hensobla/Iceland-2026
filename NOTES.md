@@ -193,6 +193,20 @@ It used to do that with a `z-index: -1` `::after` pinned to `inset: 0 calc(-1 * 
 
 > **The eyebrow sits under the h1, not over it.** It ran above the title for a long while, which meant the first thing on the page was a date range in tracked ember caps and the word "Iceland" arrived second. Underneath, the title lands first and the dates read as its answer. Everything below it is then in descending order of how much you already knew.
 
+**Space the hero by the gap you can see, not the one the box model reports.** In this stack they are a long way apart. `Iceland` has no descender, so about 14px at the foot of the h1's line box is empty; the eyebrow and the middot row both inherited the body's `line-height:1.62`, which parks another 4px of dead leading above their first pixel of ink. The result was a 15px margin drawing a 35px hole and an 18px margin below it drawing a 27px one: **the date read as further from the title than from the ship line, which is backwards.** Margins alone cannot be read off this file to know what it looks like.
+
+Both lines now set their own line-height, and the margins are tuned against measured ink. The ladder is **20 / 28 / 46**, ink to ink: the date bound to the title, the ship line a step down, the countdown its own block.
+
+| | margin | optical |
+|---|---|---|
+| `Iceland` → date | 4px | 20px |
+| date → ship line | 25px | 28px |
+| ship line → countdown | 38px | 46px |
+
+> **`margin-top:4px` on `.eyebrow` is not a typo**, and the h1's empty descender space is the reason. Do not "correct" it back up to something that looks normal in the stylesheet without measuring what it does on screen.
+
+> `.eyebrow` gets `line-height:1` because it is one unwrappable line of tracked capitals. `header.hero .meta` gets 1.35 and not 1, because it *does* wrap: the round-trip string goes to two lines below about 340px.
+
 **The countdown is left aligned on the same rail as everything above it.** The cells do not stretch: `flex:1` across the full measure parked "05" a column's worth of centring in from the margin, which is invisible while the cells have borders and obvious the moment they do not. They size to their own content and the gap carries the width, fluid so four columns still fit a 320px screen. Measured, the h1, the eyebrow, the middot row, the first number and its label all start on the same pixel.
 
 > **Four things were cut from it once the floating menu existed.** The lede naming the guides, the glance line ("five ports, eight days aboard…"), the Windstar provenance link, and the boxes around the countdown cells. The first three were all *secondary* material parked below the countdown, which meant the header did not end anywhere: it trailed off through two greyed-out lines into a link. The guides are named on every day card that has one, and Windstar's itinerary is now one tap away in the menu, so none of it was load-bearing. Do not put a second tier back under the countdown. If something new has to live in the hero it belongs above the countdown or in the menu.

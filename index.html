@@ -109,15 +109,29 @@
   }
   /* the mark sits alone at the top left; the COMPLETE stamp owns the right */
   header.hero .mark{display:block;height:31px;width:auto;margin:0 0 30px}
-  /* sits under the h1, not over it: the title lands first and the dates answer it */
+  /* Sits under the h1, not over it: the title lands first and the dates answer it.
+
+     The margins in this block are set against the gap you can SEE, not the gap the box
+     model reports, and the two are a long way apart here. "Iceland" has no descender, so
+     roughly 14px at the foot of the h1's line box is empty, and this line inherited the
+     body's 1.62 which put another 4px of dead leading above its caps. Together they meant
+     a 15px margin drew a 35px hole, wider than the 18px margin below it drew: the date
+     read as further from the title than from the ship line, which is backwards.
+
+     line-height:1 here because it is one line of tracked capitals that cannot wrap, so
+     there is no leading to protect. Ink to ink, the ladder is now 20 / 28 / 46: the date
+     is bound to the title, the ship line steps down from it, the countdown is its own
+     block. Re-measure the ink, not the boxes, if you change the type. */
   .eyebrow{
-    display:block;margin:15px 0 0;font-size:12.5px;font-weight:500;
+    display:block;margin:4px 0 0;font-size:12.5px;font-weight:500;line-height:1;
     letter-spacing:.2em;text-transform:uppercase;color:var(--ember);
   }
   h1{font-size:clamp(38px,11.5vw,54px);line-height:1.04;margin:0;font-variation-settings:'opsz' 60}
   /* the hero reuses the day card's middot line, so "what ship" reads the same
      way here as "which guide" does further down */
-  header.hero .meta{margin-top:18px;font-size:15px}
+  /* 1.35, not the body's 1.62, for the same reason as .eyebrow above. Kept off 1 because
+     this one does wrap: the round-trip string runs past a 320px screen. */
+  header.hero .meta{margin-top:25px;font-size:15px;line-height:1.35}
 
   /* No cell around each number. They are the last thing in the hero now, so they close
      the block themselves rather than sitting in four boxes that repeat the day pills
@@ -129,7 +143,7 @@
      is left aligned all the way down. They size to their own content now and the row
      starts on the same rail as the h1. The gap carries the width instead, and it is
      fluid so four columns still fit a 320px screen. */
-  .countdown{margin-top:39px;display:flex;gap:clamp(20px,7vw,40px)}
+  .countdown{margin-top:38px;display:flex;gap:clamp(20px,7vw,40px)}
   .cd-cell{text-align:left}
   .cd-num{font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   /* no text-indent here, unlike the nav pills. That correction exists to re-centre
