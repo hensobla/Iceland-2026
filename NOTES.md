@@ -371,7 +371,7 @@ The open-day callouts on the 10th, 15th and 16th were *not* part of that block a
 - 17 August arrival time unverified; Windstar does not list the disembarkation morning.
 - Photo aspect is **1.60:1 against the card's 1.90:1**, so `slice` trims about 8% off the top and bottom of every one. Rendering the set at 1.90:1 would recover it.
 - Fonts and the photos now stand between this and offline self-containment. Fonts were the last external request; the photos are local but still separate files.
-- The phrasebook does not lock the page behind it. Its own list uses `overscroll-behavior: contain`, so a touch scroll stops at the ends instead of chaining, but a wheel over the backdrop still moves the page. A real lock costs either a scrollbar-width jump on desktop or the position-fixed dance iOS needs, and neither is worth it for a sheet this short-lived.
+- The sheet does not lock the page behind it, it just refuses to start a scroll of it. `touch-action` on the dialog allows `pinch-zoom` and no panning, so a drag begun on the header or the backdrop moves nothing, and `.sheet-bd` re-states `pan-y` for the one region that should scroll (§15). A wheel over the backdrop on a desktop still moves the page. A true lock costs either a scrollbar-width jump or the `position:fixed` dance iOS needs, and that one would visibly re-stick the nav and the hero's menu button behind a half-opaque backdrop.
 
 ---
 
@@ -538,3 +538,7 @@ The sheet also gives up two things the inline panel had: the timeline no longer 
 > Prove this with **real input only**. A dispatched `KeyboardEvent` sets the flag but not the browser's own focus-visible heuristic, so the keyboard rows come back looking like failures when the code is correct; a scripted `.focus()` never sets `:focus-visible` at all and reports "no ring" on every path, which would pass a broken fix. Watch the timing too: the panel is `visibility:hidden` for its first 190ms, so a Tab sent straight after the opening Enter skips the menu entirely and lands on a nav pill.
 
 > **Header spacing is set against ink, not margins**, for the reason §9 gives. The standfirst sat 13.6px below the title on screen for a 7px rule, because at `line-height:1.5` it carried about 3.5px of dead leading above its first pixel of ink and the title's descender space added the rest. At `margin:4px` and `line-height:1.4` the pair reads about 10px apart. Measured on a 375px phone the header now runs **29.2 / 9.9 / 17.3**: sheet top to title, title to standfirst, standfirst to the scroller's edge.
+
+> **Nothing on the sheet starts a scroll except `.sheet-bd`.** Reported from an iPhone: a drag begun on the title or the standfirst scrolled the page behind instead, and iOS then kept the gesture until that momentum ran out, so the sheet would not scroll until the background had stopped. The header is not a scroll container, so the gesture fell through to the nearest ancestor that is, which is the document. `.sheet` and `.sheet-hd` therefore allow `pinch-zoom` and no panning, and `.sheet-bd` states `pan-y pinch-zoom` for itself.
+>
+> `pinch-zoom` rather than `none`, so this does not take zooming away from anyone. And `.sheet-hd` says it directly as well as inheriting the effect through the intersection rule, because `touch-action` does not inherit and that header is the exact spot the bug was found on.

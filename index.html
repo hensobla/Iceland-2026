@@ -310,6 +310,14 @@
     height:min(80vh,700px);height:min(80svh,700px);
     border-radius:20px;overflow:hidden;
     box-shadow:0 1px 3px rgba(14,22,32,.12), 0 44px 80px -34px rgba(14,22,32,.6);
+    /* No panning starts anywhere on this dialog except inside .sheet-bd below.
+       The header is not a scroll container, so a drag begun on the title or the standfirst
+       used to fall through to the nearest ancestor that is, which is the document: the page
+       behind scrolled instead, and iOS then held the gesture until its momentum ran out, so
+       the sheet itself would not scroll until the background had stopped. Same for a drag
+       begun on the backdrop, which targets the dialog box.
+       pinch-zoom rather than `none`, so this does not take zooming away from anyone. */
+    touch-action:pinch-zoom;
     /* the UA centres a modal dialog with inset:0 and margin:auto, so transform is free to
        carry the whole animation and nothing has to fight the centring */
     opacity:0;transform:scale(.97) translateY(8px);
@@ -342,6 +350,11 @@
      what holds the first row off the standfirst, and neither is the whole gap on its own. */
   .sheet-hd{
     flex:none;display:flex;align-items:flex-start;gap:14px;padding:28px 20px 17px;
+    /* Stated here as well as on the dialog. touch-action does not inherit, so this element
+       computes to `auto` and is only restrained by the intersection up its ancestor chain;
+       this is the exact spot the bug was reported on, so it says so itself rather than
+       resting on that rule holding in every engine. */
+    touch-action:pinch-zoom;
   }
   /* Takes the slack so the close button is pinned to the right edge whatever the title is.
      Without it the text block sizes to its content and the X follows it inwards: invisible
@@ -375,6 +388,13 @@
   .sheet-bd{
     --gut:20px;
     flex:1;min-height:0;
+    /* The one place on the sheet a drag should move something. Stated explicitly rather than
+       relying on the dialog's restriction not reaching in: the spec intersects touch-action
+       only up to the element that implements the gesture, and for this scroller's own panning
+       that element is this one, so .sheet's pinch-zoom should not apply here. Saying pan-y
+       out loud costs nothing and means a stricter reading of that rule cannot lock the sheet.
+       overscroll-behavior then stops the page behind picking the scroll up at either end. */
+    touch-action:pan-y pinch-zoom;
     overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
     padding:17px 20px calc(20px + env(safe-area-inset-bottom,0px));
   }
