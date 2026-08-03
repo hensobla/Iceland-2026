@@ -338,10 +338,10 @@
      flex item above the scroller, so its padding is a permanent band that the list is
      clipped against, while padding on the first row scrolls away with the row and lets the
      next one arrive hard against the type. That is the "cropped content running into the
-     sub-head" this fixes. The scroller keeps a smaller top pad so the two still add up to
-     the ~38px the phrasebook was tuned to. */
+     sub-head" this fixes. The scroller keeps its own top pad on top of this; the pair is
+     what holds the first row off the standfirst, and neither is the whole gap on its own. */
   .sheet-hd{
-    flex:none;display:flex;align-items:flex-start;gap:14px;padding:20px 20px 21px;
+    flex:none;display:flex;align-items:flex-start;gap:14px;padding:28px 20px 17px;
   }
   /* Takes the slack so the close button is pinned to the right edge whatever the title is.
      Without it the text block sizes to its content and the X follows it inwards: invisible
@@ -349,7 +349,10 @@
      one like "Grundarfjörður" turned up. min-width:0 so a long word can still wrap. */
   .sheet-hd>div{flex:1;min-width:0}
   .sheet-hd h2{font-size:23px;line-height:1.14;margin:0}
-  .sheet-hd p{margin:7px 0 0;font-size:14px;line-height:1.5;color:var(--ink-3)}
+  /* 4px and 1.4, against 7px and 1.5. The margin is only half the gap: at 1.5 the standfirst
+     carried about 3.5px of dead leading above its first pixel of ink as well, so the pair read
+     13.6px apart on screen for a 7px rule. Ink to ink they now sit about 10px apart. */
+  .sheet-hd p{margin:4px 0 0;font-size:14px;line-height:1.4;color:var(--ink-3)}
   .sheet-x{
     flex:none;width:34px;height:34px;margin:-3px -4px 0 0;border-radius:11px;
     display:grid;place-items:center;color:var(--ink-3);
@@ -406,7 +409,7 @@
       transition:transform 380ms var(--e-drawer);
     }
     .sheet.in{transform:none}
-    .sheet-hd{padding:19px 18px 19px}
+    .sheet-hd{padding:27px 18px 15px}
     .sheet-bd{--gut:18px;padding-left:18px;padding-right:18px}
   }
 
