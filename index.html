@@ -109,8 +109,9 @@
   }
   /* the mark sits alone at the top left; the COMPLETE stamp owns the right */
   header.hero .mark{display:block;height:31px;width:auto;margin:0 0 30px}
+  /* sits under the h1, not over it: the title lands first and the dates answer it */
   .eyebrow{
-    display:block;margin:0 0 16px;font-size:12.5px;font-weight:500;
+    display:block;margin:15px 0 0;font-size:12.5px;font-weight:500;
     letter-spacing:.2em;text-transform:uppercase;color:var(--ember);
   }
   h1{font-size:clamp(38px,11.5vw,54px);line-height:1.04;margin:0;font-variation-settings:'opsz' 60}
@@ -121,11 +122,21 @@
   /* No cell around each number. They are the last thing in the hero now, so they close
      the block themselves rather than sitting in four boxes that repeat the day pills
      directly below them. The 13px of former cell padding moves onto .countdown so the
-     spacing off the middot row is unchanged. */
-  .countdown{margin-top:39px;display:flex;gap:9px}
-  .cd-cell{flex:1;text-align:center}
+     spacing off the middot row is unchanged.
+
+     The cells no longer stretch. flex:1 across the full measure left "05" floating a
+     column's worth of centring in from the margin, which is visible against a hero that
+     is left aligned all the way down. They size to their own content now and the row
+     starts on the same rail as the h1. The gap carries the width instead, and it is
+     fluid so four columns still fit a 320px screen. */
+  .countdown{margin-top:39px;display:flex;gap:clamp(20px,7vw,40px)}
+  .cd-cell{text-align:left}
   .cd-num{font-size:26px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-  .cd-lab{font-size:10.5px;letter-spacing:.14em;text-indent:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:7px;font-weight:500}
+  /* no text-indent here, unlike the nav pills. That correction exists to re-centre
+     tracked text against the space its own tracking adds after the last glyph, and a
+     left aligned label has nothing to re-centre: the indent would just push DAYS off
+     the left edge its number sits on. See §9. */
+  .cd-lab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:7px;font-weight:500}
   .cd-msg{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px;font-size:16px;text-align:center;color:var(--ink-2)}
   .cd-msg strong{color:var(--ink);font-weight:500}
   .mapwrap{margin-top:22px}
@@ -640,8 +651,8 @@
       <path fill="#deb268" d="M866.7706162,205.1369293v11.5133608c27.1528504,0,44.371898,8.2018859,41.1114167,41.9266925l-11.5133608,41.060734v.8152758l-113.4010691,415.0394306-177.5392074-509.5402179.8146539-.8152758h-23.7903819l-138.9239898,510.3554936-40.8060769-119.1067559-31.0756267,79.9309196,40.6530961,116.4068933h33.7248066l133.9315916-493.0857634,172.5978028,493.0857634h32.8585372l133.9825852-492.2704876c5.7566804-19.7152467,29.5470623-83.8027023,65.7176962-83.8027023v-11.5133608h-118.3424737Z"/>
       <path fill="#182429" d="M378.9321147,205.5955968v11.5133608c34.5400824,0,52.6247775,14.0095599,34.5400824,70.7100944l-61.8465354,159.2502269-31.6359344,81.3574968-70.913447,182.5825992L105.2618795,300.9623425l-.8158977-1.6809233-4.0751352-11.4623672c-18.0846951-56.7005346,0-70.7100944,34.4890888-70.7100944v-11.5133608H14.8869101v11.5133608c29.5980559,0,50.1285784,40.2964518,59.9610158,67.3986196l4.1261288,10.698085c.8158977,2.4455164,1.6305516,4.9417155,1.6305516,4.9417155l155.3277616,443.771839,18.085317,49.3136135v1.6302406l4.1261288-1.6302406h17.2190476l72.2380369-185.7410933,31.3312166-80.5425319,87.929142-225.9868624.8146539-2.4961991,12.3286366-31.2286075c11.5127389-23.7906928,29.5980559-50.1285784,52.6247775-50.1285784v-11.5133608h-153.69721Z"/>
     </svg>
-    <span class="eyebrow">9 – 17 August 2026</span>
     <h1>Iceland</h1>
+    <span class="eyebrow">9 – 17 August 2026</span>
     <div class="meta"><span><b>Star Pride</b></span><span>Windstar</span><span>Reykjavík round-trip</span></div>
     <div id="cd" class="countdown"></div>
   </div>

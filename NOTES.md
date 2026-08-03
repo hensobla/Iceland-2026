@@ -189,7 +189,11 @@ It used to do that with a `z-index: -1` `::after` pinned to `inset: 0 calc(-1 * 
 
 **Today is marked twice, at two scales.** The ember "Today" chip identifies the card once you are looking at it; `.day.now` makes the card findable while scrolling past. That treatment is an ember border, a 4px `--ember-pale` halo holding it off the paper, and a warm ember cast in the drop shadow. Ember is reserved for *now* and for the one `hero` stop per day. Spending it anywhere else costs both.
 
-**The hero is one line per level, and nothing repeats a level.** Mark (whose it is), eyebrow (when), h1 (what), middot row (which ship, which route), countdown. That is the whole header and it ends on the countdown deliberately.
+**The hero is one line per level, and nothing repeats a level.** Mark (whose it is), h1 (what), eyebrow (when), middot row (which ship, which route), countdown. That is the whole header and it ends on the countdown deliberately.
+
+> **The eyebrow sits under the h1, not over it.** It ran above the title for a long while, which meant the first thing on the page was a date range in tracked ember caps and the word "Iceland" arrived second. Underneath, the title lands first and the dates read as its answer. Everything below it is then in descending order of how much you already knew.
+
+**The countdown is left aligned on the same rail as everything above it.** The cells do not stretch: `flex:1` across the full measure parked "05" a column's worth of centring in from the margin, which is invisible while the cells have borders and obvious the moment they do not. They size to their own content and the gap carries the width, fluid so four columns still fit a 320px screen. Measured, the h1, the eyebrow, the middot row, the first number and its label all start on the same pixel.
 
 > **Four things were cut from it once the floating menu existed.** The lede naming the guides, the glance line ("five ports, eight days aboard…"), the Windstar provenance link, and the boxes around the countdown cells. The first three were all *secondary* material parked below the countdown, which meant the header did not end anywhere: it trailed off through two greyed-out lines into a link. The guides are named on every day card that has one, and Windstar's itinerary is now one tap away in the menu, so none of it was load-bearing. Do not put a second tier back under the countdown. If something new has to live in the hero it belongs above the countdown or in the menu.
 
@@ -205,7 +209,9 @@ The hero's middot row reuses the day card's `.meta`, deliberately: "which ship" 
 
 There are exactly **two deliberate 700s**: the "TODAY" nav label, and the day card's date line, which went bold once the cards became photographs and a 500 stopped holding its own against them. Figtree 700 is loaded from Google Fonts, so neither is a synthesized fake bold — check the stylesheet link before adding a third.
 
-**Letter-spacing costs padding.** Tracked uppercase text carries its tracking after the last glyph, so a chip with symmetric padding looks shifted left. The badge uses `padding-right: calc(10px − .08em)`; centred labels in the nav pills and countdown cells use a matching `text-indent`. Apply the same correction to any new tracked label.
+**Letter-spacing costs padding.** Tracked uppercase text carries its tracking after the last glyph, so a chip with symmetric padding looks shifted left. The badge uses `padding-right: calc(10px − .08em)`; centred labels in the nav pills use a matching `text-indent`. Apply the same correction to any new tracked label.
+
+> **The correction is for centred labels only, and `.cd-lab` no longer takes it.** It carried one while the countdown cells were centred. Now that they are left aligned there is nothing to re-centre, and the indent would only push DAYS off the left edge its own number sits on. Adding `text-indent` to a left aligned tracked label is the mistake this note causes if you read the first half of it and stop.
 
 **The Itinerary panel is animated by hand.** `<details>` will not transition its own height, so the summary click is intercepted, `.tl` is animated from its measured height with the Web Animations API, and the rows lift in behind it. Three things follow from that and are easy to undo by accident:
 
