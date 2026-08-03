@@ -129,9 +129,45 @@
   h1{font-size:clamp(38px,11.5vw,54px);line-height:1.04;margin:0;font-variation-settings:'opsz' 60}
   /* the hero reuses the day card's middot line, so "what ship" reads the same
      way here as "which guide" does further down */
-  /* 1.35, not the body's 1.62, for the same reason as .eyebrow above. Kept off 1 because
-     this one does wrap: the round-trip string runs past a 320px screen. */
-  header.hero .meta{margin-top:25px;font-size:15px;line-height:1.35}
+  /* 1.35, not the body's 1.62, for the same reason as .eyebrow above. It stays at 1.35
+     rather than going to 1 because the optical ladder in the comment above was measured
+     against this line box; move it and the 28 and 46 both move with it.
+
+     THIS LINE MUST NEVER WRAP, so it is sized to fit instead. flex-wrap because .meta is
+     a flex row by default and would otherwise break between the spans, white-space for
+     the hyphen inside "round-trip", and the font-size shrinks below 15px once the screen
+     is too narrow to hold it.
+
+     The 76px is three things: 36 for .wrap's own padding, 32 for the two separator
+     margins (which are set in px, not em, so they do not scale with the type and have to
+     come off the top), and 8 of slack for a desktop scrollbar inside 100vw and for
+     sub-pixel rounding.
+
+     19.6 is the string's width in em, and it is taken from the WIDEST font in the stack
+     at the SMALLEST size this rule can pick, which is not the same as measuring Figtree.
+     Two things make that necessary:
+
+       - The fallbacks are what an offline reader gets (§8), so Figtree's 17.94 is not
+         the number to size against. Arial is 18.10.
+       - -apple-system is optically sized. SF swaps to its Text cut below 20px and gets
+         WIDER as the type gets smaller: 18.45em at 15px but 19.31em at 11px. A constant
+         measured at one size does not hold at another. An earlier pass used 18.1, read
+         off a 100px sample, and San Francisco overflowed by 0.7px at 320px. Measure at
+         the small end or this breaks on an iPhone and nowhere else.
+
+     19.6 clears that 19.31 worst case by 1.5%, which also covers real Segoe UI and Roboto
+     metrics that cannot be measured on a Mac. The cost is that Figtree readers get very
+     slightly smaller type below a 370px screen than they strictly need. That is the right
+     trade: too small is invisible, wrapped is not.
+
+     Both numbers are specific to the words currently in this line. Re-measure if you
+     change them, at 11px and not at 100px: read the rendered width, subtract the 32,
+     divide by 11, and check every family in the stack. */
+  header.hero .meta{
+    margin-top:25px;line-height:1.35;
+    flex-wrap:nowrap;white-space:nowrap;
+    font-size:min(15px, (100vw - 76px) / 19.6);
+  }
 
   /* No cell around each number. They are the last thing in the hero now, so they close
      the block themselves rather than sitting in four boxes that repeat the day pills

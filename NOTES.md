@@ -205,7 +205,30 @@ Both lines now set their own line-height, and the margins are tuned against meas
 
 > **`margin-top:4px` on `.eyebrow` is not a typo**, and the h1's empty descender space is the reason. Do not "correct" it back up to something that looks normal in the stylesheet without measuring what it does on screen.
 
-> `.eyebrow` gets `line-height:1` because it is one unwrappable line of tracked capitals. `header.hero .meta` gets 1.35 and not 1, because it *does* wrap: the round-trip string goes to two lines below about 340px.
+> `.eyebrow` gets `line-height:1` because it is one unwrappable line of tracked capitals. `header.hero .meta` keeps 1.35 rather than going to 1 because the ladder above was measured against that line box; move it and the 28 and the 46 move with it.
+
+**The hero's middot row never wraps. It shrinks to fit instead.**
+
+```css
+header.hero .meta{ flex-wrap:nowrap; white-space:nowrap;
+                   font-size:min(15px, (100vw - 76px) / 19.6); }
+```
+
+`flex-wrap` because `.meta` is a flex row and would otherwise break between the spans; `white-space` for the hyphen inside "round-trip". Full 15px down to a 370px screen, shrinking below that. This is scoped to the hero: **the day cards' `.meta` still wraps, and should**, since those lines are longer and genuinely need two.
+
+The `76px` is 36 for `.wrap`'s padding, 32 for the two separator margins (set in px, not em, so they do not scale with the type and have to come off the top), and 8 of slack for a desktop scrollbar inside `100vw`.
+
+> **The `19.6` is the trap, and it is not Figtree's number.** It is the string's width in em taken from the widest font in the stack *at the smallest size the rule can pick*, which is a different measurement from the obvious one.
+>
+> | | at 15px | at 11px |
+> |---|---|---|
+> | Figtree | 17.94 | 17.94 |
+> | Arial / Helvetica | 18.10 | 18.10 |
+> | **-apple-system** | **18.45** | **19.31** |
+>
+> Two separate things are going on. **Sizing to Figtree is wrong** because the fallbacks are what an offline reader gets (§8). And **-apple-system is optically sized**: San Francisco swaps to its Text cut below 20px and gets *wider* as the type gets smaller, so a constant read off a large sample does not hold at a small one. A first pass used `18.1`, measured from a 100px sample, and San Francisco overflowed by 0.7px at 320px: a bug that would have appeared on iPhones and on nothing else.
+>
+> Re-measure at 11px, not at 100px, and check every family in the stack. Verified at 280, 320, 360, 375 and 390px across Figtree, San Francisco, Arial and the generic sans; the tightest case has 9.6px to spare.
 
 **The countdown is left aligned on the same rail as everything above it.** The cells do not stretch: `flex:1` across the full measure parked "05" a column's worth of centring in from the margin, which is invisible while the cells have borders and obvious the moment they do not. They size to their own content and the gap carries the width, fluid so four columns still fit a 320px screen. Measured, the h1, the eyebrow, the middot row, the first number and its label all start on the same pixel.
 
