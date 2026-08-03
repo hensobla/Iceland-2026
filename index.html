@@ -51,6 +51,13 @@
     --serif:'Newsreader','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
     --shadow:0 1px 2px rgba(24,36,41,.04), 0 12px 30px -20px rgba(24,36,41,.3);
     --r:18px;
+    /* Motion curves, shared by the floating menu and the phrasebook. The CSS built-ins
+       are too weak to read as intentional at these durations, so all three are custom.
+       --e-out is the default and is used for exits too: ease-in on an exit delays the
+       first frame, which is the one the eye is on. See the FLOATING MENU section. */
+    --e-out:cubic-bezier(.23,1,.32,1);
+    --e-morph:cubic-bezier(.77,0,.175,1);
+    --e-drawer:cubic-bezier(.32,.72,0,1);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
@@ -141,6 +148,173 @@
   .mapcap b{color:var(--ink);font-weight:500}
   .glance{margin:16px 0 0;font-size:14.5px;color:var(--ink-3)}
   .glance b{font-weight:500;color:var(--ember)}
+
+  /* ---------- FLOATING MENU ---------- */
+  /* Motion here follows Emil Kowalski's animation rules (github.com/emilkowalski/skills),
+     applied by hand so the page stays one file with nothing to download:
+       - ease-out on enter AND exit; never ease-in on UI. ease-in-out is used once, on the
+         bars, because they morph in place rather than arriving or leaving.
+       - transform and opacity only, so nothing hits layout or paint.
+       - under 300ms for everything at this size; a 190ms panel reads faster than a 400ms one.
+       - the panel scales from the button it came out of, not from its own centre.
+       - it never starts from scale(0). Nothing in the world appears out of nothing.
+       - CSS transitions, not keyframes, so a fast open-close-open retargets mid-flight
+         instead of restarting from zero. */
+
+  /* Sticky to the hero and no further, with no scroll listener and no class toggling:
+     the rail is absolutely sized to the hero, and a sticky box cannot leave its own
+     containing block. The button pins 14px under the top edge while any of the hero is
+     on screen, then rides the hero's bottom edge out of view. The rail is inert to the
+     pointer so the hero's own link still takes clicks straight through it. */
+  .m-rail{position:absolute;inset:0;z-index:95;pointer-events:none}
+  /* 36px is not arbitrary: it puts the 44px button on the same centre line as the 31px
+     wordmark opposite it, so at rest the two read as one header row. */
+  .m-dock{position:sticky;top:14px;height:44px;margin-top:36px}
+  .m-dock .wrap{position:relative;height:100%}
+
+  .m-btn{
+    position:absolute;top:0;right:18px;pointer-events:auto;
+    width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+    color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow);
+    /* the nav bar's own treatment, so the two controls belong to the same family */
+    background:rgba(255,255,255,.78);
+    backdrop-filter:saturate(150%) blur(10px);-webkit-backdrop-filter:saturate(150%) blur(10px);
+    transition:transform 160ms var(--e-out),background-color 160ms ease,border-color 160ms ease;
+  }
+  .m-btn:active{transform:scale(.95)}
+  .m-btn:focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
+  .m-open .m-btn{background:var(--card);border-color:#DCD3C4}
+
+  /* three bars on a 12px stack: tops at 0, 5 and 10, so the outer two travel exactly 5px
+     to meet the middle one and cross there. Integers, so the X closes on the pixel. */
+  .m-bars{position:relative;width:18px;height:12px}
+  .m-bars i{
+    position:absolute;left:0;width:18px;height:2px;border-radius:1px;background:currentColor;
+    transition:transform 240ms var(--e-morph),opacity 110ms var(--e-out);
+  }
+  .m-bars i:nth-child(1){top:0}
+  .m-bars i:nth-child(2){top:5px}
+  .m-bars i:nth-child(3){top:10px}
+  .m-open .m-bars i:nth-child(1){transform:translateY(5px) rotate(45deg)}
+  .m-open .m-bars i:nth-child(2){opacity:0;transform:scaleX(.3)}
+  .m-open .m-bars i:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+
+  .m-panel{
+    position:absolute;top:52px;right:18px;pointer-events:auto;
+    width:284px;max-width:calc(100vw - 36px);
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 1px 2px rgba(24,36,41,.05), 0 26px 55px -26px rgba(24,36,41,.5);
+    padding:6px;
+    transform-origin:100% 0;
+    opacity:0;transform:scale(.96) translateY(-6px);visibility:hidden;
+    /* visibility is in the list so the panel stays hittable for the whole close and
+       then goes untabbable at the end of it, with no display swap to kill the tween */
+    transition:opacity 150ms var(--e-out),transform 190ms var(--e-out),visibility 190ms;
+  }
+  .m-open .m-panel{opacity:1;transform:none;visibility:visible}
+
+  .m-item{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:11px 12px;border-radius:11px;color:var(--ink);text-decoration:none;
+    font-size:15px;line-height:1.3;
+    opacity:0;transform:translateY(-6px);
+    transition:opacity 160ms var(--e-out),transform 160ms var(--e-out),background-color 130ms ease;
+  }
+  .m-open .m-item{opacity:1;transform:none}
+  /* Stagger lives in the open state only. Opening deals the rows out; closing takes the
+     whole panel back at once, which is what a dismissal should feel like. 30ms apart:
+     any longer and the third row is visibly waiting its turn. */
+  .m-open .m-item:nth-child(1){transition-delay:20ms}
+  .m-open .m-item:nth-child(2){transition-delay:50ms}
+  .m-open .m-item:nth-child(3){transition-delay:80ms}
+  .m-item .ic{flex:none;color:var(--ink-3);display:grid;place-items:center}
+  .m-item .tx{flex:1;min-width:0}
+  .m-item .sub{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px;line-height:1.3}
+  .m-item .go{flex:none;opacity:.42}
+  .m-item:focus-visible{outline:2px solid var(--glacier);outline-offset:-1px}
+  /* hover is gated: a tap on a touch screen fires a hover first and leaves the row lit */
+  @media (hover:hover) and (pointer:fine){ .m-item:hover{background:var(--paper-2)} }
+  .m-open .m-item:active{background:var(--paper-2);transform:scale(.985)}
+  /* the rule is drawn by the item so it fades in with it rather than hanging in mid-air */
+  .m-item.cut{margin-top:7px;border-top:1px solid var(--line-2);padding-top:14px}
+
+  /* The COMPLETE stamp owned this corner first. It is decorative and blend-mode'd, so it
+     drops below the button rather than the other way round, and lands across the title
+     block instead. 112px, not the 80px the button's bottom edge suggests: the stamp is
+     rotated 13 degrees, so its box reaches about 19px above the top it is given, and its
+     type is clamped against vw, so the overhang is not the same at every width. */
+  header.hero.done .stamp{top:112px}
+
+  /* ---------- PHRASEBOOK ---------- */
+  /* A real <dialog>: the top layer settles the stacking against the nav and the
+     back-to-top button, and focus containment plus Escape come for free. */
+  .sheet{
+    padding:0;border:0;color:var(--ink);background:var(--card);
+    width:min(520px,calc(100vw - 32px));max-width:none;
+    max-height:min(80vh,700px);max-height:min(80svh,700px);
+    border-radius:20px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(14,22,32,.12), 0 44px 80px -34px rgba(14,22,32,.6);
+    /* the UA centres a modal dialog with inset:0 and margin:auto, so transform is free to
+       carry the whole animation and nothing has to fight the centring */
+    opacity:0;transform:scale(.97) translateY(8px);
+    transition:opacity 180ms var(--e-out),transform 240ms var(--e-out);
+  }
+  .sheet[open]{display:flex;flex-direction:column}
+  .sheet.in{opacity:1;transform:none}
+  .sheet::backdrop{background:rgba(14,22,32,0);transition:background 240ms var(--e-out)}
+  .sheet.in::backdrop{background:rgba(14,22,32,.5)}
+
+  .sheet-hd{
+    flex:none;display:flex;align-items:flex-start;gap:14px;padding:20px 20px 15px;
+    border-bottom:1px solid var(--line-2);
+  }
+  .sheet-hd h2{font-size:23px;line-height:1.14;margin:0}
+  .sheet-hd p{margin:7px 0 0;font-size:14px;line-height:1.5;color:var(--ink-3)}
+  .sheet-x{
+    flex:none;width:34px;height:34px;margin:-3px -4px 0 0;border-radius:11px;
+    display:grid;place-items:center;color:var(--ink-3);
+    transition:transform 160ms var(--e-out),background-color 140ms ease,color 140ms ease;
+  }
+  .sheet-x:active{transform:scale(.92)}
+  .sheet-x:focus-visible{outline:2px solid var(--glacier);outline-offset:2px}
+  @media (hover:hover) and (pointer:fine){ .sheet-x:hover{background:var(--paper-2);color:var(--ink)} }
+
+  /* min-height:0 or the flex item refuses to shrink under its content and the list
+     escapes the sheet instead of scrolling inside it.
+     contain stops the page behind from scrolling on once this list hits its end. */
+  .sheet-bd{
+    flex:1;min-height:0;
+    overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:4px 20px calc(20px + env(safe-area-inset-bottom,0px));
+  }
+  .ph-g{
+    font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);
+    font-weight:500;margin:20px 0 2px;
+  }
+  .ph-g:first-child{margin-top:10px}
+  .ph{display:grid;grid-template-columns:1fr auto;column-gap:16px;padding:10px 0 9px;border-top:1px solid var(--line-2)}
+  .ph .is{font-family:var(--serif);font-size:17px;font-weight:500;line-height:1.3}
+  .ph .en{font-size:14px;color:var(--ink-3);text-align:right;line-height:1.3;padding-top:3px}
+  /* glacier, the information colour, so the sounding-out line separates cleanly from the
+     English beside it without either of them reaching for ember */
+  .ph .pron{grid-column:1/-1;font-size:13px;color:var(--glacier);margin-top:2px;letter-spacing:.04em}
+  .ph-ps{
+    margin:22px 0 0;padding-top:15px;border-top:1px solid var(--line-2);
+    font-size:14px;line-height:1.55;color:var(--ink-3);
+  }
+
+  @media (max-width:559px){
+    /* a drawer on a phone, because the thumb is at the bottom and the list is long */
+    .sheet{
+      width:100%;max-width:100%;margin:auto auto 0;
+      border-radius:22px 22px 0 0;max-height:86vh;max-height:86svh;
+      opacity:1;transform:translateY(100%);
+      transition:transform 380ms var(--e-drawer);
+    }
+    .sheet.in{transform:none}
+    .sheet-hd{padding:19px 18px 14px}
+    .sheet-bd{padding-left:18px;padding-right:18px}
+  }
 
   /* ---------- NAV ---------- */
   .nav{
@@ -441,6 +615,10 @@
     *{transition-duration:.01ms !important}
     .pulse .p1{animation:none;transform:scale(5);opacity:.16}
     .pulse .p2,.pulse .p3{display:none}
+    /* With every transition down to a hundredth of a millisecond these would not move so
+       much as snap, which is the jolt reduced motion is asking us to drop. They appear in
+       place instead. The bars still cross into an X: that one is state, not decoration. */
+    .m-panel,.m-item,.sheet{transform:none !important}
   }
 </style>
 </head>
@@ -450,6 +628,19 @@
   <div class="stamp" aria-hidden="true"><div class="box">
     <span class="s1">Complete</span><span class="s2">9 – 17 Aug 2026</span>
   </div></div>
+
+  <!-- The rail is the hero's own bounds handed to a sticky box, which is the whole reason
+       the button stops at the end of the header instead of following the page down.
+       It sits first in the source so a keyboard reaches the menu before the trip copy. -->
+  <div class="m-rail" id="mrail">
+    <div class="m-dock"><div class="wrap">
+      <button class="m-btn" id="mbtn" aria-label="Trip menu" aria-expanded="false" aria-controls="mpanel">
+        <span class="m-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+      <div class="m-panel" id="mpanel"></div>
+    </div></div>
+  </div>
+
   <div class="wrap">
     <!-- viewBox cropped to the glyph's own bounds; the source file pads it to a 1000 square -->
     <svg class="mark" role="img" aria-label="VoyageWell" xmlns="http://www.w3.org/2000/svg" viewBox="14.9 205.1 970.2 589.7">
@@ -473,6 +664,19 @@
 <button class="totop" id="totop" aria-label="Back to top">
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
+
+<dialog class="sheet" id="phrasebook" aria-labelledby="pb-title">
+  <div class="sheet-hd">
+    <div>
+      <h2 id="pb-title">Common Icelandic Phrases</h2>
+      <p>Stress lands on the first syllable, almost without exception. The capitals below mark it.</p>
+    </div>
+    <button class="sheet-x" id="pbx" aria-label="Close">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-bd" id="pb-body"></div>
+</dialog>
 
 <script>
 /* ============ icons ============ */
@@ -1413,6 +1617,141 @@ addEventListener('scroll',()=>{
 
 const totop=document.getElementById('totop');
 totop.onclick=()=>{ stopGlide(); lock=Date.now()+1100; setCurrent(days[0].id); window.scrollTo({top:0,behavior:'smooth'}); };
+
+/* ============ FLOATING MENU ============
+   Self-contained: nothing above this line refers to anything below it, so the whole block
+   plus its two CSS sections and its two pieces of markup lift out together.
+   The sticking is done in CSS by the rail; all of this is open, close and focus. */
+const mrail=document.getElementById('mrail');
+const mbtn=document.getElementById('mbtn');
+const mpanel=document.getElementById('mpanel');
+const pbook=document.getElementById('phrasebook');
+
+/* Second copy of the Windstar URL; the first is the hero's provenance link. They must be
+   changed together. Reading it back out of the DOM was the alternative and was rejected:
+   it makes deleting one line of the hero throw at load and take the whole page with it. */
+const WINDSTAR='https://www.windstarcruises.com/tour-details/REYREY7D9/n-europe/reykjavik-to-reykjavik/7-day-around-iceland-a-total-solar-eclipse/?pkgid=1013304';
+
+const mIc=p=>`<span class="ic">${S(p,19)}</span>`;
+const mGo=`<svg class="go" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>`;
+
+mpanel.innerHTML=
+`<button class="m-item" id="mi-ph" type="button">
+  ${mIc('<path d="M20 14.2a2.4 2.4 0 0 1-2.4 2.4H8.6L4.5 20V6.4A2.4 2.4 0 0 1 6.9 4h10.7A2.4 2.4 0 0 1 20 6.4Z"/><path d="M8.4 8.6h7.2"/><path d="M8.4 12.2h4.4"/>')}
+  <span class="tx">Common Icelandic Phrases<span class="sub">Sounded out, stress marked</span></span>
+</button>
+<a class="m-item cut" href="${WINDSTAR}" target="_blank" rel="noopener">
+  ${mIc('<path d="M3 17c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M5 14 6.5 8h11L19 14"/><path d="M12 8V4h4"/>')}
+  <span class="tx">Windstar Official Itinerary<span class="sub">windstarcruises.com</span></span>${mGo}
+</a>
+<a class="m-item" href="assets/itinerary.pdf" target="_blank" rel="noopener">
+  ${mIc('<path d="M14.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7.5Z"/><path d="M14.5 3v4.5H19"/><path d="M8.5 13.5h7"/><path d="M8.5 17h4.5"/>')}
+  <span class="tx">Official Excursion Itinerary<span class="sub">PDF · the operator's own sheet</span></span>${mGo}
+</a>`;
+
+let mOpen=false;
+function setMenu(on){
+  if(on===mOpen) return;
+  mOpen=on;
+  mrail.classList.toggle('m-open',on);
+  mbtn.setAttribute('aria-expanded',String(on));
+}
+
+mbtn.addEventListener('click',()=>setMenu(!mOpen));
+
+mpanel.addEventListener('click',e=>{
+  const it=e.target.closest('.m-item'); if(!it) return;
+  setMenu(false);                       /* the two links open a tab and leave the page put */
+  if(it.id==='mi-ph') pbOpen();
+});
+
+/* pointerdown, not click: the menu should be gone by the time the finger lifts. The button
+   is inside the rail, so its own press is excluded here and the toggle above handles it. */
+document.addEventListener('pointerdown',e=>{
+  if(mOpen && !(e.target instanceof Element && e.target.closest('.m-rail'))) setMenu(false);
+});
+addEventListener('keydown',e=>{
+  if(e.key==='Escape' && mOpen){ setMenu(false); mbtn.focus(); }
+});
+/* tabbing off the last row closes it, which is what a menu should do instead of trapping */
+mrail.addEventListener('focusout',e=>{
+  if(mOpen && !mrail.contains(e.relatedTarget)) setMenu(false);
+});
+/* 58 is the dock's 14px offset plus its 44px height: the exact scroll position at which the
+   button stops being sticky and starts to leave. The panel goes with it rather than sliding
+   up over the day pills. */
+addEventListener('scroll',()=>{
+  if(mOpen && mrail.getBoundingClientRect().bottom<58) setMenu(false);
+},{passive:true});
+
+/* ---- phrasebook ----
+   Same transcription system as the place names on the day cards: capitals carry the stress,
+   TH is the soft one in "them", and ll comes out "tl" the way it does in KIRK-yu-fetl. */
+const PHRASES=[
+  ['Greetings',[
+    ['Góðan daginn','GOH-than DAH-yin','Good morning'],
+    ['Gott kvöld','got KVURLD','Good evening'],
+    ['Hæ','high','Hi'],
+    ['Bless','bless','Bye'],
+    ['Sjáumst','SYOWMST','See you']
+  ]],
+  ['Please and thank you',[
+    ['Takk fyrir','tahk FIR-ir','Thank you'],
+    ['Kærar þakkir','KYE-rar THAH-kir','Many thanks'],
+    ['Gjörðu svo vel','GYUR-thu svo VEL','Here you go'],
+    ['Afsakið','AF-sa-kith','Excuse me'],
+    ['Fyrirgefðu','FIR-ir-gyev-thu','Sorry'],
+    ['Ekkert mál','EK-kert MOWL','No problem']
+  ]],
+  ['Getting by',[
+    ['Já / Nei','yow / nay','Yes / No'],
+    ['Talar þú ensku?','TA-lar thoo EN-sku','Do you speak English?'],
+    ['Ég skil ekki','yeh SKIL EK-ki','I do not understand'],
+    ['Hvað kostar þetta?','kvath KOS-tar THET-ta','How much is this?'],
+    ['Hvar er klósettið?','kvar er KLOH-set-tith','Where is the toilet?'],
+    ['Hjálp!','hyowlp','Help!']
+  ]],
+  ['At the table',[
+    ['Einn bjór, takk','aydn BYOHR, tahk','One beer, please'],
+    ['Vatn','vahtn','Water'],
+    ['Kaffi','KAF-fee','Coffee'],
+    ['Skál!','skowl','Cheers!']
+  ]],
+  ['Worth knowing on this trip',[
+    ['Foss','foss','Waterfall'],
+    ['Jökull','YUR-kutl','Glacier'],
+    ['Fjörður','FYUR-thur','Fjord'],
+    ['Sólmyrkvi','SOHL-mirk-vee','Solar eclipse'],
+    ['Norðurljós','NOR-thur-lyohs','Northern lights'],
+    ['Þetta reddast','THET-ta RED-dast','It will all work out']
+  ]]
+];
+
+document.getElementById('pb-body').innerHTML =
+  PHRASES.map(([g,rows])=>`<p class="ph-g">${g}</p>`+rows.map(([is,pr,en])=>
+    `<div class="ph"><span class="is">${is}</span><span class="en">${en}</span><span class="pron">${pr}</span></div>`
+  ).join('')).join('')+
+  `<p class="ph-ps"><b>Þetta reddast</b> is the closest thing Iceland has to a national motto. It comes out when a plan falls apart, and it means the plan was never really the point.</p>`;
+
+let pbShut=0;
+function pbOpen(){
+  if(pbShut){ clearTimeout(pbShut); pbShut=0; }   /* reverses a close still in flight */
+  if(!pbook.open){ document.getElementById('pb-body').scrollTop=0; pbook.showModal(); }
+  /* Two frames. The first commits the closed styles now that display is no longer none,
+     the second flips the class so there is a from-state to transition out of. */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>pbook.classList.add('in')));
+}
+function pbClose(){
+  if(!pbook.open || pbShut) return;
+  pbook.classList.remove('in');
+  const ms = reduceMo.matches ? 0 : (matchMedia('(max-width:559px)').matches ? 380 : 240);
+  pbShut = setTimeout(()=>{ pbShut=0; pbook.close(); mbtn.focus(); }, ms);
+}
+document.getElementById('pbx').addEventListener('click',pbClose);
+/* the dialog's own box is the sheet, so a hit on the element itself came from the backdrop */
+pbook.addEventListener('click',e=>{ if(e.target===pbook) pbClose(); });
+/* Escape would close it instantly and skip the animation, so take it over */
+pbook.addEventListener('cancel',e=>{ e.preventDefault(); pbClose(); });
 
 /* ---- minimal Iceland map, shown once the countdown runs out ---- */
 const COAST="M56.9 175.5 L61.1 174.5 Q63 174 65.0 174.0 L68.0 174.0 Q70 174 72.0 174.0 L72.0 174.0 Q74 174 76.0 173.7 L79.0 173.3 Q81 173 83.0 173.4 L84.0 173.6 Q86 174 88.0 173.7 L91.0 173.3 Q93 173 95.0 172.7 L98.0 172.3 Q100 172 101.5 173.0 L101.5 173.0 Q103 174 105.0 174.0 L106.0 174.0 Q108 174 109.2 175.6 L116.8 185.4 Q118 187 119.6 188.2 L123.4 190.8 Q125 192 126.9 192.7 L134.1 195.3 Q136 196 137.9 196.7 L145.1 199.3 Q147 200 149.0 200.3 L157.0 201.7 Q159 202 160.0 202.0 L160.0 202.0 Q161 202 161.5 201.0 L161.5 201.0 Q162 200 164.0 200.0 L166.0 200.0 Q168 200 169.5 201.0 L169.5 201.0 Q171 202 172.7 201.0 L178.3 198.0 Q180 197 181.8 196.2 L185.2 194.8 Q187 194 188.9 193.5 L192.1 192.5 Q194 192 195.9 191.4 L198.1 190.6 Q200 190 201.9 189.4 L210.1 186.6 Q212 186 213.9 185.3 L218.1 183.7 Q220 183 221.8 182.2 L229.2 178.8 Q231 178 232.6 176.8 L236.4 174.2 Q238 173 239.5 171.7 L242.5 169.3 Q244 168 244.0 166.0 L244.0 164.0 Q244 162 245.6 160.8 L253.4 155.2 Q255 154 256.6 152.8 L261.4 149.2 Q263 148 265.0 148.0 L281.0 148.0 Q283 148 284.4 146.6 L290.6 140.4 Q292 139 292.0 137.0 L292.0 132.0 Q292 130 293.4 128.6 L294.6 127.4 Q296 126 297.2 124.4 L297.8 123.6 Q299 122 297.4 120.8 L293.6 118.2 Q292 117 294.0 117.2 L301.0 117.8 Q303 118 303.7 116.1 L304.3 114.9 Q305 113 306.9 113.5 L307.1 113.5 Q309 114 308.0 113.0 L308.0 113.0 Q307 112 309.0 111.6 L310.0 111.4 Q312 111 310.4 109.8 L306.6 107.2 Q305 106 307.0 105.8 L311.0 105.2 Q313 105 314.7 103.9 L317.3 102.1 Q319 101 317.0 100.8 L303.0 99.2 Q301 99 303.0 98.9 L314.0 98.1 Q316 98 317.9 97.4 L320.1 96.6 Q322 96 321.0 94.3 L320.0 92.7 Q319 91 317.0 91.0 L310.0 91.0 Q308 91 309.9 90.5 L313.1 89.5 Q315 89 316.5 88.5 L316.5 88.5 Q318 88 316.0 88.0 L309.0 88.0 Q307 88 309.0 87.6 L314.0 86.4 Q316 86 316.5 84.5 L316.5 84.5 Q317 83 315.0 83.2 L309.0 83.8 Q307 84 308.9 83.3 L313.1 81.7 Q315 81 315.0 79.5 L315.0 79.5 Q315 78 313.0 78.0 L311.0 78.0 Q309 78 310.6 76.8 L312.4 75.2 Q314 74 314.5 72.5 L314.5 72.5 Q315 71 313.3 69.9 L310.7 68.1 Q309 67 311.0 66.8 L316.0 66.2 Q318 66 316.0 65.6 L302.0 62.4 Q300 62 298.4 63.2 L297.6 63.8 Q296 65 295.1 63.2 L291.9 56.8 Q291 55 290.0 53.5 L290.0 53.5 Q289 52 287.1 52.6 L281.9 54.4 Q280 55 281.3 53.5 L285.7 48.5 Q287 47 287.6 45.1 L288.4 42.9 Q289 41 289.8 39.2 L291.2 35.8 Q292 34 290.0 33.7 L279.0 32.3 Q277 32 278.0 30.3 L280.0 26.7 Q281 25 282.4 23.6 L290.6 15.4 Q292 14 290.2 14.8 L282.8 18.2 Q281 19 279.6 20.4 L274.4 25.6 Q273 27 271.6 28.4 L266.4 33.6 Q265 35 263.5 33.7 L255.5 26.3 Q254 25 253.0 23.3 L250.0 17.7 Q249 16 249.0 14.0 L249.0 6.0 Q249 4 247.0 4.0 L246.0 4.0 Q244 4 242.5 5.3 L237.5 9.7 Q236 11 236.0 13.0 L236.0 17.0 Q236 19 235.6 21.0 L233.4 33.0 Q233 35 232.5 34.0 L232.5 34.0 Q232 33 230.2 32.2 L221.8 28.8 Q220 28 218.6 26.6 L218.4 26.4 Q217 25 215.6 26.4 L213.4 28.6 Q212 30 211.6 32.0 L211.4 33.0 Q211 35 210.4 36.9 L208.6 42.1 Q208 44 206.0 44.0 L205.0 44.0 Q203 44 201.8 42.4 L197.2 36.6 Q196 35 194.5 33.7 L191.5 31.3 Q190 30 189.5 31.0 L189.5 31.0 Q189 32 188.4 33.9 L186.6 39.1 Q186 41 186.3 43.0 L188.7 56.0 Q189 58 188.0 56.2 L184.0 48.8 Q183 47 181.6 45.6 L177.4 41.4 Q176 40 175.2 38.2 L173.8 34.8 Q173 33 171.7 31.5 L168.3 27.5 Q167 26 166.0 27.0 L166.0 27.0 Q165 28 164.0 29.5 L164.0 29.5 Q163 31 161.8 29.4 L161.2 28.6 Q160 27 159.0 28.7 L151.0 42.3 Q150 44 149.9 46.0 L149.1 61.0 Q149 63 148.0 61.3 L145.0 55.7 Q144 54 142.5 52.7 L137.5 48.3 Q136 47 134.9 45.3 L124.1 29.7 Q123 28 123.1 30.0 L123.9 47.0 Q124 49 124.2 51.0 L124.8 57.0 Q125 59 123.6 60.4 L119.4 64.6 Q118 66 116.6 64.6 L116.4 64.4 Q115 63 114.4 61.1 L112.6 55.9 Q112 54 111.4 55.9 L109.6 62.1 Q109 64 108.6 66.0 L107.4 72.0 Q107 74 106.1 72.2 L104.9 69.8 Q104 68 103.6 66.0 L103.4 65.0 Q103 63 103.1 65.0 L103.9 93.0 Q104 95 103.6 93.0 L100.4 76.0 Q100 74 99.8 72.0 L99.2 65.0 Q99 63 97.6 64.4 L97.4 64.6 Q96 66 95.0 67.7 L94.0 69.3 Q93 71 92.5 69.1 L91.5 64.9 Q91 63 89.5 62.0 L89.5 62.0 Q88 61 86.8 59.4 L86.2 58.6 Q85 57 86.9 56.4 L89.1 55.6 Q91 55 90.2 53.2 L88.8 49.8 Q88 48 89.4 46.6 L92.6 43.4 Q94 42 92.1 41.3 L90.9 40.7 Q89 40 89.7 38.1 L90.3 36.9 Q91 35 89.8 33.4 L89.2 32.6 Q88 31 87.4 29.1 L86.6 26.9 Q86 25 84.5 23.7 L76.5 17.3 Q75 16 73.2 15.0 L65.8 11.0 Q64 10 62.1 10.5 L61.9 10.5 Q60 11 58.0 10.8 L49.0 10.2 Q47 10 47.6 11.9 L48.4 14.1 Q49 16 47.1 16.5 L43.9 17.5 Q42 18 43.2 19.6 L50.8 30.4 Q52 32 53.4 33.4 L63.6 43.6 Q65 45 63.2 44.1 L48.8 36.9 Q47 36 45.4 34.8 L44.6 34.2 Q43 33 41.8 31.4 L40.2 29.6 Q39 28 37.0 27.6 L36.0 27.4 Q34 27 32.5 27.5 L32.5 27.5 Q31 28 32.7 29.0 L36.3 31.0 Q38 32 36.0 31.7 L27.0 30.3 Q25 30 25.0 32.0 L25.0 33.0 Q25 35 26.9 35.7 L31.1 37.3 Q33 38 31.0 38.0 L24.0 38.0 Q22 38 22.0 39.5 L22.0 39.5 Q22 41 23.8 41.9 L30.2 45.1 Q32 46 30.0 45.8 L24.0 45.2 Q22 45 21.1 46.8 L20.9 47.2 Q20 49 21.9 49.5 L39.1 54.5 Q41 55 39.0 55.3 L24.0 57.7 Q22 58 20.1 58.6 L17.9 59.4 Q16 60 17.9 60.6 L20.1 61.4 Q22 62 20.0 62.2 L16.0 62.8 Q14 63 15.9 63.7 L17.1 64.3 Q19 65 17.0 65.2 L11.0 65.8 Q9 66 8.0 66.5 L8.0 66.5 Q7 67 5.1 67.7 L3.9 68.3 Q2 69 3.0 70.0 L3.0 70.0 Q4 71 5.5 71.0 L5.5 71.0 Q7 71 9.0 71.0 L14.0 71.0 Q16 71 18.0 71.0 L21.0 71.0 Q23 71 24.9 70.5 L36.1 67.5 Q38 67 39.5 67.0 L39.5 67.0 Q41 67 43.0 66.6 L44.0 66.4 Q46 66 47.5 66.0 L47.5 66.0 Q49 66 50.9 65.4 L56.1 63.6 Q58 63 60.0 63.0 L71.0 63.0 Q73 63 73.5 64.5 L73.5 64.5 Q74 66 73.0 67.7 L71.0 71.3 Q70 73 72.0 73.0 L76.0 73.0 Q78 73 79.7 74.0 L83.3 76.0 Q85 77 83.1 77.5 L78.9 78.5 Q77 79 75.6 80.4 L74.4 81.6 Q73 83 71.3 84.1 L66.7 86.9 Q65 88 66.9 88.7 L80.1 93.3 Q82 94 80.1 94.5 L68.9 97.5 Q67 98 65.0 97.7 L56.0 96.3 Q54 96 52.3 97.1 L40.7 104.9 Q39 106 37.0 106.2 L28.0 106.8 Q26 107 24.0 106.7 L22.0 106.3 Q20 106 18.2 106.9 L17.8 107.1 Q16 108 16.7 109.9 L19.3 116.1 Q20 118 21.9 117.3 L26.1 115.7 Q28 115 29.8 114.2 L33.2 112.8 Q35 112 37.0 111.9 L53.0 111.1 Q55 111 56.8 111.9 L63.2 115.1 Q65 116 66.3 117.5 L69.7 121.5 Q71 123 72.4 124.4 L76.6 128.6 Q78 130 77.3 131.9 L73.7 142.1 Q73 144 74.7 143.0 L76.3 142.0 Q78 141 80.0 140.9 L92.0 140.1 Q94 140 92.1 140.5 L84.9 142.5 Q83 143 81.7 144.5 L79.3 147.5 Q78 149 77.7 151.0 L77.3 153.0 Q77 155 77.0 157.0 L77.0 158.0 Q77 160 75.5 160.5 L75.5 160.5 Q74 161 72.0 161.4 L66.0 162.6 Q64 163 62.0 163.4 L61.0 163.6 Q59 164 57.8 162.4 L56.2 160.6 Q55 159 55.0 160.5 L55.0 160.5 Q55 162 55.0 164.0 L55.0 166.0 Q55 168 55.0 170.0 L55.0 174.0 Q55 176 56.9 175.5 Z";

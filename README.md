@@ -2,7 +2,7 @@
 
 A single-page microsite for a private Iceland trip, 9–17 August 2026: a Windstar *Star Pride* round-trip from Reykjavík wrapped around five private land days, plus the total solar eclipse on 12 August.
 
-Everything lives in **`index.html`** — markup, styles and script in one file, no build step and no dependencies. The only other runtime assets are the nine painted day images in `assets/images/`.
+Everything lives in **`index.html`** — markup, styles and script in one file, no build step and no dependencies. The other runtime assets are the nine painted day images in `assets/images/` and the operator's excursion sheet at `assets/itinerary.pdf`, which the floating menu links to.
 
 ## Running it
 
@@ -23,6 +23,7 @@ Opening the file directly with `file://` works too, though some browsers block t
 A few things that catch people out:
 
 - **No hash links.** In-page jumps are buttons plus `scrollTo()`; `href="#id"` tries to leave the page.
+- **The floating menu sticks to the hero with no JavaScript.** It is a sticky box inside a rail sized to the header, and a sticky box cannot leave its containing block. Do not add a scroll handler to do that job. See `NOTES.md` §14.
 - **Times are stored in 24h and displayed in 12h.** `h12()` converts at render, so the data still reconciles against the operator's paperwork. Prose inside `desc` and `note` is not converted and must be typed in 12h by hand.
 - **Check new artwork at phone width.** The caption covers the bottom ~47% of a card's image on a 375px screen against ~24% on a desktop.
 - **Gradient ids are suffixed with the day index.** Several scenes render at once and duplicate ids cross-contaminate.

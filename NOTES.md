@@ -30,14 +30,16 @@ These are not preferences. Each one was discovered by shipping something that br
   <style>                    ← all CSS, no framework
 <body>
   <header class="hero">      ← eyebrow, h1, lede, countdown/map slot, glance line, COMPLETE stamp
+    div.m-rail                 ← the floating menu, sized to the hero (§14)
   <nav class="nav">          ← sticky day pills (populated by JS)
   <main class="wrap">        ← everything else (populated by JS)
   back-to-top button
+  <dialog class="sheet">     ← the phrasebook (§14)
   <script>                   ← 741 lines
   footer
 ```
 
-The `<script>` runs top to bottom in this order: **icons → artwork → day data → render functions → nav/scroll → clock/map → `renderAll()`**. Nothing executes until `renderAll()` at the very bottom.
+The `<script>` runs top to bottom in this order: **icons → artwork → day data → render functions → nav/scroll → floating menu → clock/map → `renderAll()`**. Nothing executes until `renderAll()` at the very bottom.
 
 ---
 
@@ -320,6 +322,7 @@ The open-day callouts on the 10th, 15th and 16th were *not* part of that block a
 - 17 August arrival time unverified; Windstar does not list the disembarkation morning.
 - Photo aspect is **1.60:1 against the card's 1.90:1**, so `slice` trims about 8% off the top and bottom of every one. Rendering the set at 1.90:1 would recover it.
 - Fonts and the photos now stand between this and offline self-containment. Fonts were the last external request; the photos are local but still separate files.
+- The phrasebook does not lock the page behind it. Its own list uses `overscroll-behavior: contain`, so a touch scroll stops at the ends instead of chaining, but a wheel over the backdrop still moves the page. A real lock costs either a scrollbar-width jump on desktop or the position-fixed dance iOS needs, and neither is worth it for a sheet this short-lived.
 
 ---
 
@@ -361,3 +364,61 @@ cwebp -q 82 -resize 1200 0 archive/name.png -o name.webp
 > Raise the 1200 only if `.wrap`'s max-width goes up. It is derived from that number, not chosen for its own sake.
 
 > The drawn scenes for the seven replaced days are still in the file and now render nothing. They are roughly 300 lines of dead weight, kept only as a fallback while the photo approach settles. Delete them once it does, but keep `eclipse` and `gullfoss`.
+
+---
+
+## 14. The floating menu
+
+A hamburger in the hero's top right opening a three-row panel: **Common Icelandic Phrases**, which raises a phrasebook sheet, and outbound links to **Windstar's published itinerary** and the **operator's excursion PDF**. Added on the `floating-menu` branch.
+
+### It sticks to the hero and nowhere else, with no scroll handler
+
+`.m-rail` is `position:absolute; inset:0` on the header, so it is the hero's own bounds expressed as a box. `.m-dock` inside it is `position:sticky; top:14px`, and **a sticky box cannot leave its containing block**. That single fact is the entire feature: the button pins 14px under the top edge for as long as any of the hero is on screen, and then its bottom edge rides the hero's bottom edge out of view. Measured, `button.bottom === hero.bottom` for the whole exit, which is why it never crosses the day pills.
+
+There is no scroll listener doing this and no class being toggled. Do not add one. The two numbers that matter:
+
+- **`margin-top:36px`** on the dock is the button's resting position, and it is not decoration. A 44px button centred against the 31px wordmark opposite it wants its top at 36px, so at the top of the page the two read as one header row. Sticky then lifts it to 14px as you scroll, which is the whole "floating" part.
+- **58px** in the scroll handler is `14 + 44`, the exact rect at which the dock un-pins. The panel closes there so it retracts into its button rather than sliding up over the nav.
+
+The rail is `pointer-events:none` with `auto` restored on the button and the panel, because it covers the entire hero and would otherwise eat the clicks on the Windstar link underneath it.
+
+### Motion
+
+Rules taken from **Emil Kowalski's animation skills** (`github.com/emilkowalski/skills`) and applied by hand. Nothing is downloaded; the page is still one file.
+
+- **`ease-out` on enter and on exit. Never `ease-in` on UI.** `ease-in` delays the first frame, which is the one the eye is on. `--e-morph` is the only exception and is used once, on the bars, because they morph in place rather than arriving or leaving.
+- The three curves live in `:root` as `--e-out`, `--e-morph` and `--e-drawer`. They are custom because the CSS built-ins are too weak to read as deliberate at these durations.
+- **Under 300ms for everything at this size.** Panel 190ms, items 160ms, bars 240ms, press feedback 160ms. The phone drawer is the one thing allowed longer at 380ms, which is inside the 200 to 500ms a drawer gets.
+- **`transform` and `opacity` only**, so nothing touches layout or paint.
+- The panel scales from `transform-origin:100% 0`, the button it came out of, **not** from its own centre. The phrasebook is exempt: it is a modal, it arrives centred, and it keeps a centred origin.
+- Nothing starts at `scale(0)`. The panel opens from `.96`.
+- **Transitions, not keyframes.** A fast open-close-open retargets mid-flight instead of restarting from zero.
+- The row stagger is 30ms and lives **in the open state only**, so opening deals the rows out and closing takes the panel back as one piece.
+- Hover lift is behind `@media (hover:hover) and (pointer:fine)`, or a tap leaves the row lit.
+
+Under `prefers-reduced-motion` the page's existing blanket rule already cuts every transition to .01ms, which would turn these into snaps rather than moves. `.m-panel`, `.m-item` and `.sheet` therefore drop their transforms entirely and appear in place. The bars still cross into an X: that one is state, not decoration.
+
+### The phrasebook is a real `<dialog>`
+
+`showModal()` puts it in the **top layer**, which settles the stacking against the sticky nav at `z-index:60`, the back-to-top button at 70 and the menu rail at 95 without any of them needing to know about each other. Focus containment and the Escape key come with it. Three consequences:
+
+- **The `cancel` event is intercepted.** Escape would otherwise close it instantly and skip the animation.
+- **Opening needs two frames.** A dialog is `display:none` until it opens, and you cannot transition out of that. The first `requestAnimationFrame` commits the closed styles now that display is live, the second flips the class so there is a from-state.
+- **Closing is on a timer, not `transitionend`,** and the timer length is read from the media query because the phone drawer is 380ms against the sheet's 240ms. `pbOpen()` clears a close still in flight, so tapping through does not strand it.
+
+Below 560px it becomes a bottom drawer: full width, `margin:auto auto 0`, sliding `translateY(100%)` on `--e-drawer`. The opacity fade is dropped there because a drawer that also ghosts reads as two effects.
+
+### Content
+
+Phrase transcriptions use **the same system as the place names on the day cards**: capitals carry the stress, `TH` is the soft one, and `ll` comes out `tl` the way it does in `KIRK-yu-fetl`. Keep it consistent if you add rows; the group will be reading both on the same page.
+
+Group labels are `--ink-3`, and the sounding-out line is `--glacier`. **Neither is ember, deliberately** (see §9). Ember is *now* and the hero stop, and a phrasebook is neither.
+
+### Two things that will trip you up
+
+- **The Windstar URL is in the file twice**, once in the hero's `.source` link and once as `WINDSTAR` in the menu block. Change both. Reading it back out of the DOM was the obvious fix and was rejected: it makes deleting one line of hero markup throw at load and take the whole page down with it.
+- **The COMPLETE stamp moved to `top:112px`** because the button took its corner. Not 80px, the button's bottom edge: the stamp is rotated 13 degrees so its box reaches about 19px above whatever top it is given, and its type is clamped against `vw` so that overhang is not the same at every width. It now lands across the title block, which is where a stamp belongs anyway.
+
+### Removing it
+
+The whole feature is four pieces and nothing outside them refers in: the `FLOATING MENU` and `PHRASEBOOK` CSS sections, the `.m-rail` block inside the header, the `<dialog class="sheet">` before the script, and the `FLOATING MENU` script block. The script block is deliberately self-contained and registers its own scroll listener rather than joining the one above it, so it lifts out in one cut. Also drop the three `--e-*` curves from `:root` and the `header.hero.done .stamp` and reduced-motion lines, which are the only edits it made to existing rules. Unlike §11's dev panel, there is no stray caller.
