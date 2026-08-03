@@ -418,7 +418,11 @@ cwebp -q 82 -resize 1200 0 archive/name.png -o name.webp
 
 ## 14. The floating menu
 
-A hamburger in the hero's top right opening a three-row panel: **Common Icelandic Phrases**, which raises a phrasebook sheet, and outbound links to **Windstar's published itinerary** and the **operator's excursion PDF**. Added on the `floating-menu` branch.
+A hamburger in the hero's top right opening a four-row panel: **Common Icelandic Phrases**, which raises a phrasebook sheet, then outbound links to **Windstar's published itinerary**, the **Star Pride deck plans** and the **operator's excursion PDF**. Added on the `floating-menu` branch.
+
+> The two Windstar-published documents sit next to each other and the operator's sheet closes the group. The deck-plan URL carries `%20` in its path and must keep it; decoding those to spaces breaks the link. It covers all three Breeze-class ships, Star Pride among them.
+
+> The row stagger runs to `nth-child(4)` now. At 30ms apart the last row starts at 110ms and finishes at 270ms, still inside the 300ms the standards give a dropdown. Adding a fifth row would want the step reviewed rather than another 30ms bolted on.
 
 ### It sticks to the hero and nowhere else, with no scroll handler
 
@@ -522,3 +526,5 @@ The sheet also gives up two things the inline panel had: the timeline no longer 
 **Only rows with a port name shrink**, via `.ports.named`. That is the 16th and nothing else: Heimaey then Surtsey are the only calls that carry a name, and a name plus both times ran to 337px against the 279px a 375px phone has, so the times wrapped under the name and the bar read as two stacked facts rather than one line. The other eight days are a time pair on its own, fit at full size, and are deliberately left there rather than all being shrunk to match the worst case. Nothing mixes: `calls` is the only source of named rows and both of its entries have names, so a named and an unnamed bar never appear on the same card.
 
 > `.sub` keeps `flex:1 1 100%` and stays on its own line. It qualifies the call ("Sail-by, no landing") rather than continuing it, and that break is intended.
+
+> **Focus goes back to whatever raised the sheet, without a ring when a pointer closed it.** Safari counts a programmatic `focus()` as `:focus-visible`, so closing an itinerary by tap left a ring sitting on the Details row until something else was touched. Suppressing it outright would take it from keyboard users, who are the ones who need to see where focus went after Escape, so the input modality is tracked instead: `html[data-nofv]` goes on at a pointer-driven close and comes off at the next keystroke. `keydown` is captured so it lands *before* the browser moves focus, which is what lets the first Tab out of a suppressed element still draw its ring. Verified with real key presses and real clicks; a scripted `.focus()` never sets `:focus-visible` and cannot tell the two paths apart.
