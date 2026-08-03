@@ -476,19 +476,36 @@
      this much to reach the card edges, and it changes at the 520px breakpoint */
   .body{--gut:17px;padding:var(--gut)}
 
+  /* Everything inside is in em, so the bar scales as one piece rather than as type floating
+     in fixed furniture. At 15.5px every value below is exactly what it used to be in px
+     (.58em = 9, .84em = 13, .645em = 10, 1.032em = 16, .871em = 13.5), so nothing moves at
+     full size. It matters at less than full size: with the icon, the two gaps, the arrow
+     margins and the padding all frozen in px, 82 of the widest row's 337px could not shrink
+     at all, and holding it to one line meant taking the type down to about 8px on a small
+     phone. Scaled, the same row needs about 11px. */
   .ports{
-    display:flex;align-items:center;flex-wrap:wrap;gap:9px;background:var(--glacier-pale);
-    border-radius:12px;padding:10px 13px;color:#245A60;font-size:15.5px;
+    display:flex;align-items:center;flex-wrap:wrap;gap:.58em;background:var(--glacier-pale);
+    border-radius:12px;padding:.645em .84em;color:#245A60;font-size:15.5px;
   }
-  .ports svg{flex:none;opacity:.7}
+  .ports svg{flex:none;opacity:.7;width:1.032em;height:1.032em}
   .ports .t{font-variant-numeric:tabular-nums;font-weight:500}
-  .ports .ar{opacity:.45;margin:0 2px}
+  .ports .ar{opacity:.45;margin:0 .13em}
   /* second call of the day: the name carries it, the qualifier trails */
   .ports + .ports{margin-top:7px}
-  .ports .tt{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+  .ports .tt{display:inline-flex;align-items:center;gap:.58em;white-space:nowrap}
   /* no separator glyph: it dangles at the line end when the row wraps on a phone */
   .ports .pn{font-weight:500;letter-spacing:.005em}
-  .ports .sub{flex:1 1 100%;font-size:13.5px;opacity:.72;letter-spacing:.01em}
+  /* stays on its own line on purpose: it qualifies the call rather than continuing it */
+  .ports .sub{flex:1 1 100%;font-size:.871em;opacity:.72;letter-spacing:.01em}
+
+  /* Only the rows that carry a port name, which is only the 16th, Heimaey then Surtsey.
+     Those are the long ones: a name plus both times ran to 337px against the 279px a 375px
+     phone has, so the times wrapped under the name and the bar read as two stacked facts
+     instead of one line. The other eight days are a time pair on its own and fit at full
+     size, so they are left alone rather than all being shrunk to match the worst case.
+     Divisor measured the same way as §9 and §15: widest named row, widest font in the
+     stack, at the smallest size this can pick. */
+  .ports.named{font-size:min(15.5px, (100vw - 78px) / 23.2)}
 
   .meta{margin:12px 0 0;font-size:14.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:5px 0}
   /* An excursion day's line is always the same two parts, guide then hours, so it is held to
@@ -1440,7 +1457,7 @@ function dayHTML(d,u){
   /* most days are one call; the 16th is Heimaey then Surtsey, so `calls` wins when present */
   const calls = d.calls || (d.ports ? [{t:d.ports}] : []);
   /* .tt keeps the two times and their arrow together when the row wraps on a phone */
-  const ports = calls.map(c=>`<div class="ports">${I.ship}
+  const ports = calls.map(c=>`<div class="ports${c.name?' named':''}">${I.ship}
       ${c.name?`<span class="pn">${c.name}</span>`:''}
       <span class="tt"><span class="t">${h12(c.t[0])}</span><span class="ar">→</span><span class="t">${h12(c.t[1])}</span></span>
       ${c.sub?`<span class="sub">${c.sub}</span>`:''}
