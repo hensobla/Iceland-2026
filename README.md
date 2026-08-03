@@ -42,4 +42,4 @@ The page is meant to be reachable by link and nothing else — it carries a pick
 
 ## Accuracy
 
-Ship port times match [Windstar's published itinerary](https://www.windstarcruises.com/tour-details/REYREY7D9/n-europe/reykjavik-to-reykjavik/7-day-around-iceland-a-total-solar-eclipse/?pkgid=1013304), linked from the page. The 17 August arrival is the one time not listed there and remains unconfirmed. Land-day times come from the operator's sheet and were reconciled line by line; three errors in that source are corrected on the site and documented in `NOTES.md` §10.
+Ship port times match [Windstar's published itinerary](https://www.windstarcruises.com/tour-details/REYREY7D9/n-europe/reykjavik-to-reykjavik/7-day-around-iceland-a-total-solar-eclipse/?pkgid=1013304), linked from the floating menu. The 17 August arrival is the one time not listed there and remains unconfirmed. Land-day times come from the operator's sheet and were reconciled line by line; three errors in that source are corrected on the site and documented in `NOTES.md` §10.

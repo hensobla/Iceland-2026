@@ -29,7 +29,7 @@ These are not preferences. Each one was discovered by shipping something that br
   Google Fonts link          ← the only external request
   <style>                    ← all CSS, no framework
 <body>
-  <header class="hero">      ← eyebrow, h1, lede, countdown/map slot, glance line, COMPLETE stamp
+  <header class="hero">      ← eyebrow, h1, middot row, countdown/map slot, COMPLETE stamp
     div.m-rail                 ← the floating menu, sized to the hero (§14)
   <nav class="nav">          ← sticky day pills (populated by JS)
   <main class="wrap">        ← everything else (populated by JS)
@@ -189,11 +189,17 @@ It used to do that with a `z-index: -1` `::after` pinned to `inset: 0 calc(-1 * 
 
 **Today is marked twice, at two scales.** The ember "Today" chip identifies the card once you are looking at it; `.day.now` makes the card findable while scrolling past. That treatment is an ember border, a 4px `--ember-pale` halo holding it off the paper, and a warm ember cast in the drop shadow. Ember is reserved for *now* and for the one `hero` stop per day. Spending it anywhere else costs both.
 
-**The hero is one line per level, and nothing repeats a level.** Mark (whose it is), eyebrow (when), h1 plus its italic (what), middot row (which ship, which route), lede (who runs the land days). Anything secondary goes *below* the countdown: the glance line and the Windstar link. An earlier version put the source link between the lede and the countdown as a bordered card, which gave a reference the same weight as the headline and broke the run from title to countdown.
+**The hero is one line per level, and nothing repeats a level.** Mark (whose it is), eyebrow (when), h1 (what), middot row (which ship, which route), countdown. That is the whole header and it ends on the countdown deliberately.
+
+> **Four things were cut from it once the floating menu existed.** The lede naming the guides, the glance line ("five ports, eight days aboard…"), the Windstar provenance link, and the boxes around the countdown cells. The first three were all *secondary* material parked below the countdown, which meant the header did not end anywhere: it trailed off through two greyed-out lines into a link. The guides are named on every day card that has one, and Windstar's itinerary is now one tap away in the menu, so none of it was load-bearing. Do not put a second tier back under the countdown. If something new has to live in the hero it belongs above the countdown or in the menu.
+
+The countdown cells lost their border and fill in the same pass. Four bordered boxes sat directly above the nav's day pills, which are also bordered boxes in a row, and the two read as one repeated motif at two sizes. The numbers now close the hero on their own. The 13px of padding the cells used to carry moved onto `.countdown`'s `margin-top`, so the gap off the middot row did not change.
+
+> `.cd-msg` is **dead CSS**, and was already dead before this. The map phase writes `.mapwrap` plus `.mapcap`, and `.mapcap` never had a box, so it needed no matching change.
 
 The hero's middot row reuses the day card's `.meta`, deliberately: "which ship" up here reads the same way "which guide" does further down.
 
-**Rúnar leads**, so he is named first wherever guides are listed and carries the `<strong>` in the hero lede. The 14th lists him ahead of Pétur for the same reason.
+**Rúnar leads**, so he is named first wherever guides are listed. He used to carry the `<strong>` in the hero lede as well; with that line cut, the day cards' `meta` rows are the only place the guides appear. The 14th lists him ahead of Pétur for the same reason.
 
 **Weight restraint.** Nothing is 800 and almost nothing is 700. Hierarchy comes from size, colour, and the serif/sans contrast. Newsreader 500 for place names, stop titles and headings; Figtree 400 for body, 500 for numbers and the few words that need to pop.
 
@@ -278,7 +284,7 @@ That is the shape of anything shipboard. This site covers the **land days** — 
 
 Also worth knowing: the PDF's day headers overstate their own length (11 and 14 August both say "12 Hours" but run 8h30 and 8h05). The site shows actual spans instead.
 
-**Ship port times were reconciled against Windstar's own itinerary page** (linked in the hero) and three were wrong:
+**Ship port times were reconciled against Windstar's own itinerary page** (linked from the floating menu; it was in the hero until §14) and three were wrong:
 
 | Day | Was | Windstar says |
 |---|---|---|
@@ -414,9 +420,11 @@ Phrase transcriptions use **the same system as the place names on the day cards*
 
 Group labels are `--ink-3`, and the sounding-out line is `--glacier`. **Neither is ember, deliberately** (see §9). Ember is *now* and the hero stop, and a phrasebook is neither.
 
+**There is no rule under the sheet header, and `.ph-g:first-child` carries a 38px top margin instead.** With the rule in place there were four horizontal lines inside about 60px of the sheet's top corner: the standfirst, the rule, the group label's own row, and the first phrase's `border-top`. It read as ruled paper. Whitespace separates the header now, which is why that first margin is nearly four times the one between groups. Do not put the rule back without taking the margin out with it.
+
 ### Two things that will trip you up
 
-- **The Windstar URL is in the file twice**, once in the hero's `.source` link and once as `WINDSTAR` in the menu block. Change both. Reading it back out of the DOM was the obvious fix and was rejected: it makes deleting one line of hero markup throw at load and take the whole page down with it.
+- **The menu is now the only route to Windstar's itinerary.** It was in the hero as well when this was written, and the two copies of the URL had to be changed together; the hero link has since been cut (§9), so `WINDSTAR` in the menu block is the single copy. It is a literal rather than something read back out of the DOM, which is what made cutting that hero line safe.
 - **The COMPLETE stamp moved to `top:112px`** because the button took its corner. Not 80px, the button's bottom edge: the stamp is rotated 13 degrees so its box reaches about 19px above whatever top it is given, and its type is clamped against `vw` so that overhang is not the same at every width. It now lands across the title block, which is where a stamp belongs anyway.
 
 ### Removing it
