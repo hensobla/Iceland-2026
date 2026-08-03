@@ -473,3 +473,30 @@ Group labels are `--ink-3`, and the sounding-out line is `--glacier`. **Neither 
 ### Removing it
 
 The whole feature is four pieces and nothing outside them refers in: the `FLOATING MENU` and `PHRASEBOOK` CSS sections, the `.m-rail` block inside the header, the `<dialog class="sheet">` before the script, and the `FLOATING MENU` script block. The script block is deliberately self-contained and registers its own scroll listener rather than joining the one above it, so it lifts out in one cut. Also drop the three `--e-*` curves from `:root` and the `header.hero.done .stamp` and reduced-motion lines, which are the only edits it made to existing rules. Unlike §11's dev panel, there is no stray caller.
+
+---
+
+## 15. The itinerary as a sheet (experiment, branch `details-sheet`)
+
+**Unmerged.** An alternative to §9's expand/collapse: the card's `<details>` panel is replaced by a **Details ＋** button that raises the day's timeline in the phrasebook's sheet. Written to be looked at and then either merged or deleted whole.
+
+### What changed
+
+- `dayHTML` emits a `<button class="det">` instead of `<details>`. The row keeps its shape exactly: two lines, control beside the label, preview beneath, ink not glacier. Only the mechanism moved.
+- **The whole row is still the hit area**, which §9 says explicitly and which nearly got lost. `.det` is the `<button>` and `.tog` is now a `<span>` inside it, mirroring the old `<summary>` wrapping a `.tog` span. A nested `<button>` would have been invalid, and pill-only would have shrunk a 72px target to about 30.
+- `tlHTML(d)` renders the timeline. The old CSS is untouched: `--tl-bg` still resolves to `var(--card)` because the sheet is the same surface.
+- One `<dialog>` serves both callers, filled per open. `openSheet({title, sub, html, from})`.
+
+### Two things that had to be got right
+
+**`--gut` on `.sheet-bd` must equal that box's own horizontal padding.** The stop of the day widens itself by `--gut` and pays it back as padding so its wash reaches the edges of whatever it sits on (§9). Set it wrong and either the wash stops short or the row pushes past the edge, and because `overflow-y:auto` computes `overflow-x` to `auto`, one pixel too wide puts a sideways scrollbar in the sheet. Measured, the hero stop lands at 0px from both sheet edges.
+
+**The start rail is no longer suppressed on pickup days.** Inside the card that rule stopped the departure time being printed twice, once in the pickup tile and once at the head of the timeline (§3). The tile stays on the card and does not come into the sheet, so there is nothing left to duplicate, and leaving the rule in opened every pickup day on a bare drive leg: "45 min · 45 km" as the first line, a journey from nowhere.
+
+> `sheetBody.scrollTop = 0` runs **after** `showModal()` and unconditionally. Before it the dialog is `display:none`, the scroller has no layout and the assignment is dropped; and skipping it when the sheet is already open drops you halfway down another day's timeline.
+
+### What it would cost
+
+Adopting this **deletes the work in `3b4028d`**. `slidePanel`, `glideTo` and `stopGlide` are all still in the file on this branch and none of them is reachable: the foot Collapse button was `glideTo`'s only caller, and there is no `<details>` left for `slidePanel` to drive. That is the fold-and-ride-back-up gesture, the rAF scroll that re-reads the reachable maximum every frame, and the reduced-motion double-toggle fix. They are left in place deliberately so the branch reverts cleanly and so the two can be compared side by side. **If this merges, strip them in the same commit** rather than leaving three unreachable functions and a dead `main` click handler behind.
+
+The sheet also gives up two things the inline panel had: the timeline no longer sits in the reading flow of the day it belongs to, and the card behind it is hidden while it is open, so the ports bar and pickup tile cannot be read at the same time as the stops.

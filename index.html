@@ -321,6 +321,11 @@
   .sheet-hd{
     flex:none;display:flex;align-items:flex-start;gap:14px;padding:20px 20px 0;
   }
+  /* Takes the slack so the close button is pinned to the right edge whatever the title is.
+     Without it the text block sizes to its content and the X follows it inwards: invisible
+     while the only title was the phrasebook's, which wraps, and obvious the moment a short
+     one like "Grundarfjörður" turned up. min-width:0 so a long word can still wrap. */
+  .sheet-hd>div{flex:1;min-width:0}
   .sheet-hd h2{font-size:23px;line-height:1.14;margin:0}
   .sheet-hd p{margin:7px 0 0;font-size:14px;line-height:1.5;color:var(--ink-3)}
   .sheet-x{
@@ -335,11 +340,25 @@
   /* min-height:0 or the flex item refuses to shrink under its content and the list
      escapes the sheet instead of scrolling inside it.
      contain stops the page behind from scrolling on once this list hits its end. */
+  /* --gut must equal this box's own horizontal padding. The stop of the day widens itself by
+     --gut and pays it back as padding so its wash reaches both edges of whatever surface it
+     is on (§9); on a card that is the card, and in here it is the sheet. Get it wrong and the
+     wash either stops short of the edge or pushes the row past it. Because the two are equal
+     the row lands exactly on the padding box and nothing overflows, which matters: overflow-y
+     computes overflow-x to auto, so a row even a pixel too wide would add a sideways scrollbar
+     to the sheet. Kept in step with the padding at the 559px breakpoint below. */
   .sheet-bd{
+    --gut:20px;
     flex:1;min-height:0;
     overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
     padding:0 20px calc(20px + env(safe-area-inset-bottom,0px));
   }
+  /* The timeline sits straight on the sheet, so the drive icons mask the spine with the
+     sheet's own background exactly as they do with the card's.
+     24px, not the 4px it uses on a card: the first row adds 14px of its own padding, so this
+     lands the first line about 38px below the standfirst and matches what .ph-g:first-child
+     does for the phrasebook. Same header, same gap under it, whichever thing raised it. */
+  .sheet-bd .tl{padding-top:24px}
   .ph-g{
     font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);
     font-weight:500;margin:20px 0 2px;
@@ -366,8 +385,8 @@
       transition:transform 380ms var(--e-drawer);
     }
     .sheet.in{transform:none}
-    .sheet-hd{padding:19px 18px 14px}
-    .sheet-bd{padding-left:18px;padding-right:18px}
+    .sheet-hd{padding:19px 18px 0}
+    .sheet-bd{--gut:18px;padding-left:18px;padding-right:18px}
   }
 
   /* ---------- NAV ---------- */
@@ -473,61 +492,56 @@
      hairline separates it from the body above, which is a divider rather than another container.
      The affordance moves entirely onto the chevron and the label, since there is no longer a
      box edge to lift on hover. */
-  details{margin-top:16px;border-top:1px solid var(--line-2);padding-top:4px}
-  /* Two lines, not one. The label and the control hold the top row so the button lands in the
-     same place on every card at every width; the preview gets the full width beneath it. All
-     three used to compete for one line, which was tight on a phone and cramped even on desktop. */
-  details summary{
-    list-style:none;display:block;padding:11px 0;
+  /* EXPERIMENT (branch details-sheet): the itinerary no longer unfolds inside the card. The
+     row is now a button that raises the same sheet the phrasebook uses, and the timeline is
+     rendered into that. What survives from the <details> version is everything about how the
+     row LOOKS, because none of that was about the folding: two lines rather than one, the
+     control beside its label rather than opposite it, ink rather than glacier, and the whole
+     row as the hit area with the pill only as the signal. The old rules are kept verbatim
+     below and only re-pointed from `details summary` to `.det`. */
+
+  /* .det is a <button>, so it needs the block layout and the full width back */
+  .det{
+    display:block;width:100%;margin-top:16px;padding:15px 0 11px;
+    border-top:1px solid var(--line-2);
     font-size:15.5px;color:var(--ink-3);cursor:pointer;
     transition:color .18s ease;
   }
   /* the control sits beside the label, not pushed to the far edge — at 584px wide,
      space-between put ~370px of dead air between a word and its own button */
-  details summary .hd{display:flex;align-items:center;justify-content:flex-start;gap:14px}
+  .det .hd{display:flex;align-items:center;justify-content:flex-start;gap:14px}
   /* Measured off the BUTTON, not the label. The button is the tall thing in that row and the
      label sits centred inside it, so a margin that looked right under the word left the pill
      crowded by half as much. 15px clears the pill; the label ends up with more, which is
      correct — it groups the label with its button and sets the preview apart as content. */
-  details summary .pv{display:block;margin-top:15px;line-height:1.5;max-width:46ch}
-  details summary::-webkit-details-marker{display:none}
+  .det .pv{display:block;margin-top:15px;line-height:1.5;max-width:46ch}
   /* Gated on a real pointer: on touch :hover latches after a tap and stays put until you tap
      something else, which read as the drawer never closing. */
   @media (hover:hover) and (pointer:fine){
-    details summary:hover .lbl{color:var(--ink)}
-    details summary:hover .tog{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .det:hover .lbl{color:var(--ink)}
+    .det:hover .tog{background:var(--ink);color:#fff;border-color:var(--ink)}
   }
-  details summary:active .tog{transform:scale(.96)}
-  details summary:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:8px}
+  .det:active .tog{transform:scale(.96)}
+  .det:focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:8px}
   /* a touch larger than the preview beneath it, so the row reads as a heading over its blurb */
-  details summary .lbl{font-size:17px;font-weight:500;color:var(--ink);transition:color .18s ease}
-  /* The expand control. It says what it does rather than relying on an arrow being read, and
-     it is deliberately INK, not glacier: glacier is the ports bar and the pickup tile, which
-     are information. This is a control, so it sits in the neutral family and takes no meaning
-     from the palette. Ember is spoken for too — that is "today" and the hero stop. */
-  details .tog{
+  .det .lbl{font-size:17px;font-weight:500;color:var(--ink);transition:color .18s ease}
+  /* The control. It says what it does rather than relying on an arrow being read, and it is
+     deliberately INK, not glacier: glacier is the ports bar and the pickup tile, which are
+     information. This is a control, so it sits in the neutral family and takes no meaning
+     from the palette. Ember is spoken for too — that is "today" and the hero stop.
+     A <span>, not a nested <button>, because the row around it is the button now.
+     No min-width any more: every card says the same word, so nothing swaps and nothing
+     resizes. It was only ever there to stop "Expand" jumping to "Collapse". */
+  .det .tog{
     flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    min-width:99px;padding:7px 12px;border-radius:999px;
+    padding:7px 13px;border-radius:999px;
     background:transparent;border:1.25px solid #34434A;color:var(--ink);
-    font:500 13px/1 var(--sans);letter-spacing:.005em;cursor:pointer;
+    font:500 13px/1 var(--sans);letter-spacing:.005em;
     transition:background .18s ease,color .18s ease,border-color .18s ease,transform .12s ease;
   }
-  /* The second way out, at the foot of an open panel. A long day runs well past a phone
-     screen, and having to scroll back up to the header to close it is the kind of thing
-     nobody reports but everybody feels. It sits inside .tl, so a closed <details> leaves
-     it in the DOM but never renders it — no separate hide rule needed. */
-  .tog-end{margin:6px 0 2px}
-  @media (hover:hover) and (pointer:fine){
-    .tog-end:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-  }
-  .tog-end:active{transform:scale(.96)}
-  .tog-end:focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
-  /* one word is shown at a time; min-width above stops the button resizing as they swap */
-  details summary .wo{display:none}
-  details[open] summary .wc{display:none}
-  details[open] summary .wo{display:inline}
-  details summary .chev{transition:transform .25s ease}
-  details[open] summary .chev{transform:rotate(180deg)}
+  /* the plus does not rotate or morph. It is a noun now, not a state: the row opens a sheet
+     and the sheet closes itself, so the control never has a second thing to say. */
+  .det .tog svg{opacity:.85}
   /* --tl-bg is what the drive icons use to mask the dotted spine. It follows the surface the
      timeline now sits on, which is the card itself. */
   .tl{--tl-bg:var(--card);padding:0 0 4px}
@@ -716,17 +730,19 @@
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
-<dialog class="sheet" id="phrasebook" aria-labelledby="pb-title">
+<!-- One sheet, filled per open. It was the phrasebook's alone until the itinerary started
+     using it too; there is no second dialog because there is never a second one on screen. -->
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
   <div class="sheet-hd">
     <div>
-      <h2 id="pb-title">Common Icelandic Phrases</h2>
-      <p>Stress lands on the first syllable, almost without exception. The capitals below mark it.</p>
+      <h2 id="sheet-title"></h2>
+      <p id="sheet-sub"></p>
     </div>
-    <button class="sheet-x" id="pbx" aria-label="Close">
+    <button class="sheet-x" id="sheet-x" aria-label="Close">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
   </div>
-  <div class="sheet-bd" id="pb-body"></div>
+  <div class="sheet-bd" id="sheet-body"></div>
 </dialog>
 
 <script>
@@ -1364,6 +1380,23 @@ function stopHTML(s){
   </li>`;
 }
 
+/* The timeline, lifted out of the card so the sheet can render it on demand. Same markup it
+   had inside the <details>, minus the foot Collapse button: the sheet carries its own way out
+   and a second one inside the scroller would be a control competing with the one in the
+   header.
+
+   The start rail is NO LONGER suppressed on pickup days, which it was inside the card. That
+   rule existed because the pickup tile prints the same time a few pixels above and the card
+   would have said it twice (§3). The tile stays on the card and does not come into the sheet,
+   so there is nothing here to duplicate; leaving the rule in place instead opened every
+   pickup day's timeline on a drive leg with no departure above it, and "45 min · 45 km"
+   as the first line reads as a journey from nowhere. */
+const tlHTML = d => `<div class="tl"><ol class="stops">
+  ${d.start?`<li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.start)}</span></li>`:''}
+  ${d.stops.map(stopHTML).join('')}
+  ${d.end?`<li class="gap"></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
+</ol></div>`;
+
 function dayHTML(d,u){
   /* most days are one call; the 16th is Heimaey then Surtsey, so `calls` wins when present */
   const calls = d.calls || (d.ports ? [{t:d.ports}] : []);
@@ -1396,20 +1429,11 @@ function dayHTML(d,u){
     <div class="body">
       ${ports}${meta}${pickup}
       ${d.note?`<div class="note ${d.note.k}">${ico}<div><b>${d.note.b}</b>${d.note.p}</div></div>`:''}
-      ${d.stops?`<details>
-        <summary><span class="hd"><span class="lbl">Itinerary</span>
-        <span class="tog"><span class="w wc">Expand</span><span class="w wo">Collapse</span>
-        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></span>${d.summary?`<span class="pv">${d.summary}</span>`:''}</summary>
-        <div class="tl">
-          <ol class="stops">
-            ${d.start&&!d.pickup?`<li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.start)}</span></li>`:''}
-            ${d.stops.map(stopHTML).join('')}
-            ${d.end?`<li class="gap"></li><li class="rail"><span class="ic">${I.ship}</span><span>${h12(d.end)}</span></li>`:''}
-          </ol>
-          <button class="tog tog-end" type="button">Collapse
-          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
-        </div>
-      </details>`:''}
+      ${d.stops?`<button class="det" type="button" data-day="${d.id}">
+        <span class="hd"><span class="lbl">Itinerary</span>
+        <span class="tog">Details
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span></span>${d.summary?`<span class="pv">${d.summary}</span>`:''}
+      </button>`:''}
     </div>
   </section>`;
 }
@@ -1676,7 +1700,7 @@ totop.onclick=()=>{ stopGlide(); lock=Date.now()+1100; setCurrent(days[0].id); w
 const mrail=document.getElementById('mrail');
 const mbtn=document.getElementById('mbtn');
 const mpanel=document.getElementById('mpanel');
-const pbook=document.getElementById('phrasebook');
+const sheet=document.getElementById('sheet');
 
 /* Second copy of the Windstar URL; the first is the hero's provenance link. They must be
    changed together. Reading it back out of the DOM was the alternative and was rejected:
@@ -1713,7 +1737,7 @@ mbtn.addEventListener('click',()=>setMenu(!mOpen));
 mpanel.addEventListener('click',e=>{
   const it=e.target.closest('.m-item'); if(!it) return;
   setMenu(false);                       /* the two links open a tab and leave the page put */
-  if(it.id==='mi-ph') pbOpen();
+  if(it.id==='mi-ph') openPhrasebook(mbtn);
 });
 
 /* pointerdown, not click: the menu should be gone by the time the finger lifts. The button
@@ -1778,31 +1802,71 @@ const PHRASES=[
   ]]
 ];
 
-document.getElementById('pb-body').innerHTML =
+const phrasesHTML =
   PHRASES.map(([g,rows])=>`<p class="ph-g">${g}</p>`+rows.map(([is,pr,en])=>
     `<div class="ph"><span class="is">${is}</span><span class="en">${en}</span><span class="pron">${pr}</span></div>`
   ).join('')).join('')+
   `<p class="ph-ps"><b>Þetta reddast</b> is the closest thing Iceland has to a national motto. It comes out when a plan falls apart, and it means the plan was never really the point.</p>`;
 
-let pbShut=0;
-function pbOpen(){
-  if(pbShut){ clearTimeout(pbShut); pbShut=0; }   /* reverses a close still in flight */
-  if(!pbook.open){ document.getElementById('pb-body').scrollTop=0; pbook.showModal(); }
+/* ---- the sheet ----
+   One dialog, filled per open, because only ever one is on screen. It began as the
+   phrasebook's and the itinerary now uses it too, so title, standfirst and body are all
+   arguments rather than markup. */
+const sheetBody=document.getElementById('sheet-body');
+const sheetTitle=document.getElementById('sheet-title');
+const sheetSub=document.getElementById('sheet-sub');
+let sheetShut=0, sheetFrom=null;
+
+/* `from` is whatever was tapped to raise it, and focus goes back there on close. It has to be
+   an argument: the phrasebook is opened from the menu button in the hero and a day is opened
+   from a button most of a page further down, so there is no one element to return to. */
+function openSheet({title, sub, html, from}){
+  if(sheetShut){ clearTimeout(sheetShut); sheetShut=0; }  /* reverses a close still in flight */
+  sheetTitle.textContent=title;
+  sheetSub.textContent=sub||'';
+  sheetSub.hidden=!sub;
+  sheetBody.innerHTML=html;
+  sheetFrom=from||null;
+  if(!sheet.open) sheet.showModal();
+  /* After showModal and unconditionally. Before it the dialog is still display:none, where
+     the scroller has no layout and the assignment is dropped on the floor; and skipping it
+     when the sheet is already open leaves a day opened from inside another one halfway down
+     somebody else's timeline. */
+  sheetBody.scrollTop=0;
   /* Two frames. The first commits the closed styles now that display is no longer none,
      the second flips the class so there is a from-state to transition out of. */
-  requestAnimationFrame(()=>requestAnimationFrame(()=>pbook.classList.add('in')));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>sheet.classList.add('in')));
 }
-function pbClose(){
-  if(!pbook.open || pbShut) return;
-  pbook.classList.remove('in');
+function closeSheet(){
+  if(!sheet.open || sheetShut) return;
+  sheet.classList.remove('in');
   const ms = reduceMo.matches ? 0 : (matchMedia('(max-width:559px)').matches ? 380 : 240);
-  pbShut = setTimeout(()=>{ pbShut=0; pbook.close(); mbtn.focus(); }, ms);
+  sheetShut = setTimeout(()=>{
+    sheetShut=0; sheet.close();
+    /* the opener can be gone: renderAll() rebuilds main at midnight and takes every day
+       button with it, so fall back rather than focusing a node no longer in the document */
+    (sheetFrom && sheetFrom.isConnected ? sheetFrom : mbtn).focus();
+  }, ms);
 }
-document.getElementById('pbx').addEventListener('click',pbClose);
+const openPhrasebook = from => openSheet({
+  title:'Common Icelandic Phrases',
+  sub:'Stress lands on the first syllable, almost without exception. The capitals below mark it.',
+  html:phrasesHTML, from});
+
+document.getElementById('sheet-x').addEventListener('click',closeSheet);
 /* the dialog's own box is the sheet, so a hit on the element itself came from the backdrop */
-pbook.addEventListener('click',e=>{ if(e.target===pbook) pbClose(); });
+sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
 /* Escape would close it instantly and skip the animation, so take it over */
-pbook.addEventListener('cancel',e=>{ e.preventDefault(); pbClose(); });
+sheet.addEventListener('cancel',e=>{ e.preventDefault(); closeSheet(); });
+
+/* Delegated on main, because renderAll() replaces main.innerHTML and would drop anything
+   bound per element. The day is looked up by id rather than captured, so a sheet opened
+   after a date rollover still reads from the live days[]. */
+main.addEventListener('click',e=>{
+  const b=e.target.closest('.det'); if(!b) return;
+  const d=days.find(x=>x.id===b.dataset.day); if(!d) return;
+  openSheet({title:d.place, sub:d.date, html:tlHTML(d), from:b});
+});
 
 /* ---- minimal Iceland map, shown once the countdown runs out ---- */
 const COAST="M56.9 175.5 L61.1 174.5 Q63 174 65.0 174.0 L68.0 174.0 Q70 174 72.0 174.0 L72.0 174.0 Q74 174 76.0 173.7 L79.0 173.3 Q81 173 83.0 173.4 L84.0 173.6 Q86 174 88.0 173.7 L91.0 173.3 Q93 173 95.0 172.7 L98.0 172.3 Q100 172 101.5 173.0 L101.5 173.0 Q103 174 105.0 174.0 L106.0 174.0 Q108 174 109.2 175.6 L116.8 185.4 Q118 187 119.6 188.2 L123.4 190.8 Q125 192 126.9 192.7 L134.1 195.3 Q136 196 137.9 196.7 L145.1 199.3 Q147 200 149.0 200.3 L157.0 201.7 Q159 202 160.0 202.0 L160.0 202.0 Q161 202 161.5 201.0 L161.5 201.0 Q162 200 164.0 200.0 L166.0 200.0 Q168 200 169.5 201.0 L169.5 201.0 Q171 202 172.7 201.0 L178.3 198.0 Q180 197 181.8 196.2 L185.2 194.8 Q187 194 188.9 193.5 L192.1 192.5 Q194 192 195.9 191.4 L198.1 190.6 Q200 190 201.9 189.4 L210.1 186.6 Q212 186 213.9 185.3 L218.1 183.7 Q220 183 221.8 182.2 L229.2 178.8 Q231 178 232.6 176.8 L236.4 174.2 Q238 173 239.5 171.7 L242.5 169.3 Q244 168 244.0 166.0 L244.0 164.0 Q244 162 245.6 160.8 L253.4 155.2 Q255 154 256.6 152.8 L261.4 149.2 Q263 148 265.0 148.0 L281.0 148.0 Q283 148 284.4 146.6 L290.6 140.4 Q292 139 292.0 137.0 L292.0 132.0 Q292 130 293.4 128.6 L294.6 127.4 Q296 126 297.2 124.4 L297.8 123.6 Q299 122 297.4 120.8 L293.6 118.2 Q292 117 294.0 117.2 L301.0 117.8 Q303 118 303.7 116.1 L304.3 114.9 Q305 113 306.9 113.5 L307.1 113.5 Q309 114 308.0 113.0 L308.0 113.0 Q307 112 309.0 111.6 L310.0 111.4 Q312 111 310.4 109.8 L306.6 107.2 Q305 106 307.0 105.8 L311.0 105.2 Q313 105 314.7 103.9 L317.3 102.1 Q319 101 317.0 100.8 L303.0 99.2 Q301 99 303.0 98.9 L314.0 98.1 Q316 98 317.9 97.4 L320.1 96.6 Q322 96 321.0 94.3 L320.0 92.7 Q319 91 317.0 91.0 L310.0 91.0 Q308 91 309.9 90.5 L313.1 89.5 Q315 89 316.5 88.5 L316.5 88.5 Q318 88 316.0 88.0 L309.0 88.0 Q307 88 309.0 87.6 L314.0 86.4 Q316 86 316.5 84.5 L316.5 84.5 Q317 83 315.0 83.2 L309.0 83.8 Q307 84 308.9 83.3 L313.1 81.7 Q315 81 315.0 79.5 L315.0 79.5 Q315 78 313.0 78.0 L311.0 78.0 Q309 78 310.6 76.8 L312.4 75.2 Q314 74 314.5 72.5 L314.5 72.5 Q315 71 313.3 69.9 L310.7 68.1 Q309 67 311.0 66.8 L316.0 66.2 Q318 66 316.0 65.6 L302.0 62.4 Q300 62 298.4 63.2 L297.6 63.8 Q296 65 295.1 63.2 L291.9 56.8 Q291 55 290.0 53.5 L290.0 53.5 Q289 52 287.1 52.6 L281.9 54.4 Q280 55 281.3 53.5 L285.7 48.5 Q287 47 287.6 45.1 L288.4 42.9 Q289 41 289.8 39.2 L291.2 35.8 Q292 34 290.0 33.7 L279.0 32.3 Q277 32 278.0 30.3 L280.0 26.7 Q281 25 282.4 23.6 L290.6 15.4 Q292 14 290.2 14.8 L282.8 18.2 Q281 19 279.6 20.4 L274.4 25.6 Q273 27 271.6 28.4 L266.4 33.6 Q265 35 263.5 33.7 L255.5 26.3 Q254 25 253.0 23.3 L250.0 17.7 Q249 16 249.0 14.0 L249.0 6.0 Q249 4 247.0 4.0 L246.0 4.0 Q244 4 242.5 5.3 L237.5 9.7 Q236 11 236.0 13.0 L236.0 17.0 Q236 19 235.6 21.0 L233.4 33.0 Q233 35 232.5 34.0 L232.5 34.0 Q232 33 230.2 32.2 L221.8 28.8 Q220 28 218.6 26.6 L218.4 26.4 Q217 25 215.6 26.4 L213.4 28.6 Q212 30 211.6 32.0 L211.4 33.0 Q211 35 210.4 36.9 L208.6 42.1 Q208 44 206.0 44.0 L205.0 44.0 Q203 44 201.8 42.4 L197.2 36.6 Q196 35 194.5 33.7 L191.5 31.3 Q190 30 189.5 31.0 L189.5 31.0 Q189 32 188.4 33.9 L186.6 39.1 Q186 41 186.3 43.0 L188.7 56.0 Q189 58 188.0 56.2 L184.0 48.8 Q183 47 181.6 45.6 L177.4 41.4 Q176 40 175.2 38.2 L173.8 34.8 Q173 33 171.7 31.5 L168.3 27.5 Q167 26 166.0 27.0 L166.0 27.0 Q165 28 164.0 29.5 L164.0 29.5 Q163 31 161.8 29.4 L161.2 28.6 Q160 27 159.0 28.7 L151.0 42.3 Q150 44 149.9 46.0 L149.1 61.0 Q149 63 148.0 61.3 L145.0 55.7 Q144 54 142.5 52.7 L137.5 48.3 Q136 47 134.9 45.3 L124.1 29.7 Q123 28 123.1 30.0 L123.9 47.0 Q124 49 124.2 51.0 L124.8 57.0 Q125 59 123.6 60.4 L119.4 64.6 Q118 66 116.6 64.6 L116.4 64.4 Q115 63 114.4 61.1 L112.6 55.9 Q112 54 111.4 55.9 L109.6 62.1 Q109 64 108.6 66.0 L107.4 72.0 Q107 74 106.1 72.2 L104.9 69.8 Q104 68 103.6 66.0 L103.4 65.0 Q103 63 103.1 65.0 L103.9 93.0 Q104 95 103.6 93.0 L100.4 76.0 Q100 74 99.8 72.0 L99.2 65.0 Q99 63 97.6 64.4 L97.4 64.6 Q96 66 95.0 67.7 L94.0 69.3 Q93 71 92.5 69.1 L91.5 64.9 Q91 63 89.5 62.0 L89.5 62.0 Q88 61 86.8 59.4 L86.2 58.6 Q85 57 86.9 56.4 L89.1 55.6 Q91 55 90.2 53.2 L88.8 49.8 Q88 48 89.4 46.6 L92.6 43.4 Q94 42 92.1 41.3 L90.9 40.7 Q89 40 89.7 38.1 L90.3 36.9 Q91 35 89.8 33.4 L89.2 32.6 Q88 31 87.4 29.1 L86.6 26.9 Q86 25 84.5 23.7 L76.5 17.3 Q75 16 73.2 15.0 L65.8 11.0 Q64 10 62.1 10.5 L61.9 10.5 Q60 11 58.0 10.8 L49.0 10.2 Q47 10 47.6 11.9 L48.4 14.1 Q49 16 47.1 16.5 L43.9 17.5 Q42 18 43.2 19.6 L50.8 30.4 Q52 32 53.4 33.4 L63.6 43.6 Q65 45 63.2 44.1 L48.8 36.9 Q47 36 45.4 34.8 L44.6 34.2 Q43 33 41.8 31.4 L40.2 29.6 Q39 28 37.0 27.6 L36.0 27.4 Q34 27 32.5 27.5 L32.5 27.5 Q31 28 32.7 29.0 L36.3 31.0 Q38 32 36.0 31.7 L27.0 30.3 Q25 30 25.0 32.0 L25.0 33.0 Q25 35 26.9 35.7 L31.1 37.3 Q33 38 31.0 38.0 L24.0 38.0 Q22 38 22.0 39.5 L22.0 39.5 Q22 41 23.8 41.9 L30.2 45.1 Q32 46 30.0 45.8 L24.0 45.2 Q22 45 21.1 46.8 L20.9 47.2 Q20 49 21.9 49.5 L39.1 54.5 Q41 55 39.0 55.3 L24.0 57.7 Q22 58 20.1 58.6 L17.9 59.4 Q16 60 17.9 60.6 L20.1 61.4 Q22 62 20.0 62.2 L16.0 62.8 Q14 63 15.9 63.7 L17.1 64.3 Q19 65 17.0 65.2 L11.0 65.8 Q9 66 8.0 66.5 L8.0 66.5 Q7 67 5.1 67.7 L3.9 68.3 Q2 69 3.0 70.0 L3.0 70.0 Q4 71 5.5 71.0 L5.5 71.0 Q7 71 9.0 71.0 L14.0 71.0 Q16 71 18.0 71.0 L21.0 71.0 Q23 71 24.9 70.5 L36.1 67.5 Q38 67 39.5 67.0 L39.5 67.0 Q41 67 43.0 66.6 L44.0 66.4 Q46 66 47.5 66.0 L47.5 66.0 Q49 66 50.9 65.4 L56.1 63.6 Q58 63 60.0 63.0 L71.0 63.0 Q73 63 73.5 64.5 L73.5 64.5 Q74 66 73.0 67.7 L71.0 71.3 Q70 73 72.0 73.0 L76.0 73.0 Q78 73 79.7 74.0 L83.3 76.0 Q85 77 83.1 77.5 L78.9 78.5 Q77 79 75.6 80.4 L74.4 81.6 Q73 83 71.3 84.1 L66.7 86.9 Q65 88 66.9 88.7 L80.1 93.3 Q82 94 80.1 94.5 L68.9 97.5 Q67 98 65.0 97.7 L56.0 96.3 Q54 96 52.3 97.1 L40.7 104.9 Q39 106 37.0 106.2 L28.0 106.8 Q26 107 24.0 106.7 L22.0 106.3 Q20 106 18.2 106.9 L17.8 107.1 Q16 108 16.7 109.9 L19.3 116.1 Q20 118 21.9 117.3 L26.1 115.7 Q28 115 29.8 114.2 L33.2 112.8 Q35 112 37.0 111.9 L53.0 111.1 Q55 111 56.8 111.9 L63.2 115.1 Q65 116 66.3 117.5 L69.7 121.5 Q71 123 72.4 124.4 L76.6 128.6 Q78 130 77.3 131.9 L73.7 142.1 Q73 144 74.7 143.0 L76.3 142.0 Q78 141 80.0 140.9 L92.0 140.1 Q94 140 92.1 140.5 L84.9 142.5 Q83 143 81.7 144.5 L79.3 147.5 Q78 149 77.7 151.0 L77.3 153.0 Q77 155 77.0 157.0 L77.0 158.0 Q77 160 75.5 160.5 L75.5 160.5 Q74 161 72.0 161.4 L66.0 162.6 Q64 163 62.0 163.4 L61.0 163.6 Q59 164 57.8 162.4 L56.2 160.6 Q55 159 55.0 160.5 L55.0 160.5 Q55 162 55.0 164.0 L55.0 166.0 Q55 168 55.0 170.0 L55.0 174.0 Q55 176 56.9 175.5 Z";
