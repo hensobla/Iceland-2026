@@ -203,9 +203,24 @@ There are exactly **two deliberate 700s**: the "TODAY" nav label, and the day ca
 
 - **`open` stays `true` for the whole of a close** and is only set false in `onfinish`. A closed `<details>` does not render its children, so flipping it early would make the panel vanish instead of retract.
 - **The listener is delegated on `main`**, because `renderAll()` replaces `main.innerHTML` and would drop anything bound per element.
-- **`prefers-reduced-motion` returns early** and lets the browser toggle natively. It does not just shorten the animation, because a zero-length animation still runs the intercept and would leave the panel mid-flight.
+- **`prefers-reduced-motion` returns early** and flips `open` with no animation. It does not just shorten the animation, because a zero-length animation still runs the intercept and would leave the panel mid-flight.
+- **The summary's default action is always prevented**, in both motion modes, because `slidePanel` owns `open` in both. It used to be left in place under reduced motion so the browser could do the toggling — but the reduced-motion branch flips `open` as well, and a summary click runs its listeners *before* the default action, so the panel opened during dispatch and the browser shut it again on the way out. **Two toggles, no change: the itinerary could not be opened at all with reduced motion on.** That is the whole content of the page, gone, for a preference plenty of people have set without thinking about it. Do not make the `preventDefault` conditional again.
 
 Duration scales with panel height (230–380 ms), and a `sliding` flag drops taps that land mid-animation.
+
+**The foot button's ride back up starts with the fold, not after it.** Collapsing from the bottom of a long panel removes everything above the button, so the viewport is left looking at the next card and has to be returned to the top of the one being closed. That scroll used to run from `onfinish`. Sequential, it read as two separate events — the panel shut, a beat passed, then the page moved on its own — and the second half was the jarring one, because nothing the finger did appeared to cause it. Both now start in the same frame and it reads as one gesture.
+
+The scroll target is safe to measure at click time: the button and everything collapsing sit *below* the card's top, so the card's own position in the document is the one thing the close cannot move. Verified landing pixel-exact on all five panels.
+
+> This needed a scroll with **a duration**, which `behavior: 'smooth'` does not take — hence `glideTo`. Three things it must keep doing, all of them learned the hard way:
+>
+> - **Re-read the reachable maximum every frame.** The document is shrinking underneath the scroll as the panel folds; a target fixed at the start gets clamped short.
+> - **Yield the instant the user takes over.** A wheel, touch or key ends it. The native smooth scroll does this for free, and a hand-rolled one that holds the page hostage for half a second is worse than the problem it fixes.
+> - **Bind those listeners one frame late.** Enter on a focused button fires its click while that same keydown is still travelling up to `window`, so binding immediately hands the scroll back to a key the user has already finished pressing and kills it before it moves.
+>
+> Anything that scrolls by another route calls `stopGlide()` first, or a glide left running overwrites it every frame and its listeners outlive it to cancel the *next* one.
+
+Pacing: the fold keeps its 230–380 ms, the scroll runs `1.6 ×` that. Panel height is a fair proxy for the distance back up, so scaling off the fold scales off the distance. The fold lands around 70% of the way through the scroll, which is the intended shape — the page keeps gliding for a moment after the panel is shut and settles rather than stops. The scroll is eased at **both** ends where the fold is eased out only: it starts a screen away rather than under the finger, so it wants the softer entry. Quadratic, not cubic — a cubic entry is lazy enough against an eased-out fold to read as the page setting off *after* the panel, which is the thing being fixed.
 
 **The itinerary is flat, and that is the point.** It used to be a bordered, filled box inside the card, with the timeline as a second box below it. That put three surfaces in front of the reader — page, card, drawer — and the two outer ones carried no information. It now has no fill, no border and no radius: a hairline separates it from the body above, and the timeline sits directly on the card. Two surfaces, one of which is the content.
 
@@ -300,6 +315,7 @@ The open-day callouts on the 10th, 15th and 16th were *not* part of that block a
 ## 12. Known gaps
 
 - **One unresolved scheduling conflict, no longer shown on the site** (see §11). *14 August:* departure from Seyðisfjörður is booked for 9:30 am, the exact minute the ship docks, and gangway clearance normally takes ten to fifteen minutes. The 12 August conflict turned out to be an artefact of a wrong arrival time and is resolved (see §10).
+- **A pill tapped while a panel is still folding lands about a screen short.** `goTo` measures its target from the current layout, and a fold in flight is about to take up to a screenful out of the document, so the measurement is stale by that much before the scroll finishes. Reproduced at ~960px off. It predates the simultaneous-scroll work and is not caused by it — the same tap on the older sequential version missed by ~997px, just by a different route, with the deferred collapse scroll overriding the pill outright. Only reachable inside the ~400 ms a panel is closing. The fix is to land any in-flight fold before measuring, which means giving `slidePanel` a settle function that can be called from outside and keeping `goTo` from finishing the very fold that called it — more surgery than the symptom has earned so far.
 - No offline map of the ports beyond the hero SVG.
 - 17 August arrival time unverified; Windstar does not list the disembarkation morning.
 - Photo aspect is **1.60:1 against the card's 1.90:1**, so `slice` trims about 8% off the top and bottom of every one. Rendering the set at 1.90:1 would recover it.
